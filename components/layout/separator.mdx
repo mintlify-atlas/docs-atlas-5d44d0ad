@@ -1,0 +1,304 @@
+---
+title: 'Separator'
+description: 'A horizontal separator component for visually dividing content sections'
+---
+
+## Overview
+
+Separator (also known as SeparatorHorizontal) is a simple yet essential component for creating visual divisions between content sections. It renders as a dashed horizontal line using a gradient pattern.
+
+## Import
+
+```svelte
+import { SeparatorHorizontal } from '@invopop/popui'
+// or
+import { Separator } from '@invopop/popui'
+```
+
+<Note>
+  The component is exported as `SeparatorHorizontal` in the source code.
+</Note>
+
+## Basic Usage
+
+```svelte
+<script>
+  import { SeparatorHorizontal } from '@invopop/popui'
+</script>
+
+<div>
+  <p>Content above separator</p>
+  <SeparatorHorizontal />
+  <p>Content below separator</p>
+</div>
+```
+
+## In Lists and Menus
+
+Separators are commonly used in dropdown menus and context menus to group related actions:
+
+```svelte
+<script>
+  import { SeparatorHorizontal, BaseButton } from '@invopop/popui'
+</script>
+
+<div class="menu">
+  <button>Cut</button>
+  <button>Copy</button>
+  <button>Paste</button>
+  
+  <SeparatorHorizontal />
+  
+  <button class="text-red-600">Delete</button>
+</div>
+```
+
+## In DrawerContext
+
+Separators can be used within DrawerContext items:
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import type { DrawerOption } from '@invopop/popui'
+  
+  const items: DrawerOption[] = [
+    { label: 'Edit', value: 'edit' },
+    { label: 'Duplicate', value: 'duplicate' },
+    { separator: true, label: '', value: 'sep' },
+    { label: 'Delete', value: 'delete', destructive: true }
+  ]
+</script>
+
+<DrawerContext bind:items onclick={handleAction} />
+```
+
+<Info>
+  When using separators in DrawerContext, the component automatically renders the DrawerContextSeparator variant.
+</Info>
+
+## Between Card Sections
+
+```svelte
+<script>
+  import { SeparatorHorizontal } from '@invopop/popui'
+</script>
+
+<div class="card">
+  <div class="card-header">
+    <h3>User Profile</h3>
+  </div>
+  
+  <SeparatorHorizontal />
+  
+  <div class="card-body">
+    <p>Name: John Doe</p>
+    <p>Email: john@example.com</p>
+  </div>
+  
+  <SeparatorHorizontal />
+  
+  <div class="card-footer">
+    <button>Edit Profile</button>
+  </div>
+</div>
+```
+
+## In Form Sections
+
+```svelte
+<script>
+  import { SeparatorHorizontal, InputText } from '@invopop/popui'
+</script>
+
+<form>
+  <h3>Personal Information</h3>
+  <InputText label="First Name" />
+  <InputText label="Last Name" />
+  
+  <SeparatorHorizontal />
+  
+  <h3>Contact Details</h3>
+  <InputText label="Email" />
+  <InputText label="Phone" />
+  
+  <SeparatorHorizontal />
+  
+  <h3>Address</h3>
+  <InputText label="Street" />
+  <InputText label="City" />
+</form>
+```
+
+## Props
+
+The Separator component accepts no props. It's a simple presentational component.
+
+## Styling
+
+The component uses:
+- Transparent border with bottom border visible
+- Dashed pattern created with `repeating-linear-gradient`
+- Uses CSS custom properties:
+  - `--color-border-default-secondary` for the dash color
+- 1px height with minimum height constraint
+- Full width by default
+- Vertical margin (`my-1`) for spacing
+
+### CSS Implementation
+
+```css
+.hr-separator {
+  border-image: repeating-linear-gradient(
+    90deg,
+    var(--color-border-default-secondary),
+    var(--color-border-default-secondary) 3px,
+    transparent 3px,
+    transparent 7px
+  );
+  border-image-slice: 1;
+}
+```
+
+## Related Components
+
+### DrawerContextSeparator
+
+A variant used specifically within DrawerContext components:
+
+```svelte
+<!-- Internal component used by DrawerContext -->
+<li class="bg-border h-px min-h-px w-full my-1"></li>
+```
+
+This variant:
+- Renders as a `<li>` element for proper list semantics
+- Uses solid background color instead of dashed pattern
+- Maintains consistent height and spacing
+
+## Accessibility
+
+- The separator is a purely visual element
+- Uses `<div>` element by default (or `<li>` in drawer contexts)
+- Screen readers typically ignore decorative separators
+- Provides visual structure for sighted users
+
+## Examples
+
+### Settings Panel
+
+```svelte
+<script>
+  import { SeparatorHorizontal, InputToggle, InputSelect } from '@invopop/popui'
+  
+  let darkMode = $state(false)
+  let language = $state('en')
+  let notifications = $state(true)
+</script>
+
+<div class="settings-panel">
+  <h2>Appearance</h2>
+  <InputToggle label="Dark Mode" bind:checked={darkMode} />
+  <InputSelect label="Language" bind:value={language} options={languages} />
+  
+  <SeparatorHorizontal />
+  
+  <h2>Notifications</h2>
+  <InputToggle label="Enable Notifications" bind:checked={notifications} />
+  
+  <SeparatorHorizontal />
+  
+  <h2>Privacy</h2>
+  <button>Manage Privacy Settings</button>
+</div>
+```
+
+### Action Menu
+
+```svelte
+<script>
+  import { SeparatorHorizontal } from '@invopop/popui'
+  
+  function handleAction(action: string) {
+    console.log('Action:', action)
+  }
+</script>
+
+<div class="dropdown-menu">
+  <button onclick={() => handleAction('view')}>View Details</button>
+  <button onclick={() => handleAction('edit')}>Edit</button>
+  <button onclick={() => handleAction('duplicate')}>Duplicate</button>
+  
+  <SeparatorHorizontal />
+  
+  <button onclick={() => handleAction('share')}>Share</button>
+  <button onclick={() => handleAction('export')}>Export</button>
+  
+  <SeparatorHorizontal />
+  
+  <button 
+    class="text-red-600" 
+    onclick={() => handleAction('delete')}
+  >
+    Delete
+  </button>
+</div>
+```
+
+### Dashboard Sections
+
+```svelte
+<script>
+  import { SeparatorHorizontal, TagStatus } from '@invopop/popui'
+</script>
+
+<div class="dashboard">
+  <section>
+    <h3>Active Projects</h3>
+    <div class="project-list">
+      <div class="project">Project A <TagStatus status="green" label="Active" /></div>
+      <div class="project">Project B <TagStatus status="yellow" label="Pending" /></div>
+    </div>
+  </section>
+  
+  <SeparatorHorizontal />
+  
+  <section>
+    <h3>Recent Activity</h3>
+    <ul>
+      <li>User logged in</li>
+      <li>New file uploaded</li>
+      <li>Task completed</li>
+    </ul>
+  </section>
+  
+  <SeparatorHorizontal />
+  
+  <section>
+    <h3>System Status</h3>
+    <p>All systems operational</p>
+  </section>
+</div>
+```
+
+## Design Considerations
+
+- Use separators sparingly to avoid visual clutter
+- Group related content before and after separators
+- Consider vertical spacing around separators
+- In menus, place destructive actions after a separator
+- Use consistent separator styling throughout your application
+
+## Theming
+
+The separator color can be customized through CSS variables:
+
+```css
+:root {
+  --color-border-default-secondary: #e5e7eb; /* Light mode */
+}
+
+.dark {
+  --color-border-default-secondary: #374151; /* Dark mode */
+}
+```

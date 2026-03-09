@@ -1,0 +1,397 @@
+---
+title: 'Types'
+description: 'Type definitions and interfaces used throughout Popui'
+---
+
+## Icon Types
+
+### IconTheme
+
+Theme variants for icon rendering.
+
+```typescript
+type IconTheme = 'default' | 'solid' | 'mini'
+```
+
+### IconPosition
+
+Position of icon relative to content.
+
+```typescript
+type IconPosition = 'right' | 'left'
+```
+
+### SidebarIcon
+
+Configuration for sidebar navigation icons.
+
+```typescript
+type SidebarIcon = {
+  path: string
+  icon: IconSource
+  title: string
+  iconTheme: IconTheme
+}
+```
+
+### TableIcon
+
+Icon type for table cells, can be a string or IconSource.
+
+```typescript
+type TableIcon = string | IconSource
+```
+
+### StepIcon
+
+Icon configuration for step indicators.
+
+```typescript
+type StepIcon = {
+  name: string
+  url: string
+}
+```
+
+## Button Types
+
+### ButtonVariant
+
+Available button style variants.
+
+```typescript
+type ButtonVariant =
+  | 'warning'
+  | 'primary'
+  | 'secondary'
+  | 'danger'
+  | 'dark'
+  | 'outline'
+  | 'ghost'
+  | 'selected'
+  | 'dark-ghost'
+```
+
+### ButtonFileType
+
+File types supported by ButtonFile component.
+
+```typescript
+type ButtonFileType = 'pdf' | 'xml' | 'png' | 'generic'
+```
+
+## Status Types
+
+### Status
+
+General status types for notifications and alerts.
+
+```typescript
+type Status = 'success' | 'warning' | 'error' | 'info' | 'neutral'
+```
+
+### StatusType
+
+Color-based status types for tags and badges.
+
+```typescript
+type StatusType =
+  | 'grey'
+  | 'green'
+  | 'yellow'
+  | 'red'
+  | 'orange'
+  | 'blue'
+  | 'purple'
+  | 'olive'
+  | 'teal'
+  | 'crimson'
+  | 'blueViolet'
+  | 'steelBlue'
+  | 'empty'
+```
+
+### FeedItemStatus
+
+Status types for feed items and activity logs.
+
+```typescript
+type FeedItemStatus = 'success' | 'failure' | 'run' | 'queued' | 'alert' | 'skip' | 'signed'
+```
+
+## Data Types
+
+### AnyProp
+
+Generic prop type that accepts various value types.
+
+```typescript
+type AnyProp = string | number | object | boolean
+```
+
+### SelectOption
+
+Basic option structure for select inputs.
+
+```typescript
+type SelectOption = {
+  label: string
+  value: AnyProp
+}
+```
+
+### DrawerOption
+
+Extended option for drawer/dropdown menus with rich features.
+
+```typescript
+type DrawerOption = SelectOption & {
+  separator?: boolean
+  destructive?: boolean
+  selected?: boolean
+  focused?: boolean
+  icon?: IconSource | string | undefined
+  rightIcon?: IconSource | undefined
+  country?: string
+  color?: StatusType
+  picture?: string
+  sandbox?: boolean
+  iconClass?: string
+  disabled?: boolean
+  locked?: boolean
+  groupBy?: string
+  useAvatar?: boolean
+  action?: Snippet<[DrawerOption]>
+  flagPosition?: 'before' | 'after'
+}
+```
+
+### DrawerGroup
+
+Configuration for grouping drawer options.
+
+```typescript
+type DrawerGroup = {
+  label: string
+  slug: string
+  emptyIcon?: IconSource
+  emptyTitle?: string
+  emptyDescription?: string
+  hideCounter?: boolean
+}
+```
+
+### DataListItem
+
+Label-value pair for data lists.
+
+```typescript
+type DataListItem = {
+  label: string
+  value: string
+}
+```
+
+### Badge
+
+Badge configuration with status color.
+
+```typescript
+type Badge = {
+  label: string
+  status: StatusType
+  dot?: boolean
+}
+```
+
+### Breadcrumb
+
+Breadcrumb navigation item.
+
+```typescript
+type Breadcrumb = {
+  label: string
+  url?: string
+  country?: string
+  copiable?: boolean
+}
+```
+
+### TabItem
+
+Tab navigation item with optional indicators.
+
+```typescript
+type TabItem = {
+  label: string
+  slug: string
+  counter?: number
+  check?: boolean
+  warning?: boolean
+}
+```
+
+## Table Types
+
+### TableDataRow
+
+Generic table row data structure.
+
+```typescript
+type TableDataRow = { [key: string]: unknown }
+```
+
+### TableAction
+
+Action configuration for table rows.
+
+```typescript
+type TableAction = DrawerOption & {
+  slug?: string
+}
+```
+
+### TableSortBy
+
+Sort direction for table columns.
+
+```typescript
+type TableSortBy = '' | 'asc' | 'desc'
+```
+
+### TableActionProp
+
+Function type for generating row actions dynamically.
+
+```typescript
+type TableActionProp = undefined | ((data: TableDataRow) => TableAction[])
+```
+
+### TableGroupLabelProp
+
+Function type for generating group labels.
+
+```typescript
+type TableGroupLabelProp = undefined | ((data: TableDataRow) => string)
+```
+
+### TableGroup
+
+Grouped table data structure.
+
+```typescript
+type TableGroup = {
+  label: string
+  rows: TableDataRow[]
+}
+```
+
+### TableField
+
+Column configuration for legacy table components.
+
+```typescript
+type TableField = {
+  headerLabel: string
+  slug: string
+  sortable?: boolean
+  grayed?: boolean
+  formatter?: (data: TableDataRow) => string | number
+  helperBadge?: (data: TableDataRow) => Badge | null
+  helperStatus?: (data: TableDataRow) => FeedItemStatus | null
+  helperIcons?: (data: TableDataRow) => TableIcon[]
+  monospaced?: boolean
+  nowrap?: boolean
+  monospacedNums?: boolean
+  rightAlign?: boolean
+  isCountry?: boolean
+  copy?: boolean
+  style?: string
+  status?: boolean
+  noPadding?: boolean
+}
+```
+
+## Feed Types
+
+### FeedEvent
+
+Event entry in activity feeds.
+
+```typescript
+type FeedEvent = {
+  status: {
+    label: string
+    type: StatusType
+  }
+  date: Date
+  code?: string
+  message?: string
+}
+```
+
+### FeedItemUser
+
+User information for feed items.
+
+```typescript
+type FeedItemUser = {
+  name: string
+  picture?: string
+}
+```
+
+## Company Types
+
+### Company
+
+Company/organization data structure.
+
+```typescript
+type Company = {
+  id: string
+  slug: string
+  name: string
+  country?: string
+  logo_url?: string
+  sandbox?: boolean
+}
+```
+
+## Date Utility Types
+
+### DatesFromToday
+
+Pre-calculated date ranges relative to today.
+
+```typescript
+type DatesFromToday = {
+  today: Date
+  startOfThisWeek: Date
+  endOfThisWeek: Date
+  startOfLastWeek: Date
+  endOfLastWeek: Date
+  startOfThisMonth: Date
+  endOfThisMonth: Date
+  startOfLastMonth: Date
+  endOfLastMonth: Date
+  startOfThisQuarter: Date
+  endOfThisQuarter: Date
+  startOfLastQuarter: Date
+  endOfLastQuarter: Date
+}
+```
+
+## DataTable Types
+
+The following types are used for DataTable configuration and are exported from `@invopop/popui`.
+
+### CellType
+
+Available cell types for DataTable columns.
+
+```typescript
+type CellType = 'text' | 'boolean' | 'tag' | 'date' | 'currency' | 'uuid' | 'custom'
+```
+
+See [component-props](/api/component-props) for component prop interfaces.

@@ -1,0 +1,234 @@
+---
+title: 'BaseCard'
+description: 'A versatile card component for displaying content with optional images, badges, and footer sections'
+---
+
+## Overview
+
+BaseCard is a flexible container component designed for displaying content in a card format. It supports images, type badges (beta/soon), and customizable footer content through Svelte snippets.
+
+## Import
+
+```svelte
+import { BaseCard } from '@invopop/popui'
+```
+
+## Basic Usage
+
+```svelte
+<script>
+  import { BaseCard } from '@invopop/popui'
+</script>
+
+<BaseCard
+  imageUrl="/icons/integration.png"
+  imageAlt="Integration icon"
+  title="API Integration"
+  description="Connect your application with our REST API"
+  onclick={() => console.log('Card clicked')}
+/>
+```
+
+## With Type Badge
+
+Display status badges to indicate beta features or upcoming functionality:
+
+```svelte
+<BaseCard
+  imageUrl="/icons/feature.png"
+  imageAlt="Feature icon"
+  title="New Feature"
+  description="This feature is currently in beta testing"
+  type="beta"
+  onclick={() => console.log('Beta feature clicked')}
+/>
+
+<BaseCard
+  imageUrl="/icons/upcoming.png"
+  imageAlt="Upcoming icon"
+  title="Upcoming Feature"
+  description="This feature will be available soon"
+  type="soon"
+/>
+```
+
+<Note>
+  Cards with `type="soon"` are automatically disabled and non-interactive.
+</Note>
+
+## With Footer Content
+
+Use Svelte snippets to add custom footer content:
+
+```svelte
+<script>
+  import { BaseCard, TagStatus } from '@invopop/popui'
+</script>
+
+<BaseCard
+  imageUrl="/icons/service.png"
+  imageAlt="Service icon"
+  title="Cloud Service"
+  description="Scalable cloud infrastructure for your applications"
+>
+  {#snippet footer()}
+    <div class="flex gap-2">
+      <TagStatus label="Active" status="green" />
+      <TagStatus label="Europe" status="blue" />
+    </div>
+  {/snippet}
+</BaseCard>
+```
+
+## Image Support
+
+The component displays images in a consistent bordered container:
+
+```svelte
+<BaseCard
+  imageUrl="https://example.com/logo.png"
+  imageAlt="Company logo"
+  title="Company Name"
+  description="Enterprise-grade solutions for modern businesses"
+/>
+```
+
+## Props
+
+<ParamField path="imageUrl" type="string" default="''">
+  URL of the image to display in the card header
+</ParamField>
+
+<ParamField path="imageAlt" type="string" default="''">
+  Alternative text for the image (accessibility)
+</ParamField>
+
+<ParamField path="title" type="string" default="''">
+  Main heading text for the card
+</ParamField>
+
+<ParamField path="description" type="string" default="''">
+  Secondary descriptive text displayed below the title
+</ParamField>
+
+<ParamField path="type" type="'default' | 'soon' | 'beta'" default="'default'">
+  Card type that determines badge display and disabled state:
+  - `default`: Normal interactive card
+  - `beta`: Shows "Beta" badge
+  - `soon`: Shows "Soon" badge and disables interaction
+</ParamField>
+
+<ParamField path="footer" type="Snippet">
+  Svelte snippet for custom footer content. Rendered at the bottom of the card with proper spacing.
+</ParamField>
+
+<ParamField path="onclick" type="(event: MouseEvent) => void">
+  Click handler function called when the card is clicked (not called when `type="soon"`)
+</ParamField>
+
+## TypeScript Interface
+
+```typescript
+export interface BaseCardProps {
+  imageUrl?: string
+  imageAlt?: string
+  title?: string
+  description?: string
+  type?: 'default' | 'soon' | 'beta'
+  footer?: Snippet
+  [key: string]: any
+  onclick?: (event: MouseEvent) => void
+}
+```
+
+## Styling
+
+BaseCard uses Tailwind CSS classes and supports:
+- Hover state with border color change
+- Disabled state for "soon" cards
+- Automatic layout with flexbox
+- Minimum width of 298px
+- Rounded corners (xl)
+- Consistent padding and spacing
+
+## Accessibility
+
+- Rendered as a `<button>` element for proper keyboard navigation
+- Supports disabled state when appropriate
+- Includes alt text for images
+- Maintains focus states for keyboard users
+
+## Examples
+
+### Grid of Cards
+
+```svelte
+<script>
+  import { BaseCard } from '@invopop/popui'
+  
+  const integrations = [
+    {
+      id: 1,
+      title: 'Stripe',
+      description: 'Payment processing integration',
+      imageUrl: '/icons/stripe.png',
+      type: 'default'
+    },
+    {
+      id: 2,
+      title: 'Webhooks',
+      description: 'Real-time event notifications',
+      imageUrl: '/icons/webhooks.png',
+      type: 'beta'
+    },
+    {
+      id: 3,
+      title: 'Analytics',
+      description: 'Advanced analytics dashboard',
+      imageUrl: '/icons/analytics.png',
+      type: 'soon'
+    }
+  ]
+  
+  function handleCardClick(id: number) {
+    console.log('Selected integration:', id)
+  }
+</script>
+
+<div class="grid grid-cols-3 gap-4">
+  {#each integrations as integration}
+    <BaseCard
+      imageUrl={integration.imageUrl}
+      imageAlt={integration.title}
+      title={integration.title}
+      description={integration.description}
+      type={integration.type}
+      onclick={() => handleCardClick(integration.id)}
+    />
+  {/each}
+</div>
+```
+
+### Card with Status Footer
+
+```svelte
+<script>
+  import { BaseCard, TagStatus, BaseButton } from '@invopop/popui'
+</script>
+
+<BaseCard
+  imageUrl="/icons/database.png"
+  imageAlt="Database icon"
+  title="PostgreSQL Database"
+  description="Managed database with automatic backups"
+>
+  {#snippet footer()}
+    <div class="flex items-center justify-between">
+      <TagStatus label="Running" status="green" dot />
+      <BaseButton size="sm" variant="ghost">
+        Configure
+      </BaseButton>
+    </div>
+  {/snippet}
+</BaseCard>
+```

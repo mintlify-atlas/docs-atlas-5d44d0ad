@@ -1,0 +1,303 @@
+---
+title: "ProgressBar"
+description: "Linear and circular progress indicators with warning thresholds and overage support"
+---
+
+## Overview
+
+Popui provides two progress components: `ProgressBar` for linear progress indicators and `ProgressBarCircle` for circular progress rings. Both support percentage-based and current/total-based progress tracking.
+
+## ProgressBar
+
+### Basic Usage with Percentage
+
+```svelte
+<script>
+  import { ProgressBar } from '@invopop/popui'
+</script>
+
+<ProgressBar percentage={65} />
+```
+
+### With Current and Total
+
+```svelte
+<script>
+  import { ProgressBar } from '@invopop/popui'
+</script>
+
+<ProgressBar current={75} total={100} />
+```
+
+### Warning Threshold
+
+The progress bar changes to yellow when reaching the warning threshold:
+
+```svelte
+<script>
+  import { ProgressBar } from '@invopop/popui'
+</script>
+
+<ProgressBar
+  percentage={85}
+  warningPercentage={80}
+/>
+```
+
+### Critical State (100% or Over)
+
+The progress bar turns red when at or exceeding 100%:
+
+```svelte
+<ProgressBar percentage={100} />
+<ProgressBar current={120} total={100} />
+```
+
+### Overage Display
+
+When usage exceeds the total and `allowOverage` is enabled, the bar shows both used and overage:
+
+```svelte
+<script>
+  import { ProgressBar } from '@invopop/popui'
+</script>
+
+<ProgressBar
+  current={120}
+  total={100}
+  allowOverage
+/>
+```
+
+This displays:
+- A primary bar showing the base usage (up to 100%)
+- A yellow overage bar showing the excess usage
+
+### Prevent Overage Display
+
+```svelte
+<ProgressBar
+  current={120}
+  total={100}
+  allowOverage={false}
+/>
+```
+
+When `allowOverage={false}`, the bar displays as fully red at 100% even when current exceeds total.
+
+## ProgressBarCircle
+
+### Basic Usage
+
+```svelte
+<script>
+  import { ProgressBarCircle } from '@invopop/popui'
+</script>
+
+<ProgressBarCircle
+  progress={0.65}
+  size={40}
+/>
+```
+
+<Note>
+  The `progress` prop for `ProgressBarCircle` is a decimal between 0 and 1 (e.g., 0.65 for 65%).
+</Note>
+
+### Dark Variant
+
+```svelte
+<ProgressBarCircle
+  progress={0.75}
+  size={40}
+  variant="dark"
+/>
+```
+
+### Different Sizes
+
+```svelte
+<script>
+  import { ProgressBarCircle } from '@invopop/popui'
+</script>
+
+<div class="flex gap-4 items-center">
+  <ProgressBarCircle progress={0.5} size={24} />
+  <ProgressBarCircle progress={0.5} size={40} />
+  <ProgressBarCircle progress={0.5} size={60} />
+  <ProgressBarCircle progress={0.5} size={80} />
+</div>
+```
+
+## Usage in Counter Widgets
+
+```svelte
+<script>
+  import { ProgressBar, ProgressBarCircle } from '@invopop/popui'
+  
+  let apiCalls = { current: 8500, total: 10000 }
+  let storageUsed = 0.82 // 82%
+</script>
+
+<div class="space-y-4">
+  <!-- API Usage -->
+  <div>
+    <div class="flex justify-between mb-2">
+      <span class="text-sm font-medium">API Calls</span>
+      <span class="text-sm text-gray-600">
+        {apiCalls.current.toLocaleString()} / {apiCalls.total.toLocaleString()}
+      </span>
+    </div>
+    <ProgressBar
+      current={apiCalls.current}
+      total={apiCalls.total}
+      warningPercentage={80}
+    />
+  </div>
+  
+  <!-- Storage Usage with Circle -->
+  <div class="flex items-center gap-3">
+    <ProgressBarCircle progress={storageUsed} size={40} />
+    <div>
+      <div class="text-sm font-medium">Storage</div>
+      <div class="text-xs text-gray-600">82% used</div>
+    </div>
+  </div>
+</div>
+```
+
+## ProgressBar Props
+
+<ParamField path="percentage" type="number" default="0">
+  Progress as a percentage (0-100). Cannot be used with `current` and `total`.
+</ParamField>
+
+<ParamField path="current" type="number" default="0">
+  Current value. Must be used with `total`. The percentage is automatically calculated as `(current / total) * 100`.
+</ParamField>
+
+<ParamField path="total" type="number" default="0">
+  Maximum value. Must be used with `current`.
+</ParamField>
+
+<ParamField path="allowOverage" type="boolean" default="true">
+  When `true` and `current > total`, displays the overage as a separate yellow segment. When `false`, treats values over 100% as critical (red) at 100%.
+</ParamField>
+
+<ParamField path="warningPercentage" type="number" default="80">
+  Percentage threshold at which the bar turns yellow (warning state). Must be less than 100.
+</ParamField>
+
+## ProgressBarCircle Props
+
+<ParamField path="progress" type="number" required>
+  Progress as a decimal between 0 and 1 (e.g., 0.65 for 65%).
+</ParamField>
+
+<ParamField path="size" type="number" required>
+  Diameter of the circle in pixels.
+</ParamField>
+
+<ParamField path="variant" type="'default' | 'dark'" default="'default'">
+  Color variant:
+  - `'default'` - Uses standard theme colors
+  - `'dark'` - Uses inverse/dark theme colors for light backgrounds
+</ParamField>
+
+## Color States (ProgressBar)
+
+The linear progress bar automatically changes color based on progress:
+
+| State | Condition | Color |
+|-------|-----------|-------|
+| Normal | `percentage < warningPercentage` | Blue/default (`bg-icon-inverse-bold`) |
+| Warning | `percentage >= warningPercentage && percentage < 100` | Yellow (`bg-background-warning-inverse`) |
+| Overage | `current > total` with `allowOverage={true}` | Primary blue + yellow overage |
+| Critical | `percentage >= 100` or over limit without overage | Red (`bg-background-critical-inverse`) |
+
+## Overage Calculation
+
+When `allowOverage={true}` and `current > total`:
+
+```typescript
+overagePercentage = ((current - total) / current) * 100
+usedPercentage = 100 - overagePercentage
+```
+
+Example: With current=120 and total=100:
+- overagePercentage = (20/120) * 100 ≈ 16.67%
+- usedPercentage = 83.33%
+- Visual: 83.33% blue bar + 16.67% yellow bar
+
+## Styling Details
+
+### ProgressBar Layout
+
+- **Height**: 4px (h-1)
+- **Container**: Full width flex with 2px gap between segments
+- **Shape**: Rounded with `rounded-full`
+- **Background**: Light gray for remaining portion (`bg-background-selected-inverse`)
+
+### ProgressBarCircle Styling
+
+The circular progress uses CSS conic-gradient and mask for the ring effect:
+- Ring thickness: 1.5px
+- Smooth rotation animation (500ms ease-in)
+- Circular clip path using radial-gradient mask
+
+## Accessibility
+
+- Progress values are visually distinct through color and size
+- Color is not the only indicator (percentage/values should be shown separately)
+- Sufficient contrast ratios for all color states
+- Consider adding ARIA labels for screen readers:
+
+```svelte
+<div role="progressbar" aria-valuenow={current} aria-valuemin="0" aria-valuemax={total}>
+  <ProgressBar {current} {total} />
+</div>
+```
+
+## Use Cases
+
+### ProgressBar
+- API quota usage tracking
+- Storage space indicators
+- Upload/download progress
+- Task completion tracking
+- Subscription limits
+
+### ProgressBarCircle
+- Compact space indicators
+- Profile completion status
+- Loading states
+- Circular gauges
+- Small widgets and badges
+
+## TypeScript
+
+Both components are fully typed:
+
+```typescript
+import type { ProgressBarProps, ProgressBarCircleProps } from '@invopop/popui'
+
+interface ProgressBarProps {
+  percentage?: number
+  current?: number
+  total?: number
+  allowOverage?: boolean
+  warningPercentage?: number
+}
+
+interface ProgressBarCircleProps {
+  progress: number
+  size: number
+  variant?: 'default' | 'dark'
+}
+```
+
+## Related Components
+
+- [StatusLabel](/components/feedback/status-label) - For discrete status states
+- [Notification](/components/feedback/notification) - For status messages
+- [TagStatus](/components/feedback/tag-status) - For colored status badges

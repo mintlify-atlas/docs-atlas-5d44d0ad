@@ -1,0 +1,144 @@
+---
+title: Introduction
+description: Popui is a comprehensive set of reusable Svelte components built with Svelte 5 and Tailwind CSS, designed for modern web applications.
+---
+
+# Introduction to Popui
+
+Popui is a comprehensive Svelte component library built with **Svelte 5** and **Tailwind CSS**. Originally created for Console UI and Invopop applications, it provides a complete set of production-ready UI components with a cohesive design system.
+
+## What is Popui?
+
+Popui offers a rich collection of reusable UI components that follow modern design principles and accessibility best practices. The library is built on top of Svelte 5's latest features, providing exceptional performance and developer experience.
+
+<Card title="Built for Modern Development" icon="sparkles">
+  Popui leverages Svelte 5's runes and reactivity system, providing a cutting-edge development experience with excellent TypeScript support.
+</Card>
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="Svelte 5 Native" icon="code">
+    Built with Svelte 5's latest features including runes, snippets, and improved reactivity
+  </Card>
+  <Card title="Tailwind Powered" icon="palette">
+    Styled with Tailwind CSS 4+ with a complete design system and theme configuration
+  </Card>
+  <Card title="Comprehensive Components" icon="grid">
+    Over 60+ components including forms, tables, navigation, feedback, and data visualization
+  </Card>
+  <Card title="TypeScript First" icon="shield-check">
+    Full TypeScript support with comprehensive type definitions for all components
+  </Card>
+  <Card title="Accessible" icon="universal-access">
+    Built with accessibility in mind, following WAI-ARIA guidelines
+  </Card>
+  <Card title="Themeable" icon="paint-brush">
+    Customizable design tokens and theme configuration to match your brand
+  </Card>
+</CardGroup>
+
+## Component Categories
+
+Popui organizes components into logical categories:
+
+### Form Components
+- **InputText** - Text input with label, error states, and validation
+- **InputTextarea** - Multi-line text input
+- **InputSelect** - Dropdown select component
+- **InputCheckbox** - Checkbox with label support
+- **InputRadio** - Radio button groups
+- **InputToggle** - Toggle switch component
+- **InputSearch** - Search input with icon
+- **DatePicker** - Date selection with calendar
+
+### Buttons & Actions
+- **BaseButton** - Primary button with multiple variants (primary, outline, ghost, danger)
+- **ButtonFile** - File upload button
+- **ButtonSearch** - Search trigger button
+- **ButtonUuidCopy** - Copy UUID to clipboard
+
+### Data Display
+- **DataTable** - Feature-rich data table with sorting, filtering, and pagination
+- **Table** - Basic table components (Table, TableRow, TableCell, etc.)
+- **DataListItem** - List item component for data lists
+- **CardRelation** - Relational data card
+
+### Navigation
+- **MenuItem** - Navigation menu item
+- **MenuItemCollapsible** - Collapsible menu item with children
+- **Breadcrumbs** - Breadcrumb navigation
+- **Tabs** - Tab navigation (Tabs, TabsList, TabsTrigger, TabsContent)
+
+### Feedback & Notifications
+- **Notification** - Toast notification component
+- **Toaster** - Toast notification container
+- **AlertDialog** - Modal dialog for confirmations
+- **EmptyState** - Empty state placeholder
+
+### Layout & Structure
+- **BaseCard** - Card container with header, content, and footer
+- **CardCheckbox** - Card with checkbox selection
+- **DrawerContext** - Context drawer with items
+- **SeparatorHorizontal** - Horizontal separator line
+
+### Status & Indicators
+- **StatusLabel** - Status badge component
+- **TagStatus** - Status tag with variants
+- **TagProgress** - Progress tag indicator
+- **TagSearch** - Search tag component
+- **ProgressBar** - Linear progress indicator
+- **ProgressBarCircle** - Circular progress indicator
+
+### Utilities
+- **Tooltip** - Tooltip with trigger and content
+- **Skeleton** - Loading skeleton components
+- **ProfileAvatar** - User avatar component
+- **BaseFlag** - Country flag component
+- **UuidCopy** - UUID display with copy functionality
+
+## Design System
+
+Popui includes a complete Tailwind theme that you can import into your projects:
+
+```css
+@import "@invopop/popui/tailwind.theme.css";
+```
+
+This provides access to:
+- Carefully crafted color palette with semantic naming
+- Typography scale and font configuration
+- Spacing and sizing tokens
+- Border radius and shadow utilities
+- Responsive breakpoints
+
+<Note>
+  The theme is designed to work seamlessly with Tailwind CSS 4+ and can be customized to match your brand identity.
+</Note>
+
+## Interactive Examples
+
+All components are documented in the **[Popui Storybook](https://popui-svelte.netlify.app/)**, which provides:
+- Live interactive examples
+- Prop documentation
+- Code snippets
+- Visual testing for all component states
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Get started by installing Popui in your project
+  </Card>
+  <Card title="Quick Start" icon="rocket" href="/quickstart">
+    Build your first component in minutes
+  </Card>
+</CardGroup>
+
+## Open Source
+
+Popui is open source and available on [GitHub](https://github.com/invopop/popui). Contributions are welcome!
+
+<Note>
+  The Go library has been moved to a separate repository at [github.com/invopop/popui.go](https://github.com/invopop/popui.go)
+</Note>

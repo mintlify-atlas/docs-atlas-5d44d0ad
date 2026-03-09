@@ -1,0 +1,227 @@
+---
+title: "StatusLabel"
+description: "Display status text with corresponding icons for feed items and workflows"
+---
+
+## Overview
+
+The `StatusLabel` component displays status text with a matching icon indicator. It's designed for feed items, workflow steps, and process status displays.
+
+## Basic Usage
+
+```svelte
+<script>
+  import { StatusLabel } from '@invopop/popui'
+</script>
+
+<StatusLabel
+  status="success"
+  label="Completed"
+/>
+```
+
+## Status Types
+
+### Success
+
+For completed or successful operations:
+
+```svelte
+<StatusLabel
+  status="success"
+  label="Payment processed"
+/>
+```
+
+### Failure
+
+For failed operations or errors:
+
+```svelte
+<StatusLabel
+  status="failure"
+  label="Upload failed"
+/>
+```
+
+### Run
+
+For currently running or in-progress operations:
+
+```svelte
+<StatusLabel
+  status="run"
+  label="Processing"
+/>
+```
+
+### Alert
+
+For operations requiring attention:
+
+```svelte
+<StatusLabel
+  status="alert"
+  label="Action required"
+/>
+```
+
+### Queued
+
+For pending or queued operations:
+
+```svelte
+<StatusLabel
+  status="queued"
+  label="Waiting in queue"
+/>
+```
+
+### Skip
+
+For skipped operations:
+
+```svelte
+<StatusLabel
+  status="skip"
+  label="Skipped"
+/>
+```
+
+### Signed
+
+For signed or verified operations:
+
+```svelte
+<StatusLabel
+  status="signed"
+  label="Digitally signed"
+/>
+```
+
+## In Feed Items
+
+The `StatusLabel` is commonly used in feed components:
+
+```svelte
+<script>
+  import { StatusLabel, FeedItem } from '@invopop/popui'
+</script>
+
+<div class="space-y-4">
+  <div class="flex items-center justify-between">
+    <span class="text-sm">Invoice #1234 created</span>
+    <StatusLabel status="success" label="Completed" />
+  </div>
+  
+  <div class="flex items-center justify-between">
+    <span class="text-sm">Payment verification</span>
+    <StatusLabel status="run" label="In progress" />
+  </div>
+  
+  <div class="flex items-center justify-between">
+    <span class="text-sm">Document upload</span>
+    <StatusLabel status="failure" label="Failed" />
+  </div>
+</div>
+```
+
+## Workflow Steps
+
+```svelte
+<script>
+  import { StatusLabel } from '@invopop/popui'
+  
+  let steps = [
+    { name: 'Data validation', status: 'success', label: 'Complete' },
+    { name: 'Processing', status: 'run', label: 'Running' },
+    { name: 'Notification', status: 'queued', label: 'Pending' }
+  ]
+</script>
+
+<div class="space-y-3">
+  {#each steps as step}
+    <div class="flex items-center justify-between">
+      <span>{step.name}</span>
+      <StatusLabel status={step.status} label={step.label} />
+    </div>
+  {/each}
+</div>
+```
+
+## Props
+
+<ParamField path="status" type="FeedItemStatus" required>
+  The status type that determines the icon and text color.
+  
+  **Possible values:**
+  - `'success'` - Green text with success icon
+  - `'failure'` - Red text with failure icon
+  - `'run'` - Yellow/orange text with running icon
+  - `'alert'` - Yellow/orange text with alert icon
+  - `'queued'` - Gray text with queued icon
+  - `'skip'` - Default styling with skip icon
+  - `'signed'` - Default styling with signed icon
+</ParamField>
+
+<ParamField path="label" type="string" default="''">
+  The text label displayed next to the status icon.
+</ParamField>
+
+## Color Mapping
+
+The component automatically applies colors based on status:
+
+| Status | Text Color | Icon |
+|--------|-----------|------|
+| `success` | Green (`text-foreground-success`) | Success checkmark |
+| `failure` | Red (`text-foreground-critical`) | Error X |
+| `run` | Yellow/orange (`text-foreground-attention`) | Running spinner |
+| `alert` | Yellow/orange (`text-foreground-attention`) | Alert triangle |
+| `queued` | Gray (`text-foreground-default-secondary`) | Queued icon |
+| `skip` | Default | Skip icon |
+| `signed` | Default | Signed icon |
+
+## Layout
+
+The component uses a horizontal flex layout with:
+- 0.25rem (1) gap between label and icon
+- Items centered vertically
+- Label uses Inter font, medium weight, base size
+
+## Icon Component
+
+The status icons are rendered using the internal `FeedIconStatus` component, which provides consistent icon styling across all status types.
+
+## Use Cases
+
+- **Feed items**: Display status in activity feeds and timelines
+- **Workflow steps**: Show progress in multi-step processes
+- **Task lists**: Indicate completion status of tasks
+- **Process monitoring**: Real-time status of background jobs
+- **Document states**: Show document processing status
+
+## Accessibility
+
+- Color is not the only indicator (icons are also used)
+- Text labels provide clear status information
+- Sufficient contrast ratios for all status colors
+- Icons are sized appropriately for readability
+
+## TypeScript
+
+The component is fully typed with the `StatusLabelProps` interface:
+
+```typescript
+import type { StatusLabelProps, FeedItemStatus } from '@invopop/popui'
+
+// FeedItemStatus type definition
+type FeedItemStatus = 'success' | 'failure' | 'run' | 'queued' | 'alert' | 'skip' | 'signed'
+```
+
+## Related Components
+
+- [TagStatus](/components/feedback/tag-status) - For colored status badges
+- [FeedItem](/components/data-display/feed-viewer) - For activity feed items
+- [Notification](/components/feedback/notification) - For status notifications
+- [ProgressBar](/components/feedback/progress-bar) - For percentage-based progress

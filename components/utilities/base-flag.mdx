@@ -1,0 +1,146 @@
+---
+title: BaseFlag
+description: Display country flag icons with support for ISO country codes
+---
+
+The BaseFlag component renders country flags using ISO country codes. It includes special handling for global/international contexts.
+
+## Import
+
+```svelte
+import { BaseFlag } from '@invopop/popui'
+```
+
+## Props
+
+<ParamField path="country" type="string" default="''">
+  ISO 3166-1 alpha-2 country code (e.g., 'US', 'GB', 'ES'). Use 'GLOBAL' for international/worldwide icon.
+</ParamField>
+
+## Usage
+
+### Basic Flag
+
+```svelte
+<script>
+  import { BaseFlag } from '@invopop/popui'
+</script>
+
+<BaseFlag country="US" />
+<BaseFlag country="GB" />
+<BaseFlag country="ES" />
+```
+
+### Global/International Icon
+
+Use the special 'GLOBAL' code to display a world icon instead of a country flag:
+
+```svelte
+<BaseFlag country="GLOBAL" />
+```
+
+### In Dropdown Options
+
+Flags are commonly used in dropdowns with the `DrawerOption` type:
+
+```svelte
+<script>
+  import { DropdownSelect, BaseFlag } from '@invopop/popui'
+  
+  const countries = [
+    { label: 'United States', value: 'US', country: 'US' },
+    { label: 'United Kingdom', value: 'GB', country: 'GB' },
+    { label: 'Spain', value: 'ES', country: 'ES' },
+    { label: 'Global', value: 'global', country: 'GLOBAL' }
+  ]
+</script>
+
+<DropdownSelect 
+  options={countries}
+  flagPosition="before"
+  onSelect={(value) => console.log(value)}
+/>
+```
+
+### In Tables
+
+Flags can be displayed in table cells using the `isCountry` field configuration:
+
+```svelte
+<script>
+  const fields = [
+    {
+      headerLabel: 'Country',
+      slug: 'country',
+      isCountry: true
+    },
+    // ... other fields
+  ]
+  
+  const data = [
+    { country: 'US', name: 'United States' },
+    { country: 'GB', name: 'United Kingdom' }
+  ]
+</script>
+```
+
+### With Custom Layout
+
+```svelte
+<script>
+  import { BaseFlag } from '@invopop/popui'
+</script>
+
+<div class="flex items-center space-x-2">
+  <BaseFlag country="FR" />
+  <span>France</span>
+</div>
+```
+
+### In Breadcrumbs
+
+Breadcrumbs support country flags through the `Breadcrumb` type:
+
+```svelte
+<script>
+  import { Breadcrumbs } from '@invopop/popui'
+  
+  const breadcrumbs = [
+    { label: 'Companies', url: '/companies' },
+    { label: 'Acme Inc', url: '/companies/acme', country: 'US' },
+    { label: 'Settings' }
+  ]
+</script>
+
+<Breadcrumbs {breadcrumbs} />
+```
+
+## Implementation Details
+
+- Uses the [flag-icons](https://github.com/lipis/flag-icons) CSS library
+- Renders flags with fixed dimensions: 14px width, 10px height (3.5 and 2.5 in Tailwind units)
+- Country codes are case-insensitive (automatically converted to lowercase)
+- 'GLOBAL' code displays a world icon from @invopop/ui-icons instead of a flag
+- Flags have rounded corners (1.5px radius) and hidden overflow for clean appearance
+- Global icon uses the default icon text color from the theme
+
+## Supported Country Codes
+
+BaseFlag supports all ISO 3166-1 alpha-2 country codes. Common examples:
+
+- `US` - United States
+- `GB` - United Kingdom
+- `DE` - Germany
+- `FR` - France
+- `ES` - Spain
+- `IT` - Italy
+- `JP` - Japan
+- `CN` - China
+- `IN` - India
+- `BR` - Brazil
+- `CA` - Canada
+- `AU` - Australia
+- `MX` - Mexico
+- `GLOBAL` - World/International icon (special case)
+
+For a complete list of country codes, see [ISO 3166-1 alpha-2](https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2).

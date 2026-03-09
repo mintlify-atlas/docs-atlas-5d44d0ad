@@ -1,0 +1,148 @@
+---
+title: InputTextarea
+description: A multi-line textarea component with label and error handling
+---
+
+## Overview
+
+InputTextarea provides a multi-line text input area with support for labels, error messages, and customizable row height. It maintains consistent styling with other form components.
+
+## Props
+
+<ParamField path="id" type="any" default="Random string">
+  Unique identifier for the textarea element. If not provided, a random ID is generated.
+</ParamField>
+
+<ParamField path="label" type="string" default="''">
+  Label text displayed above the textarea.
+</ParamField>
+
+<ParamField path="placeholder" type="string" default="''">
+  Placeholder text shown when the textarea is empty.
+</ParamField>
+
+<ParamField path="errorText" type="string" default="''">
+  Error message displayed below the textarea. When present, the textarea displays an error state.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  When true, the textarea is disabled and styled accordingly.
+</ParamField>
+
+<ParamField path="value" type="string | number" default="''">
+  The textarea value. This prop is bindable using `bind:value`.
+</ParamField>
+
+<ParamField path="rows" type="number" default="4">
+  Number of visible text rows in the textarea.
+</ParamField>
+
+<ParamField path="oninput" type="(value: string) => void">
+  Callback fired when the textarea value changes.
+</ParamField>
+
+## Usage
+
+### Basic Textarea
+
+```svelte
+<script>
+  import { InputTextarea } from 'popui'
+  
+  let message = $state('')
+</script>
+
+<InputTextarea 
+  bind:value={message}
+  label="Message" 
+  placeholder="Enter your message" 
+/>
+```
+
+### With Custom Rows
+
+```svelte
+<script>
+  import { InputTextarea } from 'popui'
+  
+  let description = $state('')
+</script>
+
+<InputTextarea 
+  bind:value={description}
+  label="Description"
+  placeholder="Enter a detailed description"
+  rows={8}
+/>
+```
+
+### With Error Validation
+
+```svelte
+<script>
+  import { InputTextarea } from 'popui'
+  
+  let comment = $state('')
+  let error = $state('')
+  
+  function validateComment(value: string) {
+    if (value.length < 10) {
+      error = 'Comment must be at least 10 characters'
+    } else if (value.length > 500) {
+      error = 'Comment must not exceed 500 characters'
+    } else {
+      error = ''
+    }
+  }
+</script>
+
+<InputTextarea 
+  bind:value={comment}
+  label="Comment"
+  errorText={error}
+  oninput={validateComment}
+/>
+```
+
+### Disabled State
+
+```svelte
+<InputTextarea 
+  value="This field is read-only"
+  label="Read-only Field"
+  disabled
+/>
+```
+
+### With Character Counter
+
+```svelte
+<script>
+  import { InputTextarea } from 'popui'
+  
+  let bio = $state('')
+  const maxLength = 200
+  
+  let charsRemaining = $derived(maxLength - bio.length)
+</script>
+
+<div class="flex flex-col gap-1">
+  <InputTextarea 
+    bind:value={bio}
+    label="Bio"
+    placeholder="Tell us about yourself"
+    rows={6}
+  />
+  <p class="text-sm text-foreground-default-tertiary">
+    {charsRemaining} characters remaining
+  </p>
+</div>
+```
+
+## Features
+
+- **Multi-line Input**: Supports multiple lines of text with adjustable height
+- **Error States**: Built-in error styling and message display
+- **Accessibility**: Properly linked labels using the `for` attribute
+- **Consistent Styling**: Matches the design system of other input components
+- **Auto-sizing**: Height adjusts based on the `rows` prop

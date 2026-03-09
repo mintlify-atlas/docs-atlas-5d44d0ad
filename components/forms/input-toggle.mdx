@@ -1,0 +1,184 @@
+---
+title: InputToggle
+description: A toggle switch component for binary on/off states
+---
+
+## Overview
+
+InputToggle provides a toggle switch interface for boolean settings. Built with svelte-headlessui, it features smooth animations and accessibility support.
+
+## Props
+
+<ParamField path="id" type="string" default="Random string">
+  Unique identifier for the toggle element. If not provided, a random ID is generated.
+</ParamField>
+
+<ParamField path="label" type="string" default="''">
+  Label text displayed next to the toggle switch.
+</ParamField>
+
+<ParamField path="checked" type="boolean" default="false">
+  Whether the toggle is in the on state. This prop is bindable using `bind:checked`.
+</ParamField>
+
+<ParamField path="onchange" type="(checked: boolean) => void">
+  Callback fired when the toggle state changes.
+</ParamField>
+
+<ParamField path="class" type="string" default="''">
+  Additional CSS classes to apply to the toggle wrapper.
+</ParamField>
+
+## Usage
+
+### Basic Toggle
+
+```svelte
+<script>
+  import { InputToggle } from 'popui'
+  
+  let enabled = $state(false)
+</script>
+
+<InputToggle 
+  bind:checked={enabled}
+  label="Enable notifications" 
+/>
+```
+
+### Without Label
+
+```svelte
+<script>
+  import { InputToggle } from 'popui'
+  
+  let active = $state(true)
+</script>
+
+<InputToggle bind:checked={active} />
+```
+
+### Settings Panel
+
+```svelte
+<script>
+  import { InputToggle } from 'popui'
+  
+  let settings = $state({
+    emailNotifications: true,
+    pushNotifications: false,
+    darkMode: false,
+    autoSave: true
+  })
+</script>
+
+<div class="flex flex-col gap-4">
+  <div class="flex items-center justify-between">
+    <div>
+      <h4 class="font-medium">Email Notifications</h4>
+      <p class="text-sm text-foreground-default-tertiary">
+        Receive updates via email
+      </p>
+    </div>
+    <InputToggle bind:checked={settings.emailNotifications} />
+  </div>
+  
+  <div class="flex items-center justify-between">
+    <div>
+      <h4 class="font-medium">Push Notifications</h4>
+      <p class="text-sm text-foreground-default-tertiary">
+        Get push notifications on your device
+      </p>
+    </div>
+    <InputToggle bind:checked={settings.pushNotifications} />
+  </div>
+  
+  <div class="flex items-center justify-between">
+    <div>
+      <h4 class="font-medium">Dark Mode</h4>
+      <p class="text-sm text-foreground-default-tertiary">
+        Use dark color scheme
+      </p>
+    </div>
+    <InputToggle bind:checked={settings.darkMode} />
+  </div>
+</div>
+```
+
+### With Change Handler
+
+```svelte
+<script>
+  import { InputToggle } from 'popui'
+  
+  let isPublic = $state(false)
+  
+  function handleVisibilityChange(checked: boolean) {
+    console.log('Visibility changed:', checked ? 'Public' : 'Private')
+    // Additional logic, API calls, etc.
+  }
+</script>
+
+<InputToggle 
+  bind:checked={isPublic}
+  label="Make profile public"
+  onchange={handleVisibilityChange}
+/>
+```
+
+### Feature Toggle
+
+```svelte
+<script>
+  import { InputToggle } from 'popui'
+  
+  let features = $state({
+    betaFeatures: false,
+    analytics: true,
+    experimental: false
+  })
+  
+  function toggleBeta(enabled: boolean) {
+    if (enabled) {
+      console.log('Beta features enabled - user will see experimental features')
+    } else {
+      console.log('Beta features disabled')
+    }
+  }
+</script>
+
+<div class="space-y-3">
+  <InputToggle 
+    bind:checked={features.betaFeatures}
+    label="Enable Beta Features"
+    onchange={toggleBeta}
+  />
+  <InputToggle 
+    bind:checked={features.analytics}
+    label="Analytics Tracking"
+  />
+  <InputToggle 
+    bind:checked={features.experimental}
+    label="Experimental UI"
+  />
+</div>
+```
+
+### Custom Styling
+
+```svelte
+<InputToggle 
+  bind:checked={enabled}
+  label="Custom styled toggle"
+  class="p-4 bg-background-default-secondary rounded-lg"
+/>
+```
+
+## Features
+
+- **Smooth Animations**: The toggle circle and background color transition smoothly (200ms duration)
+- **Deferred Transitions**: Transitions are disabled on initial mount to prevent animation flash (see lines 19-26 in source)
+- **Accessibility**: Built on svelte-headlessui for proper ARIA attributes and keyboard navigation
+- **Screen Reader Support**: Includes "sr-only" text for screen readers
+- **Visual States**: Clear visual distinction between on (accent background) and off (tertiary background) states
+- **Flexible Sizing**: Compact 30px width × 20px height design that fits inline layouts

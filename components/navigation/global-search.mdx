@@ -1,0 +1,119 @@
+---
+title: "GlobalSearch"
+description: "Keyboard-accessible global search trigger button"
+icon: "magnifying-glass"
+---
+
+The GlobalSearch component provides a search trigger button with keyboard shortcut support, typically used in application navigation bars.
+
+## Usage
+
+```svelte
+<script>
+  import { GlobalSearch } from '@invopop/popui'
+
+  function handleOpen() {
+    // Open your search modal or panel
+    console.log('Opening global search')
+  }
+</script>
+
+<GlobalSearch onOpen={handleOpen} />
+```
+
+## Collapsed Mode
+
+```svelte
+<script>
+  import { GlobalSearch } from '@invopop/popui'
+  import { searchModalOpen } from './stores'
+
+  function openSearchModal() {
+    searchModalOpen.set(true)
+  }
+</script>
+
+<GlobalSearch collapsed={true} onOpen={openSearchModal} />
+```
+
+## With Search Modal
+
+```svelte
+<script>
+  import { GlobalSearch } from '@invopop/popui'
+  import SearchModal from './SearchModal.svelte'
+
+  let searchOpen = $state(false)
+
+  function handleOpen() {
+    searchOpen = true
+  }
+
+  function handleClose() {
+    searchOpen = false
+  }
+</script>
+
+<GlobalSearch onOpen={handleOpen} />
+
+{#if searchOpen}
+  <SearchModal onClose={handleClose} />
+{/if}
+```
+
+## Props
+
+<ParamField path="collapsed" type="boolean" default="false">
+  When true, displays only the search icon without text or shortcut indicator. Useful for collapsed sidebars or mobile views
+</ParamField>
+
+<ParamField path="onOpen" type="() => void">
+  Callback function triggered when the search button is clicked or the keyboard shortcut is pressed
+</ParamField>
+
+## Keyboard Shortcut
+
+The component automatically registers a keyboard listener for the **/** (slash) key to trigger the search:
+
+- Pressing **/** anywhere in the application calls the `onOpen` callback
+- The shortcut is disabled when focus is inside input fields to allow typing the slash character
+- The shortcut indicator is displayed in the expanded view
+
+## Behavior
+
+### Expanded Mode (default)
+
+- Shows search icon, "Search" text, and keyboard shortcut indicator (/)
+- Full width button with hover effects
+- Height: 32px (h-8)
+- Shortcut displayed in a styled wrapper
+
+### Collapsed Mode
+
+- Shows only the search icon
+- Square button (32x32px)
+- No text or shortcut indicator
+
+### Keyboard Handling
+
+- The component listens for the **/** key globally
+- Respects input focus - doesn't trigger when typing in text fields
+- Automatically registers and cleans up keyboard listener on mount/unmount
+
+## Styling
+
+- Uses inverse theme colors for dark backgrounds (typically in sidebars)
+- Border: `border-border-inverse-default`
+- Text: `text-foreground-inverse` (icon), `text-foreground-inverse-secondary` (label)
+- Hover: `hover:bg-background-selected-inverse`
+- Rounded corners: `rounded-lg`
+
+## Implementation Details
+
+The component:
+- Uses the `GLOBAL_SEARCH_KEY` constant (set to '/') for the keyboard shortcut
+- Imports `isInputFocused()` helper to check if an input is currently focused
+- Registers global keydown listener on mount
+- Cleans up listener on component destroy
+- Uses @invopop/ui-icons for Search and Slash icons
+- Includes ShortcutWrapper component for keyboard shortcut display

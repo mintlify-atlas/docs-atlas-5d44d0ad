@@ -1,0 +1,290 @@
+---
+title: Tailwind Theme
+description: Learn about Popui's Tailwind v4 theme configuration and design tokens
+---
+
+## Overview
+
+Popui provides a comprehensive Tailwind v4 theme with a three-tier color system, typography scales, spacing utilities, and design tokens. The theme is designed to work seamlessly with both light and dark modes.
+
+## Installation
+
+Import the Popui theme in your main CSS file:
+
+```css
+@import "@invopop/popui/tailwind.theme.css";
+```
+
+<Note>
+The theme requires Tailwind CSS v4 and uses the `@theme` directive for configuration.
+</Note>
+
+## Font Setup
+
+Popui uses **Inter** for sans-serif and **Geist Mono** for monospace text. To use the Geist Mono font, add this import to your HTML or main CSS file:
+
+```css
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap');
+```
+
+## Color System
+
+Popui implements a three-tier color architecture:
+
+### 1. Primitive Colors
+
+Raw color values from the design system. Each color has shades from 10-100 and alpha variants:
+
+<CodeGroup>
+```css Mint
+--color-mint-10: #fdfffd;
+--color-mint-20: #f6fef6;
+--color-mint-30: #ecfeeb;
+/* ... through mint-100 */
+--color-mint-alpha-5: rgba(211, 252, 210, 0.05);
+--color-mint-alpha-10: rgba(211, 252, 210, 0.1);
+/* ... through mint-alpha-90 */
+```
+
+```css Grey
+--color-grey-5: #f8f8fa;
+--color-grey-10: #f0f0f2;
+--color-grey-20: #e6e7eb;
+/* ... through grey-100 */
+--color-grey-alpha-5: rgba(22, 22, 90, 0.03);
+/* ... through grey-alpha-90 */
+```
+
+```css Green
+--color-green-10: #f5faf8;
+--color-green-50: #018551;
+--color-green-100: #001b10;
+--color-green-alpha-10: rgba(1, 133, 81, 0.1);
+/* ... */
+```
+</CodeGroup>
+
+#### Available Primitive Colors
+
+- **Mint** - Brand color
+- **Sherwood** - Deep green
+- **Grey** - Neutral tones
+- **Green** - Success states
+- **Red** - Error states
+- **Orange** - Warning states
+- **Yellow** - Attention states
+- **Indigo** - Info states
+- **Sky** - Informational
+- **Violet** - Personalization
+- **Pink** - Personalization variant
+- **Aqua** - Status indicator
+- **PDF, XML, IMG** - Document type colors
+
+### 2. Semantic Colors
+
+Named palettes that reference primitive colors:
+
+```css
+/* Accent - Dynamically configurable */
+--color-accent-50: var(--color-base-accent, var(--color-green-50));
+--color-accent-60: color-mix(in srgb, var(--color-accent-50) 84%, black);
+--color-accent-alpha-10: color-mix(in srgb, var(--color-accent-50) 10%, transparent);
+
+/* Neutral */
+--color-neutral-10: var(--color-grey-10);
+--color-neutral-50: var(--color-grey-50);
+
+/* Status colors */
+--color-positive-50: var(--color-green-50);
+--color-warning-50: var(--color-orange-50);
+--color-critical-50: var(--color-red-60);
+--color-info-50: var(--color-indigo-50);
+--color-attention-50: var(--color-yellow-60);
+```
+
+### 3. Token Colors
+
+Application-specific semantic tokens for UI elements:
+
+<CodeGroup>
+```css Foreground
+--color-foreground: var(--color-neutral-100);
+--color-foreground-inverse: var(--color-white);
+--color-foreground-accent: var(--color-accent-60);
+--color-foreground-accent-hover: var(--color-accent-70);
+--color-foreground-success: var(--color-positive-60);
+--color-foreground-critical: var(--color-critical-50);
+```
+
+```css Background
+--color-background: var(--color-white);
+--color-background-accent: var(--color-accent-50);
+--color-background-accent-hover: var(--color-accent-60);
+--color-background-success: var(--color-positive-alpha-10);
+--color-background-critical: var(--color-critical-alpha-5);
+```
+
+```css Border
+--color-border: var(--color-neutral-alpha-10);
+--color-border-inverse: var(--color-neutral-white-alpha-10);
+--color-border-selected: var(--color-accent-alpha-10);
+--color-border-critical-bold: var(--color-critical-50);
+```
+
+```css Icon
+--color-icon: var(--color-neutral-alpha-50);
+--color-icon-inverse: var(--color-neutral-white-alpha-70);
+--color-icon-accent: var(--color-accent-50);
+--color-icon-success: var(--color-positive-50);
+```
+</CodeGroup>
+
+## Typography
+
+Popui provides a comprehensive typography scale with matching line heights and letter spacing:
+
+```css
+/* Font Families */
+--font-sans: Inter, sans-serif;
+--font-mono: "Geist Mono", CommitMono, ui-monospace, monospace;
+
+/* Text Sizes */
+--text-2xl: 24px;           /* line-height: 32px */
+--text-xl: 20px;            /* line-height: 28px */
+--text-lg: 16px;            /* line-height: 24px */
+--text-base: 14px;          /* line-height: 20px */
+--text-sm: 12px;            /* line-height: 16px */
+--text-xs: 10px;            /* line-height: 12px */
+
+/* Letter Spacing (Tracking) */
+--tracking-tightest: -0.29px;  /* -1.2% for text-2xl */
+--tracking-tighter: -0.24px;   /* -1.2% for text-xl */
+--tracking-tight: -0.16px;     /* -1% for text-lg */
+--tracking-normal: -0.07px;    /* -0.5% for text-base */
+--tracking-wide: -0.036px;     /* -0.3% for text-sm */
+```
+
+### Using Typography Tokens
+
+```css
+.heading {
+  font-size: var(--text-2xl);
+  line-height: var(--text-2xl--line-height);
+  letter-spacing: var(--text-2xl--letter-spacing);
+}
+
+.body-text {
+  font-size: var(--text-base);
+  line-height: var(--text-base--line-height);
+  letter-spacing: var(--text-base--letter-spacing);
+}
+```
+
+<Tip>
+Use the `font-mono` utility class for monospace text with proper OpenType features enabled.
+</Tip>
+
+## Spacing
+
+Extended spacing values beyond Tailwind's defaults:
+
+```css
+--spacing-1\.25: 5px;     /* 1.25 * 4px */
+--spacing-18: 4.5rem;     /* 72px */
+--spacing-128: 32rem;     /* 512px */
+```
+
+Use with Tailwind utilities:
+
+```html
+<div class="p-1.25">Custom padding</div>
+<div class="mt-18">Large margin</div>
+```
+
+## Border Radius
+
+Custom radius values for consistent rounded corners:
+
+```css
+--radius-xl: 0.625rem;    /* 10px */
+--radius-2xl: 12px;
+```
+
+```html
+<div class="rounded-xl">10px radius</div>
+<div class="rounded-2xl">12px radius</div>
+```
+
+## Shadows
+
+Predefined shadow tokens for depth and elevation:
+
+```css
+/* Basic Shadows */
+--shadow-sm: 0 2px 20px 0 rgba(10, 10, 10, 0.04);
+--shadow-lg: 0 8px 30px 0 rgba(10, 10, 10, 0.12);
+--shadow-xl: 0 8px 28px -6px rgba(10, 10, 10, 0.12), 
+             0 18px 88px -4px rgba(10, 10, 10, 0.14);
+
+/* Interactive Shadows */
+--shadow-active: 0 0 0 2px color-mix(in lab, transparent 88%, var(--color-accent-50));
+--shadow-button-default: 0 2px 6px -1px rgba(11, 11, 16, 0.04);
+--shadow-button-primary: 0 -4px 4px 0 rgba(11, 11, 16, 0.12) inset;
+--shadow-button-pressed: 0 2px 6px 0 rgba(11, 11, 16, 0.16) inset;
+
+/* Specialized Shadows */
+--shadow-avatar: 0 0 0 1px var(--color-border-default-default) inset;
+--shadow-shortcut: 0 1px 0 0 var(--color-border-default-secondary);
+```
+
+## Dark Mode
+
+Dark mode automatically adjusts token colors when the `.dark` class is present:
+
+```css
+.dark {
+  --color-foreground: var(--color-white-90);
+  --color-background: var(--color-neutral-90);
+  --color-border: var(--color-neutral-white-alpha-10);
+  /* ... all tokens are redefined for dark mode */
+}
+```
+
+<Note>
+The theme uses the `.dark` class selector for dark mode. Apply this class to your root element or body to enable dark mode.
+</Note>
+
+## Status Colors
+
+Popui includes comprehensive status colors for document workflows:
+
+```css
+/* Foreground Status Colors */
+--color-foreground-status-draft: var(--color-warning-60);
+--color-foreground-status-processing: var(--color-attention-60);
+--color-foreground-status-sent: var(--color-info-60);
+--color-foreground-status-paid: var(--color-positive-60);
+--color-foreground-status-error: var(--color-critical-50);
+--color-foreground-status-void: var(--color-neutral-alpha-50);
+
+/* Background Status Colors */
+--color-background-status-draft: var(--color-warning-alpha-10);
+--color-background-status-paid: var(--color-positive-alpha-10);
+/* ... */
+```
+
+Available statuses:
+- `invalid`, `empty`, `draft`, `processing`
+- `registered`, `sent`, `received`, `paid`
+- `completed`, `error`, `rejected`, `void`
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Customization" icon="palette" href="/theming/customization">
+    Learn how to customize the theme with your own colors and variables
+  </Card>
+  <Card title="Components" icon="cube" href="/components/forms/input-text">
+    Explore Popui components that use these design tokens
+  </Card>
+</CardGroup>

@@ -1,0 +1,296 @@
+---
+title: "TagStatus"
+description: "Compact status badges with customizable colors and optional dot indicators"
+---
+
+## Overview
+
+The `TagStatus` component displays compact, color-coded status badges. It supports 13 different color schemes and an optional dot variant for minimal status indicators.
+
+## Basic Usage
+
+```svelte
+<script>
+  import { TagStatus } from '@invopop/popui'
+</script>
+
+<TagStatus
+  label="Paid"
+  status="green"
+/>
+```
+
+## Status Colors
+
+### Green (Paid/Success)
+
+```svelte
+<TagStatus label="Paid" status="green" />
+<TagStatus label="Approved" status="green" />
+<TagStatus label="Active" status="green" />
+```
+
+### Yellow (Processing/Warning)
+
+```svelte
+<TagStatus label="Processing" status="yellow" />
+<TagStatus label="Pending" status="yellow" />
+<TagStatus label="Review" status="yellow" />
+```
+
+### Red (Error/Failed)
+
+```svelte
+<TagStatus label="Failed" status="red" />
+<TagStatus label="Rejected" status="red" />
+<TagStatus label="Error" status="red" />
+```
+
+### Orange (Draft)
+
+```svelte
+<TagStatus label="Draft" status="orange" />
+<TagStatus label="Incomplete" status="orange" />
+```
+
+### Blue (Sent/Info)
+
+```svelte
+<TagStatus label="Sent" status="blue" />
+<TagStatus label="Delivered" status="blue" />
+```
+
+### Purple (Registered)
+
+```svelte
+<TagStatus label="Registered" status="purple" />
+<TagStatus label="Verified" status="purple" />
+```
+
+### Teal (Completed)
+
+```svelte
+<TagStatus label="Completed" status="teal" />
+<TagStatus label="Finished" status="teal" />
+```
+
+### Steel Blue (Received)
+
+```svelte
+<TagStatus label="Received" status="steelBlue" />
+<TagStatus label="Acknowledged" status="steelBlue" />
+```
+
+### Crimson (Rejected)
+
+```svelte
+<TagStatus label="Rejected" status="crimson" />
+<TagStatus label="Declined" status="crimson" />
+```
+
+### Grey (Void/Neutral)
+
+```svelte
+<TagStatus label="Void" status="grey" />
+<TagStatus label="Cancelled" status="grey" />
+<TagStatus label="Archived" status="grey" />
+```
+
+### Additional Colors
+
+```svelte
+<TagStatus label="Olive Status" status="olive" />
+<TagStatus label="Blue Violet" status="blueViolet" />
+<TagStatus label="Empty State" status="empty" />
+```
+
+## Dot Variant
+
+Use the `dot` prop for a minimal status indicator:
+
+```svelte
+<TagStatus label="Online" status="green" dot />
+<TagStatus label="Away" status="yellow" dot />
+<TagStatus label="Offline" status="grey" dot />
+```
+
+## Dot Only (No Label)
+
+Create a small status dot without text:
+
+```svelte
+<TagStatus status="green" dot />
+<TagStatus status="red" dot />
+<TagStatus status="grey" dot />
+```
+
+## In Data Tables
+
+Commonly used in table cells for status columns:
+
+```svelte
+<script>
+  import { TagStatus } from '@invopop/popui'
+  
+  let invoices = [
+    { id: 1, number: 'INV-001', status: 'green', statusLabel: 'Paid' },
+    { id: 2, number: 'INV-002', status: 'yellow', statusLabel: 'Processing' },
+    { id: 3, number: 'INV-003', status: 'red', statusLabel: 'Failed' }
+  ]
+</script>
+
+<table>
+  <thead>
+    <tr>
+      <th>Invoice</th>
+      <th>Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {#each invoices as invoice}
+      <tr>
+        <td>{invoice.number}</td>
+        <td>
+          <TagStatus
+            label={invoice.statusLabel}
+            status={invoice.status}
+          />
+        </td>
+      </tr>
+    {/each}
+  </tbody>
+</table>
+```
+
+## Multiple Status Indicators
+
+```svelte
+<script>
+  import { TagStatus } from '@invopop/popui'
+</script>
+
+<div class="flex gap-2 items-center">
+  <span class="text-sm">Payment:</span>
+  <TagStatus label="Paid" status="green" />
+  <TagStatus label="Verified" status="purple" dot />
+</div>
+```
+
+## Props
+
+<ParamField path="label" type="string" default="''">
+  The text displayed in the tag. Can be omitted for dot-only indicators.
+</ParamField>
+
+<ParamField path="status" type="StatusType" default="'grey'">
+  The color scheme of the tag.
+  
+  **Possible values:**
+  - `'green'` - Green (paid, success, active)
+  - `'yellow'` - Yellow (processing, pending, warning)
+  - `'red'` - Red (error, failed, rejected)
+  - `'orange'` - Orange (draft, incomplete)
+  - `'blue'` - Blue (sent, delivered, info)
+  - `'purple'` - Purple (registered, verified)
+  - `'teal'` - Teal (completed, finished)
+  - `'steelBlue'` - Steel blue (received, acknowledged)
+  - `'crimson'` - Crimson (rejected, declined)
+  - `'olive'` - Olive green
+  - `'blueViolet'` - Blue violet
+  - `'grey'` - Grey (void, cancelled, neutral)
+  - `'empty'` - Light grey with shadow
+</ParamField>
+
+<ParamField path="dot" type="boolean" default="false">
+  When `true`, displays a colored dot before the label. Creates a more subtle status indicator.
+  
+  If `label` is empty and `dot` is `true`, displays only a small colored dot.
+</ParamField>
+
+## Styling Details
+
+### Default Tag Styling
+
+- **Typography**: `text-sm`, `font-medium`, `leading-4`
+- **Shape**: Rounded corners with `rounded` class
+- **Spacing**: `py-0.5` vertical padding, `px-1` horizontal padding
+- **Layout**: Inline flex with centered items and 0.25rem gap
+
+### Dot Variant Styling
+
+When `dot={true}`:
+- Horizontal padding increases to `px-1.5`
+- Dot size: 8px (size-2)
+- Dot shape: Rounded with `rounded-[2px]`
+- Label wraps with `whitespace-nowrap`
+
+### Dot Only (No Label)
+
+When `dot={true}` and no label:
+- Zero padding (`p-0!`)
+- Only the colored dot is visible
+- Minimal footprint for space-constrained layouts
+
+## Color Mappings
+
+Each status has specific background, text, and dot colors defined in the Tailwind theme:
+
+| Status | Background | Text | Dot |
+|--------|-----------|------|-----|
+| `green` | `bg-background-status-paid` | `text-foreground-status-paid` | `bg-icon-status-paid` |
+| `yellow` | `bg-background-status-processing` | `text-foreground-status-processing` | `bg-icon-status-processing` |
+| `red` | `bg-background-status-error` | `text-foreground-status-error` | `bg-icon-status-error` |
+| `orange` | `bg-background-status-draft` | `text-foreground-status-draft` | `bg-icon-status-draft` |
+| `blue` | `bg-background-status-sent` | `text-foreground-status-sent` | `bg-icon-status-sent` |
+| `purple` | `bg-background-status-registered` | `text-foreground-status-registered` | `bg-icon-status-registered` |
+| `teal` | `bg-background-status-completed` | `text-foreground-status-completed` | `bg-icon-status-completed` |
+| `steelBlue` | `bg-background-status-received` | `text-foreground-status-received` | `bg-icon-status-received` |
+| `crimson` | `bg-background-status-rejected` | `text-foreground-status-rejected` | `bg-icon-status-rejected` |
+| `grey` | `bg-background-status-void` | `text-foreground-default-secondary` | `bg-icon-status-void` |
+| `empty` | `shadow-avatar` | `text-foreground-default-secondary` | `bg-icon-default-secondary` |
+
+## Use Cases
+
+- **Invoice status**: Paid, pending, overdue, void
+- **Order status**: Processing, shipped, delivered, cancelled
+- **Document status**: Draft, sent, signed, completed
+- **User status**: Active, inactive, pending, suspended
+- **Payment status**: Paid, processing, failed, refunded
+- **Availability indicators**: Online, away, busy, offline (with dot)
+
+## Accessibility
+
+- Color is not the only indicator (text labels are provided)
+- Sufficient contrast ratios between background and text
+- Compact size maintains readability
+- Inline display works well with screen readers
+
+## TypeScript
+
+The component is fully typed with the `TagStatusProps` interface:
+
+```typescript
+import type { TagStatusProps, StatusType } from '@invopop/popui'
+
+// StatusType definition
+type StatusType =
+  | 'grey'
+  | 'green'
+  | 'yellow'
+  | 'red'
+  | 'orange'
+  | 'blue'
+  | 'purple'
+  | 'olive'
+  | 'teal'
+  | 'crimson'
+  | 'blueViolet'
+  | 'steelBlue'
+  | 'empty'
+```
+
+## Related Components
+
+- [StatusLabel](/components/feedback/status-label) - For status with icons in feeds
+- [Notification](/components/feedback/notification) - For contextual status messages
+- [DataTable](/components/data-display/data-table) - Often uses TagStatus in cells

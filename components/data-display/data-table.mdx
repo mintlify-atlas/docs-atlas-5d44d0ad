@@ -1,0 +1,828 @@
+---
+title: DataTable
+description: A powerful data table component with sorting, filtering, pagination, and column management.
+---
+
+<Note>
+  DataTable is a feature-rich table component built on TanStack Table that provides sorting, filtering, pagination, row selection, column resizing, and more.
+</Note>
+
+## Import
+
+```svelte
+import { DataTable } from 'popui'
+```
+
+## Basic Usage
+
+```svelte
+<script lang="ts">
+  import { DataTable } from 'popui'
+  
+  type User = {
+    id: string
+    name: string
+    email: string
+    status: string
+  }
+  
+  const data: User[] = [
+    { id: '1', name: 'John Doe', email: 'john@example.com', status: 'active' },
+    { id: '2', name: 'Jane Smith', email: 'jane@example.com', status: 'inactive' }
+  ]
+  
+  const columns = [
+    {
+      id: 'name',
+      accessorKey: 'name',
+      header: 'Name',
+      cellType: 'text'
+    },
+    {
+      id: 'email',
+      accessorKey: 'email',
+      header: 'Email',
+      cellType: 'text'
+    },
+    {
+      id: 'status',
+      accessorKey: 'status',
+      header: 'Status',
+      cellType: 'tag',
+      cellConfig: {
+        options: [
+          { value: 'active', label: 'Active', color: 'green' },
+          { value: 'inactive', label: 'Inactive', color: 'grey' }
+        ]
+      }
+    }
+  ]
+</script>
+
+<DataTable {data} {columns} />
+```
+
+## Column Types
+
+DataTable supports multiple built-in cell types:
+
+### Text Cell
+
+```svelte
+{
+  id: 'name',
+  accessorKey: 'name',
+  header: 'Name',
+  cellType: 'text',
+  cellConfig: {
+    className: 'font-bold'
+  }
+}
+```
+
+### Boolean Cell
+
+Display icons based on boolean values:
+
+```svelte
+<script>
+  import { Check } from '@invopop/ui-icons'
+</script>
+
+{
+  id: 'verified',
+  accessorKey: 'verified',
+  header: 'Verified',
+  cellType: 'boolean',
+  cellConfig: {
+    icon: Check,
+    iconClass: 'size-4 text-green-500',
+    showWhenTrue: true,
+    showWhenFalse: false,
+    hintWhenTrue: 'Verified user',
+    hintWhenFalse: 'Not verified'
+  }
+}
+```
+
+### Tag Cell
+
+Display status tags with colors:
+
+```svelte
+{
+  id: 'status',
+  accessorKey: 'status',
+  header: 'Status',
+  cellType: 'tag',
+  cellConfig: {
+    options: [
+      { value: 'active', label: 'Active', color: 'green' },
+      { value: 'pending', label: 'Pending', color: 'yellow' },
+      { value: 'inactive', label: 'Inactive', color: 'grey' }
+    ],
+    showDot: true
+  }
+}
+```
+
+### Date Cell
+
+```svelte
+{
+  id: 'createdAt',
+  accessorKey: 'createdAt',
+  header: 'Created At',
+  cellType: 'date',
+  cellConfig: {
+    className: 'text-sm'
+  }
+}
+```
+
+### Currency Cell
+
+```svelte
+{
+  id: 'amount',
+  accessorKey: 'amount',
+  header: 'Amount',
+  cellType: 'currency',
+  cellConfig: {
+    className: 'font-semibold'
+  }
+}
+```
+
+### UUID Cell
+
+```svelte
+{
+  id: 'id',
+  accessorKey: 'id',
+  header: 'ID',
+  cellType: 'uuid',
+  cellConfig: {
+    prefixLength: 4,
+    suffixLength: 4,
+    full: false,
+    disabled: false,
+    onCopy: (value) => {
+      console.log('Copied:', value)
+    }
+  }
+}
+```
+
+## Custom Cell Renderer
+
+You can provide custom cell renderers using a function or Snippet:
+
+```svelte
+<script lang="ts">
+  import { DataTable } from 'popui'
+  import CustomComponent from './CustomComponent.svelte'
+  import { renderComponent } from 'popui/data-table'
+  
+  const columns = [
+    {
+      id: 'custom',
+      accessorKey: 'name',
+      header: 'Custom',
+      cell: (value, row) => {
+        return renderComponent(CustomComponent, { value, data: row })
+      }
+    }
+  ]
+</script>
+```
+
+## Sorting
+
+Enable sorting on columns:
+
+```svelte
+<script lang="ts">
+  const columns = [
+    {
+      id: 'name',
+      accessorKey: 'name',
+      header: 'Name',
+      cellType: 'text',
+      enableSorting: true // Enable sorting (default: true)
+    }
+  ]
+</script>
+
+<DataTable 
+  {data} 
+  {columns}
+  initialSortColumn="name"
+  initialSortDirection="asc"
+/>
+```
+
+## Manual Sorting (Server-Side)
+
+```svelte
+<script lang="ts">
+  function handleSortingChange(columnId: string, direction: 'asc' | 'desc' | '') {
+    // Fetch sorted data from server
+    console.log('Sort by:', columnId, direction)
+  }
+</script>
+
+<DataTable 
+  {data} 
+  {columns}
+  manualSorting={true}
+  onSortingChange={handleSortingChange}
+/>
+```
+
+## Pagination
+
+```svelte
+<DataTable 
+  {data} 
+  {columns}
+  initialPageSize={25}
+  initialPage={0}
+/>
+```
+
+## Manual Pagination (Server-Side)
+
+```svelte
+<script lang="ts">
+  let currentPage = 0
+  let pageSize = 10
+  let totalPages = 10
+  let totalRows = 100
+  
+  function handlePageChange(pageIndex: number) {
+    currentPage = pageIndex
+    // Fetch data for new page
+  }
+  
+  function handlePageSizeChange(newPageSize: number) {
+    pageSize = newPageSize
+    currentPage = 0
+    // Fetch data with new page size
+  }
+</script>
+
+<DataTable 
+  {data} 
+  {columns}
+  manualPagination={true}
+  pageCount={totalPages}
+  rowCount={totalRows}
+  initialPage={currentPage}
+  initialPageSize={pageSize}
+  onPageChange={handlePageChange}
+  onPageSizeChange={handlePageSizeChange}
+/>
+```
+
+## Row Selection
+
+```svelte
+<script lang="ts">
+  function handleSelectionChange(selectedRows) {
+    console.log('Selected:', selectedRows)
+  }
+</script>
+
+<DataTable 
+  {data} 
+  {columns}
+  onSelectionChange={handleSelectionChange}
+/>
+```
+
+To disable selection:
+
+```svelte
+<DataTable {data} {columns} disableSelection={true} />
+```
+
+## Row Actions
+
+```svelte
+<script lang="ts">
+  import { Edit, Trash } from '@invopop/ui-icons'
+  
+  const rowActions = [
+    { label: 'Edit', value: 'edit', icon: Edit },
+    { label: 'Delete', value: 'delete', icon: Trash, destructive: true }
+  ]
+  
+  function handleRowAction(action, row) {
+    console.log('Action:', action, 'Row:', row)
+  }
+</script>
+
+<DataTable 
+  {data} 
+  {columns}
+  {rowActions}
+  onRowAction={handleRowAction}
+/>
+```
+
+### Dynamic Row Actions
+
+```svelte
+<script lang="ts">
+  function getRowActions(row) {
+    if (row.status === 'active') {
+      return [
+        { label: 'Deactivate', value: 'deactivate' },
+        { label: 'Edit', value: 'edit' }
+      ]
+    }
+    return [
+      { label: 'Activate', value: 'activate' }
+    ]
+  }
+</script>
+
+<DataTable 
+  {data} 
+  {columns}
+  {getRowActions}
+  onRowAction={handleRowAction}
+/>
+```
+
+## Column Management
+
+### Column Visibility
+
+```svelte
+<DataTable 
+  {data} 
+  {columns}
+  initialColumnVisibility={{
+    email: false // Hide email column initially
+  }}
+  onColumnVisibilityChange={(visibility) => {
+    console.log('Visibility changed:', visibility)
+  }}
+/>
+```
+
+### Column Resizing
+
+```svelte
+<script lang="ts">
+  const columns = [
+    {
+      id: 'name',
+      accessorKey: 'name',
+      header: 'Name',
+      cellType: 'text',
+      size: 200,
+      minSize: 100,
+      maxSize: 400,
+      enableResizing: true
+    }
+  ]
+</script>
+
+<DataTable 
+  {data} 
+  {columns}
+  onColumnResize={(sizes) => {
+    console.log('Column sizes:', sizes)
+  }}
+/>
+```
+
+### Frozen Columns
+
+```svelte
+<DataTable 
+  {data} 
+  {columns}
+  initialFrozenColumns={['name', 'email']}
+  onFreezeChange={(columnId) => {
+    console.log('Freeze toggled for:', columnId)
+  }}
+/>
+```
+
+### Column Ordering
+
+```svelte
+<DataTable 
+  {data} 
+  {columns}
+  initialColumnOrder={['status', 'name', 'email']}
+  onColumnOrderChange={(order) => {
+    console.log('New column order:', order)
+  }}
+/>
+```
+
+## Loading State
+
+Display skeleton placeholders while loading:
+
+```svelte
+<script lang="ts">
+  import { User } from '@invopop/ui-icons'
+  
+  const columns = [
+    {
+      id: 'name',
+      accessorKey: 'name',
+      header: 'Name',
+      cellType: 'text',
+      loadingConfig: {
+        lines: 1,
+        showAvatar: true,
+        avatarSize: 32
+      }
+    },
+    {
+      id: 'email',
+      accessorKey: 'email',
+      header: 'Email',
+      cellType: 'text',
+      loadingConfig: {
+        lines: 2
+      }
+    }
+  ]
+</script>
+
+<DataTable {data} {columns} loading={true} />
+```
+
+## Row Styling
+
+```svelte
+<script lang="ts">
+  function getRowClassName(row) {
+    return row.status === 'critical' ? 'bg-red-50' : ''
+  }
+  
+  function getRowState(row) {
+    return {
+      isError: row.status === 'error',
+      isWarning: row.status === 'warning',
+      isSuccess: row.status === 'success'
+    }
+  }
+</script>
+
+<DataTable 
+  {data} 
+  {columns}
+  {getRowClassName}
+  {getRowState}
+/>
+```
+
+## Row Click Handler
+
+```svelte
+<script lang="ts">
+  function handleRowClick(row) {
+    console.log('Row clicked:', row)
+  }
+</script>
+
+<DataTable {data} {columns} onRowClick={handleRowClick} />
+```
+
+## Empty State
+
+```svelte
+<script lang="ts">
+  import { Search } from '@invopop/ui-icons'
+</script>
+
+<DataTable 
+  {data} 
+  {columns}
+  emptyState={{
+    iconSource: Search,
+    title: 'No users found',
+    description: 'Try adjusting your search criteria'
+  }}
+/>
+```
+
+## Keyboard Navigation
+
+By default, DataTable supports keyboard navigation:
+
+- **Arrow Up/Down**: Navigate rows
+- **Shift + Arrow Up/Down**: Select multiple rows
+- **Space/Enter**: Select current row
+- **Escape**: Clear focus
+
+To disable keyboard navigation:
+
+```svelte
+<DataTable {data} {columns} disableKeyboardNavigation={true} />
+```
+
+## Props
+
+<ParamField path="data" type="TData[]" required>
+  Array of data objects to display in the table.
+</ParamField>
+
+<ParamField path="columns" type="DataTableColumn<TData>[]" required>
+  Column definitions for the table.
+</ParamField>
+
+<ParamField path="loading" type="boolean" default="false">
+  Show skeleton placeholders instead of data.
+</ParamField>
+
+<ParamField path="disableSelection" type="boolean" default="false">
+  Disable row selection functionality.
+</ParamField>
+
+<ParamField path="disablePagination" type="boolean" default="false">
+  Disable pagination controls.
+</ParamField>
+
+<ParamField path="disableKeyboardNavigation" type="boolean" default="false">
+  Disable keyboard navigation.
+</ParamField>
+
+<ParamField path="disableControls" type="boolean" default="false">
+  Disable all controls (filters, pagination, view options).
+</ParamField>
+
+<ParamField path="disableJumpToPage" type="boolean" default="false">
+  Disable first/last page buttons and make page input read-only.
+</ParamField>
+
+<ParamField path="rowActions" type="TableAction[]">
+  Static row actions available for all rows.
+</ParamField>
+
+<ParamField path="getRowActions" type="(row: TData) => TableAction[]">
+  Function to dynamically generate row actions based on row data.
+</ParamField>
+
+<ParamField path="onRowAction" type="(action: any, row: TData) => void">
+  Callback when a row action is clicked.
+</ParamField>
+
+<ParamField path="initialPageSize" type="number" default="10">
+  Initial number of rows per page.
+</ParamField>
+
+<ParamField path="initialPage" type="number" default="0">
+  Initial page index (0-based).
+</ParamField>
+
+<ParamField path="initialSortColumn" type="string">
+  Initial column ID to sort by.
+</ParamField>
+
+<ParamField path="initialSortDirection" type="'asc' | 'desc' | ''">
+  Initial sort direction.
+</ParamField>
+
+<ParamField path="initialFrozenColumns" type="string[]">
+  Array of column IDs to freeze initially.
+</ParamField>
+
+<ParamField path="initialColumnOrder" type="string[]">
+  Initial column order (array of column IDs).
+</ParamField>
+
+<ParamField path="initialColumnVisibility" type="Record<string, boolean>">
+  Initial column visibility state.
+</ParamField>
+
+<ParamField path="initialColumnSizing" type="Record<string, number>">
+  Initial column sizes (column ID to width in pixels).
+</ParamField>
+
+<ParamField path="emptyState" type="EmptyStateProps">
+  Configuration for empty state display.
+</ParamField>
+
+<ParamField path="onRowClick" type="(row: TData) => void">
+  Callback when a row is clicked.
+</ParamField>
+
+<ParamField path="onSelectionChange" type="(selectedRows: TData[]) => void">
+  Callback when row selection changes.
+</ParamField>
+
+<ParamField path="manualPagination" type="boolean" default="false">
+  Enable server-side pagination mode.
+</ParamField>
+
+<ParamField path="manualSorting" type="boolean" default="false">
+  Enable server-side sorting mode.
+</ParamField>
+
+<ParamField path="pageCount" type="number">
+  Total number of pages (for manual pagination).
+</ParamField>
+
+<ParamField path="rowCount" type="number">
+  Total number of rows (for manual pagination).
+</ParamField>
+
+<ParamField path="onPageChange" type="(pageIndex: number) => void">
+  Callback when page changes.
+</ParamField>
+
+<ParamField path="onPageSizeChange" type="(pageSize: number) => void">
+  Callback when page size changes.
+</ParamField>
+
+<ParamField path="onSortingChange" type="(columnId: string, direction: TableSortBy) => void">
+  Callback when sorting changes.
+</ParamField>
+
+<ParamField path="onFilterChange" type="(columnId: string) => void">
+  Callback when filter changes.
+</ParamField>
+
+<ParamField path="onFreezeChange" type="(columnId: string) => void">
+  Callback when column freeze state changes.
+</ParamField>
+
+<ParamField path="onColumnResize" type="(columnSizes: Record<string, number>) => void">
+  Callback when columns are resized.
+</ParamField>
+
+<ParamField path="onColumnOrderChange" type="(columnOrder: string[]) => void">
+  Callback when column order changes.
+</ParamField>
+
+<ParamField path="onColumnVisibilityChange" type="(visibility: Record<string, boolean>) => void">
+  Callback when column visibility changes.
+</ParamField>
+
+<ParamField path="getRowClassName" type="(row: TData) => string">
+  Function to generate custom CSS class for rows.
+</ParamField>
+
+<ParamField path="getRowState" type="(row: TData) => { isSuccess?: boolean; isError?: boolean; isWarning?: boolean }">
+  Function to set row state (affects row styling).
+</ParamField>
+
+## Column Definition
+
+<ParamField path="id" type="string" required>
+  Unique identifier for the column.
+</ParamField>
+
+<ParamField path="accessorKey" type="keyof TData">
+  Key to access data in the row object.
+</ParamField>
+
+<ParamField path="header" type="string">
+  Header text to display. Use empty string or omit for no header.
+</ParamField>
+
+<ParamField path="cellType" type="'text' | 'boolean' | 'tag' | 'date' | 'currency' | 'uuid' | 'custom'">
+  Built-in cell renderer type.
+</ParamField>
+
+<ParamField path="cellConfig" type="CellConfig">
+  Configuration object for the cell renderer (varies by cellType).
+</ParamField>
+
+<ParamField path="cell" type="Snippet | Function">
+  Custom cell renderer function or Snippet.
+</ParamField>
+
+<ParamField path="enableSorting" type="boolean" default="true">
+  Enable sorting for this column.
+</ParamField>
+
+<ParamField path="enableHiding" type="boolean" default="true">
+  Allow this column to be hidden.
+</ParamField>
+
+<ParamField path="enableResizing" type="boolean" default="true">
+  Allow this column to be resized.
+</ParamField>
+
+<ParamField path="disableColumnFilter" type="boolean" default="false">
+  Disable column filter option.
+</ParamField>
+
+<ParamField path="size" type="number">
+  Default column width in pixels.
+</ParamField>
+
+<ParamField path="minSize" type="number">
+  Minimum column width in pixels.
+</ParamField>
+
+<ParamField path="maxSize" type="number">
+  Maximum column width in pixels.
+</ParamField>
+
+<ParamField path="loadingConfig" type="LoadingConfig">
+  Configuration for loading skeleton placeholders.
+</ParamField>
+
+## Cell Config Types
+
+### TextCellConfig
+
+<ParamField path="className" type="string">
+  Custom CSS class for the cell.
+</ParamField>
+
+### BooleanCellConfig
+
+<ParamField path="icon" type="IconSource">
+  Icon to display.
+</ParamField>
+
+<ParamField path="iconClass" type="string">
+  CSS class for the icon.
+</ParamField>
+
+<ParamField path="showWhenTrue" type="boolean" default="true">
+  Show icon when value is true.
+</ParamField>
+
+<ParamField path="showWhenFalse" type="boolean" default="false">
+  Show icon when value is false.
+</ParamField>
+
+<ParamField path="hintWhenTrue" type="string">
+  Tooltip text when value is true.
+</ParamField>
+
+<ParamField path="hintWhenFalse" type="string">
+  Tooltip text when value is false.
+</ParamField>
+
+### TagCellConfig
+
+<ParamField path="options" type="Array<{ value: string; label: string; color: StatusType }>" required>
+  Tag options mapping values to labels and colors.
+</ParamField>
+
+<ParamField path="showDot" type="boolean" default="false">
+  Show dot indicator before tag label.
+</ParamField>
+
+### DateCellConfig
+
+<ParamField path="className" type="string">
+  Custom CSS class for the cell.
+</ParamField>
+
+### CurrencyCellConfig
+
+<ParamField path="className" type="string">
+  Custom CSS class for the cell.
+</ParamField>
+
+### UuidCellConfig
+
+<ParamField path="prefixLength" type="number" default="4">
+  Number of characters from start to show.
+</ParamField>
+
+<ParamField path="suffixLength" type="number" default="4">
+  Number of characters from end to show.
+</ParamField>
+
+<ParamField path="full" type="boolean" default="false">
+  Show full UUID.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disable copy functionality.
+</ParamField>
+
+<ParamField path="onCopy" type="(value: string) => void">
+  Callback when UUID is copied.
+</ParamField>
+
+## Loading Config
+
+<ParamField path="lines" type="number" default="1">
+  Number of skeleton lines to show.
+</ParamField>
+
+<ParamField path="showAvatar" type="boolean" default="false">
+  Show skeleton avatar before lines.
+</ParamField>
+
+<ParamField path="avatarSize" type="number" default="32">
+  Size of skeleton avatar in pixels.
+</ParamField>

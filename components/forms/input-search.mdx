@@ -1,0 +1,261 @@
+---
+title: InputSearch
+description: A search input component with icon, clear button, and keyboard shortcut support
+---
+
+## Overview
+
+InputSearch is a specialized input component designed for search interfaces. It includes a search icon, optional clear button, loading state, keyboard shortcut display, and debounced input handling.
+
+## Props
+
+<ParamField path="value" type="string" default="''">
+  The search input value. This prop is bindable using `bind:value`.
+</ParamField>
+
+<ParamField path="shortcut" type="string" default="''">
+  Keyboard shortcut to display (e.g., "⌘K" or "Ctrl+K"). Each character is displayed in a separate key wrapper.
+</ParamField>
+
+<ParamField path="placeholder" type="string" default="''">
+  Placeholder text shown when the input is empty.
+</ParamField>
+
+<ParamField path="icon" type="IconSource" default="Search">
+  Icon displayed on the left side of the input. Defaults to the Search icon.
+</ParamField>
+
+<ParamField path="focusOnLoad" type="boolean" default="false">
+  When true, the input automatically receives focus when mounted.
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md'" default="'md'">
+  Size variant of the input:
+  - `xs`: Height 26px, rounded-sm
+  - `sm`: Height 28px, rounded-md
+  - `md`: Height 32px, rounded-lg
+</ParamField>
+
+<ParamField path="loading" type="boolean" default="false">
+  When true, displays a pulsing loading icon instead of the clear button.
+</ParamField>
+
+<ParamField path="oninput" type="(value: string) => void">
+  Callback fired when the input value changes. Debounced by 750ms.
+</ParamField>
+
+<ParamField path="onclick" type="(event: MouseEvent) => void">
+  Callback fired when the input is clicked.
+</ParamField>
+
+<ParamField path="onfocus" type="(event: FocusEvent) => void">
+  Callback fired when the input receives focus.
+</ParamField>
+
+<ParamField path="onblur" type="(event: FocusEvent) => void">
+  Callback fired when the input loses focus.
+</ParamField>
+
+## Exported Methods
+
+<ParamField path="focus()" type="function">
+  Programmatically focus the input.
+</ParamField>
+
+<ParamField path="blur()" type="function">
+  Programmatically blur the input.
+</ParamField>
+
+<ParamField path="toggle()" type="function">
+  Toggle focus state - if focused, blur; if blurred, focus.
+</ParamField>
+
+<ParamField path="clear()" type="function">
+  Clear the input value and trigger the oninput callback with empty string.
+</ParamField>
+
+## Usage
+
+### Basic Search
+
+```svelte
+<script>
+  import { InputSearch } from 'popui'
+  
+  let searchQuery = $state('')
+</script>
+
+<InputSearch 
+  bind:value={searchQuery}
+  placeholder="Search..." 
+/>
+```
+
+### With Keyboard Shortcut
+
+```svelte
+<script>
+  import { InputSearch } from 'popui'
+  
+  let query = $state('')
+</script>
+
+<InputSearch 
+  bind:value={query}
+  placeholder="Quick search"
+  shortcut="⌘K"
+/>
+```
+
+### With Search Handler
+
+```svelte
+<script>
+  import { InputSearch } from 'popui'
+  
+  let searchTerm = $state('')
+  let results = $state([])
+  
+  async function handleSearch(value: string) {
+    if (!value) {
+      results = []
+      return
+    }
+    
+    // Debounced search - only called 750ms after user stops typing
+    const response = await fetch(`/api/search?q=${value}`)
+    results = await response.json()
+  }
+</script>
+
+<InputSearch 
+  bind:value={searchTerm}
+  placeholder="Search products..."
+  oninput={handleSearch}
+/>
+```
+
+### With Loading State
+
+```svelte
+<script>
+  import { InputSearch } from 'popui'
+  
+  let query = $state('')
+  let isSearching = $state(false)
+  
+  async function search(value: string) {
+    if (!value) {
+      isSearching = false
+      return
+    }
+    
+    isSearching = true
+    await fetch(`/api/search?q=${value}`)
+    isSearching = false
+  }
+</script>
+
+<InputSearch 
+  bind:value={query}
+  placeholder="Search..."
+  loading={isSearching}
+  oninput={search}
+/>
+```
+
+### Different Sizes
+
+```svelte
+<InputSearch size="xs" placeholder="Extra small search" />
+<InputSearch size="sm" placeholder="Small search" />
+<InputSearch size="md" placeholder="Medium search" />
+```
+
+### With Custom Icon
+
+```svelte
+<script>
+  import { InputSearch } from 'popui'
+  import { Magnifier } from '@invopop/ui-icons'
+  
+  let value = $state('')
+</script>
+
+<InputSearch 
+  bind:value
+  icon={Magnifier}
+  placeholder="Find items..."
+/>
+```
+
+### Using Exported Methods
+
+```svelte
+<script>
+  import { InputSearch } from 'popui'
+  
+  let searchInput: InputSearch
+  let query = $state('')
+  
+  function focusSearch() {
+    searchInput.focus()
+  }
+  
+  function clearAndFocus() {
+    searchInput.clear()
+    searchInput.focus()
+  }
+</script>
+
+<div class="space-y-4">
+  <InputSearch bind:this={searchInput} bind:value={query} />
+  
+  <div class="flex gap-2">
+    <button onclick={focusSearch}>Focus Search</button>
+    <button onclick={clearAndFocus}>Clear & Focus</button>
+  </div>
+</div>
+```
+
+### Global Search with Keyboard Shortcut
+
+```svelte
+<script>
+  import { InputSearch } from 'popui'
+  import { onMount } from 'svelte'
+  
+  let searchInput: InputSearch
+  let query = $state('')
+  
+  onMount(() => {
+    function handleKeydown(e: KeyboardEvent) {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        searchInput.toggle()
+      }
+    }
+    
+    window.addEventListener('keydown', handleKeydown)
+    return () => window.removeEventListener('keydown', handleKeydown)
+  })
+</script>
+
+<InputSearch 
+  bind:this={searchInput}
+  bind:value={query}
+  placeholder="Search anything..."
+  shortcut="⌘K"
+/>
+```
+
+## Features
+
+- **Debounced Input**: The `oninput` callback is automatically debounced by 750ms to reduce API calls
+- **Clear Button**: Displays an X button when the input has a value, allowing quick clearing
+- **Loading State**: Shows a pulsing icon when `loading` is true
+- **Keyboard Shortcuts**: Displays keyboard shortcuts in styled key wrappers
+- **Auto Focus**: Can automatically focus on mount with `focusOnLoad`
+- **Programmatic Control**: Exported methods for `focus()`, `blur()`, `toggle()`, and `clear()`
+- **Smart Padding**: Automatically adjusts right padding based on shortcut length and loading/clear button presence
+- **Accessible**: Includes proper focus states and interactive elements

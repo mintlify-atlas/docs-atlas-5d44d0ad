@@ -1,0 +1,418 @@
+---
+title: ButtonSearch
+description: An expandable search button that transforms into a search input field
+---
+
+## Overview
+
+The `ButtonSearch` component provides a space-efficient search interface that starts as a compact icon button and expands into a full search input field when activated. It includes loading states and auto-collapse functionality.
+
+## Import
+
+```svelte
+import { ButtonSearch } from '@invopop/popui'
+```
+
+## Props
+
+<ParamField path="value" type="string" default="''" bindable>
+  The current search input value. This prop is bindable using Svelte's `bind:` directive.
+</ParamField>
+
+<ParamField path="expanded" type="boolean" default="false" bindable>
+  Controls whether the search input is expanded or collapsed. This prop is bindable.
+</ParamField>
+
+<ParamField path="placeholder" type="string" default="'Search...'">
+  Placeholder text shown in the search input when expanded.
+</ParamField>
+
+<ParamField path="size" type="'sm' | 'md'" default="'sm'">
+  The size of the search input:
+  - `sm` - Small size
+  - `md` - Medium size
+</ParamField>
+
+<ParamField path="loading" type="boolean" default="false">
+  Shows a loading indicator. When collapsed, displays a pulse icon instead of the search icon.
+</ParamField>
+
+<ParamField path="autofocus" type="boolean" default="false">
+  Automatically focuses the input field when expanded.
+</ParamField>
+
+<ParamField path="oninput" type="(value: string) => void">
+  Callback function triggered when the input value changes.
+</ParamField>
+
+<ParamField path="onExpand" type="() => void">
+  Callback function triggered when the search expands.
+</ParamField>
+
+<ParamField path="onCollapse" type="() => void">
+  Callback function triggered when the search collapses (only happens when clicking outside with empty value).
+</ParamField>
+
+## Basic Usage
+
+```svelte
+<script>
+  let searchValue = $state('')
+  let isExpanded = $state(false)
+
+  function handleInput(value) {
+    console.log('Search for:', value)
+  }
+</script>
+
+<ButtonSearch
+  bind:value={searchValue}
+  bind:expanded={isExpanded}
+  oninput={handleInput}
+/>
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonSearch.svelte:1-83`
+
+## States
+
+<Tabs>
+  <Tab title="Collapsed">
+    The default collapsed state shows a compact search icon button:
+
+    ```svelte
+    <ButtonSearch />
+    ```
+
+    - Width: 40px (w-10)
+    - Shows search icon
+    - Clicking expands the input
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonSearch.svelte:70-81`
+  </Tab>
+
+  <Tab title="Expanded">
+    The expanded state shows a full search input field:
+
+    ```svelte
+    <script>
+      let expanded = $state(true)
+    </script>
+
+    <ButtonSearch bind:expanded />
+    ```
+
+    - Width: 280px (w-[280px])
+    - Shows input field with search icon
+    - Automatically focuses if `autofocus` is true
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonSearch.svelte:47-69`
+  </Tab>
+
+  <Tab title="Loading">
+    Shows a loading indicator while searching:
+
+    ```svelte
+    <script>
+      let loading = $state(false)
+      let searchValue = $state('')
+
+      async function handleInput(value) {
+        loading = true
+        await searchAPI(value)
+        loading = false
+      }
+    </script>
+
+    <ButtonSearch
+      bind:value={searchValue}
+      loading={loading}
+      oninput={handleInput}
+    />
+    ```
+
+    - When collapsed: shows pulse icon with animation
+    - When expanded: passes loading state to InputSearch
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonSearch.svelte:21-22, 77-78`
+  </Tab>
+</Tabs>
+
+## Auto-Collapse Behavior
+
+The search automatically collapses when:
+1. Clicking outside the component
+2. The input value is empty
+
+```svelte
+<script>
+  let searchValue = $state('')
+  let expanded = $state(false)
+
+  function handleCollapse() {
+    console.log('Search collapsed')
+  }
+</script>
+
+<ButtonSearch
+  bind:value={searchValue}
+  bind:expanded={expanded}
+  onCollapse={handleCollapse}
+/>
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonSearch.svelte:28-33`
+
+## Event Handlers
+
+### Input Handler
+
+Triggered whenever the search value changes:
+
+```svelte
+<script>
+  let searchValue = $state('')
+
+  function handleInput(value) {
+    console.log('Searching for:', value)
+    // Perform search logic
+  }
+</script>
+
+<ButtonSearch
+  bind:value={searchValue}
+  oninput={handleInput}
+/>
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonSearch.svelte:35-38`
+
+### Expand Handler
+
+Triggered when the search button is clicked to expand:
+
+```svelte
+<script>
+  function handleExpand() {
+    console.log('Search expanded')
+    // Track analytics, etc.
+  }
+</script>
+
+<ButtonSearch onExpand={handleExpand} />
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonSearch.svelte:23-26`
+
+### Collapse Handler
+
+Triggered when clicking outside with an empty search value:
+
+```svelte
+<script>
+  function handleCollapse() {
+    console.log('Search collapsed')
+    // Clean up, reset state, etc.
+  }
+</script>
+
+<ButtonSearch onCollapse={handleCollapse} />
+```
+
+## Advanced Examples
+
+### Debounced Search
+
+```svelte
+<script>
+  import { debounce } from 'lodash-es'
+
+  let searchValue = $state('')
+  let loading = $state(false)
+  let results = $state([])
+
+  const performSearch = debounce(async (value) => {
+    if (!value) {
+      results = []
+      return
+    }
+
+    loading = true
+    try {
+      const response = await fetch(`/api/search?q=${value}`)
+      results = await response.json()
+    } finally {
+      loading = false
+    }
+  }, 300)
+
+  function handleInput(value) {
+    searchValue = value
+    performSearch(value)
+  }
+</script>
+
+<ButtonSearch
+  bind:value={searchValue}
+  loading={loading}
+  oninput={handleInput}
+/>
+
+{#if results.length > 0}
+  <div class="mt-2">
+    {#each results as result}
+      <div>{result.name}</div>
+    {/each}
+  </div>
+{/if}
+```
+
+### Controlled Expansion
+
+```svelte
+<script>
+  let expanded = $state(false)
+  let searchValue = $state('')
+
+  function openSearch() {
+    expanded = true
+  }
+
+  function closeSearch() {
+    expanded = false
+    searchValue = ''
+  }
+</script>
+
+<button onclick={openSearch}>Open Search</button>
+
+<ButtonSearch
+  bind:value={searchValue}
+  bind:expanded={expanded}
+/>
+
+{#if searchValue}
+  <button onclick={closeSearch}>Clear Search</button>
+{/if}
+```
+
+### With Keyboard Shortcut
+
+```svelte
+<script>
+  import { onMount } from 'svelte'
+
+  let expanded = $state(false)
+  let searchValue = $state('')
+
+  onMount(() => {
+    function handleKeydown(e) {
+      // Cmd+K or Ctrl+K to open search
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault()
+        expanded = true
+      }
+      // Escape to close
+      if (e.key === 'Escape') {
+        expanded = false
+        searchValue = ''
+      }
+    }
+
+    window.addEventListener('keydown', handleKeydown)
+    return () => window.removeEventListener('keydown', handleKeydown)
+  })
+</script>
+
+<ButtonSearch
+  bind:value={searchValue}
+  bind:expanded={expanded}
+  autofocus
+/>
+```
+
+### Search with Filters
+
+```svelte
+<script>
+  let searchValue = $state('')
+  let expanded = $state(false)
+  let selectedFilter = $state('all')
+  let loading = $state(false)
+
+  async function handleInput(value) {
+    if (!value) return
+
+    loading = true
+    try {
+      await searchWithFilter(value, selectedFilter)
+    } finally {
+      loading = false
+    }
+  }
+</script>
+
+<div class="flex items-center gap-2">
+  <ButtonSearch
+    bind:value={searchValue}
+    bind:expanded={expanded}
+    loading={loading}
+    oninput={handleInput}
+  />
+
+  {#if expanded}
+    <select bind:value={selectedFilter}>
+      <option value="all">All</option>
+      <option value="users">Users</option>
+      <option value="documents">Documents</option>
+    </select>
+  {/if}
+</div>
+```
+
+## Animation Details
+
+The component includes smooth transitions:
+- Container width animates between 40px (collapsed) and 280px (expanded)
+- Transition duration: 150ms
+- Easing: ease-in-out
+- Opacity transitions: 100ms for smooth fade in/out
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonSearch.svelte:47-52`
+
+## Click Outside Behavior
+
+The component uses a custom `clickOutside` action to detect clicks outside the search area:
+
+```svelte
+use:clickOutside
+onclick_outside={handleClickOutside}
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonSearch.svelte:51-52`
+
+## Accessibility
+
+- Auto-focus support for immediate typing when expanded
+- Keyboard navigation works seamlessly with the underlying InputSearch component
+- Proper pointer events management during state transitions
+- Clear visual feedback for loading states
+- Smooth animations that respect user preferences
+
+## Type Definitions
+
+The component uses TypeScript interfaces defined in `types.ts:338-348`:
+
+```typescript
+export interface ButtonSearchProps {
+  value?: string;
+  expanded?: boolean;
+  placeholder?: string;
+  size?: 'sm' | 'md';
+  loading?: boolean;
+  autofocus?: boolean;
+  oninput?: (value: string) => void;
+  onExpand?: () => void;
+  onCollapse?: () => void;
+}
+```

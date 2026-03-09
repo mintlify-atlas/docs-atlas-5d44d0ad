@@ -1,0 +1,203 @@
+---
+title: Skeleton
+description: Loading state indicators for content placeholders
+---
+
+Skeleton components provide visual placeholders while content is loading, improving perceived performance and user experience.
+
+## Components
+
+### Skeleton
+
+The base skeleton component for creating custom loading states.
+
+```svelte
+import { Skeleton } from '@invopop/popui'
+```
+
+<ParamField path="class" type="string">
+  Additional CSS classes to customize appearance
+</ParamField>
+
+### SkeletonAvatar
+
+A circular or square skeleton for avatar placeholders.
+
+```svelte
+import { SkeletonAvatar } from '@invopop/popui'
+```
+
+<ParamField path="size" type="number" default="48">
+  The width and height of the avatar skeleton in pixels
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes to customize appearance
+</ParamField>
+
+### SkeletonCard
+
+A composite skeleton with avatar and text lines, perfect for card or list item placeholders.
+
+```svelte
+import { SkeletonCard } from '@invopop/popui'
+```
+
+<ParamField path="avatarSize" type="number" default="48">
+  The size of the avatar portion in pixels
+</ParamField>
+
+<ParamField path="lines" type="number" default="2">
+  The number of text lines to display
+</ParamField>
+
+<ParamField path="width" type="number" default="250">
+  The width of the text lines in pixels
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes to customize appearance
+</ParamField>
+
+### SkeletonList
+
+Multiple skeleton lines for text content placeholders.
+
+```svelte
+import { SkeletonList } from '@invopop/popui'
+```
+
+<ParamField path="rows" type="number" default="5">
+  The number of skeleton rows to display
+</ParamField>
+
+<ParamField path="width" type="number | string" default="250">
+  The width of rows (in pixels if number, or CSS value if string)
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes to customize appearance
+</ParamField>
+
+## Usage
+
+### Basic Skeleton
+
+```svelte
+<script>
+  import { Skeleton } from '@invopop/popui'
+</script>
+
+<Skeleton class="h-12 w-64" />
+```
+
+### Avatar Skeleton
+
+```svelte
+<script>
+  import { SkeletonAvatar } from '@invopop/popui'
+</script>
+
+<!-- Default 48px avatar -->
+<SkeletonAvatar />
+
+<!-- Custom size avatar -->
+<SkeletonAvatar size={64} />
+```
+
+### Card Skeleton
+
+Perfect for loading states in user lists or comment sections:
+
+```svelte
+<script>
+  import { SkeletonCard } from '@invopop/popui'
+</script>
+
+<!-- Default card skeleton -->
+<SkeletonCard />
+
+<!-- Custom configuration -->
+<SkeletonCard 
+  avatarSize={56}
+  lines={3}
+  width={300}
+/>
+```
+
+### List Skeleton
+
+```svelte
+<script>
+  import { SkeletonList } from '@invopop/popui'
+</script>
+
+<!-- Default 5 rows -->
+<SkeletonList />
+
+<!-- Custom rows and width -->
+<SkeletonList 
+  rows={8}
+  width={400}
+/>
+
+<!-- Responsive width with CSS -->
+<SkeletonList 
+  rows={3}
+  width="100%"
+/>
+```
+
+### Loading Pattern Example
+
+```svelte
+<script>
+  import { SkeletonCard } from '@invopop/popui'
+  
+  let loading = $state(true)
+  let users = $state([])
+  
+  async function loadUsers() {
+    loading = true
+    users = await fetchUsers()
+    loading = false
+  }
+</script>
+
+<div class="space-y-4">
+  {#if loading}
+    {#each Array(5) as _}
+      <SkeletonCard avatarSize={48} lines={2} />
+    {/each}
+  {:else}
+    {#each users as user}
+      <UserCard {user} />
+    {/each}
+  {/if}
+</div>
+```
+
+### Custom Skeleton Shapes
+
+```svelte
+<script>
+  import { Skeleton } from '@invopop/popui'
+</script>
+
+<!-- Rectangle -->
+<Skeleton class="h-32 w-full" />
+
+<!-- Circle -->
+<Skeleton class="h-20 w-20 rounded-full" />
+
+<!-- Button shape -->
+<Skeleton class="h-10 w-24 rounded-md" />
+```
+
+## Implementation Details
+
+- Base skeleton uses `animate-pulse` for loading animation
+- Default background color: `bg-background-default-tertiary`
+- SkeletonList automatically makes the last row 80% width for natural appearance
+- All skeletons are highly customizable with Tailwind classes
+- Supports both fixed pixel widths and responsive CSS values

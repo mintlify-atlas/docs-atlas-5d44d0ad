@@ -1,0 +1,326 @@
+---
+title: DropdownSelect
+description: An advanced dropdown select component with icons, colors, flags, and multi-select support
+---
+
+## Overview
+
+DropdownSelect is a feature-rich dropdown component that extends beyond basic select functionality. It supports icons, status colors, country flags, profile pictures, multi-select, and custom item rendering.
+
+## Props
+
+<ParamField path="value" type="AnyProp" default="''">
+  The selected value(s). For single select, this is a single value. For multi-select, this is an array of DrawerOption objects. This prop is bindable using `bind:value`.
+</ParamField>
+
+<ParamField path="icon" type="IconSource | string | undefined" default="undefined">
+  Optional icon displayed on the left side of the trigger button.
+</ParamField>
+
+<ParamField path="iconTheme" type="IconTheme" default="'default'">
+  Theme variant for the icon ('default' | 'solid' | 'mini').
+</ParamField>
+
+<ParamField path="options" type="DrawerOption[]" default="[]">
+  Array of options to display. Each option can include:
+  - `label`: Display text
+  - `value`: Option value
+  - `icon`: Icon to display
+  - `color`: Status color (StatusType)
+  - `country`: Country code for flag display
+  - `picture`: Avatar image URL
+  - `disabled`: Disable the option
+  - And more (see DrawerOption type)
+</ParamField>
+
+<ParamField path="placeholder" type="string" default="''">
+  Placeholder text shown when no option is selected.
+</ParamField>
+
+<ParamField path="multiple" type="boolean" default="false">
+  When true, allows multiple options to be selected.
+</ParamField>
+
+<ParamField path="fullWidth" type="boolean" default="false">
+  When true, the dropdown takes up the full width of its container.
+</ParamField>
+
+<ParamField path="widthClass" type="string" default="'min-w-[160px] max-w-[420px]'">
+  Custom width class for the dropdown.
+</ParamField>
+
+<ParamField path="flagPosition" type="'before' | 'after'" default="'before'">
+  Position of country flags relative to the label.
+</ParamField>
+
+<ParamField path="onSelect" type="(value: AnyProp) => void">
+  Callback fired when an option is selected.
+</ParamField>
+
+<ParamField path="onOpenChange" type="(isOpen: boolean) => void">
+  Callback fired when the dropdown open state changes.
+</ParamField>
+
+<ParamField path="stackLeft" type="boolean" default="false">
+  When true, styles the dropdown for stacking with a component on its left.
+</ParamField>
+
+<ParamField path="stackRight" type="boolean" default="false">
+  When true, styles the dropdown for stacking with a component on its right.
+</ParamField>
+
+<ParamField path="multipleLabel" type="string" default="'items'">
+  Label suffix used when multiple items are selected (e.g., "3 items").
+</ParamField>
+
+<ParamField path="strategy" type="'absolute' | 'fixed'" default="'absolute'">
+  Positioning strategy for the dropdown.
+</ParamField>
+
+## Exported Methods
+
+<ParamField path="open()" type="function">
+  Programmatically open the dropdown.
+</ParamField>
+
+<ParamField path="toggle()" type="function">
+  Toggle the dropdown open/closed state.
+</ParamField>
+
+## Usage
+
+### Basic Dropdown
+
+```svelte
+<script>
+  import { DropdownSelect } from 'popui'
+  
+  let selected = $state('')
+  
+  const options = [
+    { label: 'Option 1', value: '1' },
+    { label: 'Option 2', value: '2' },
+    { label: 'Option 3', value: '3' }
+  ]
+</script>
+
+<DropdownSelect 
+  bind:value={selected}
+  {options}
+  placeholder="Select an option"
+/>
+```
+
+### With Icons
+
+```svelte
+<script>
+  import { DropdownSelect } from 'popui'
+  import { Home, Settings, User } from '@invopop/ui-icons'
+  
+  let selected = $state('')
+  
+  const options = [
+    { label: 'Home', value: 'home', icon: Home },
+    { label: 'Settings', value: 'settings', icon: Settings },
+    { label: 'Profile', value: 'profile', icon: User }
+  ]
+</script>
+
+<DropdownSelect 
+  bind:value={selected}
+  {options}
+  placeholder="Navigate to..."
+/>
+```
+
+### With Status Colors
+
+```svelte
+<script>
+  import { DropdownSelect } from 'popui'
+  
+  let status = $state('')
+  
+  const statuses = [
+    { label: 'Active', value: 'active', color: 'green' },
+    { label: 'Pending', value: 'pending', color: 'yellow' },
+    { label: 'Inactive', value: 'inactive', color: 'grey' },
+    { label: 'Error', value: 'error', color: 'red' }
+  ]
+</script>
+
+<DropdownSelect 
+  bind:value={status}
+  options={statuses}
+  placeholder="Select status"
+/>
+```
+
+### Multi-Select
+
+```svelte
+<script>
+  import { DropdownSelect } from 'popui'
+  
+  let selectedTags = $state([])
+  
+  const tags = [
+    { label: 'JavaScript', value: 'js', color: 'yellow' },
+    { label: 'TypeScript', value: 'ts', color: 'blue' },
+    { label: 'Svelte', value: 'svelte', color: 'orange' },
+    { label: 'React', value: 'react', color: 'teal' }
+  ]
+  
+  function handleSelect(value: any) {
+    console.log('Selected tags:', value)
+  }
+</script>
+
+<DropdownSelect 
+  bind:value={selectedTags}
+  options={tags}
+  placeholder="Select tags"
+  multiple
+  multipleLabel="tags"
+  onSelect={handleSelect}
+/>
+```
+
+### With Country Flags
+
+```svelte
+<script>
+  import { DropdownSelect } from 'popui'
+  
+  let country = $state('')
+  
+  const countries = [
+    { label: 'United States', value: 'US', country: 'US' },
+    { label: 'United Kingdom', value: 'GB', country: 'GB' },
+    { label: 'Canada', value: 'CA', country: 'CA' },
+    { label: 'Australia', value: 'AU', country: 'AU' }
+  ]
+</script>
+
+<DropdownSelect 
+  bind:value={country}
+  options={countries}
+  placeholder="Select country"
+/>
+```
+
+### With Trigger Icon
+
+```svelte
+<script>
+  import { DropdownSelect } from 'popui'
+  import { Filter } from '@invopop/ui-icons'
+  
+  let filter = $state('')
+  
+  const filters = [
+    { label: 'All', value: 'all' },
+    { label: 'Active', value: 'active' },
+    { label: 'Archived', value: 'archived' }
+  ]
+</script>
+
+<DropdownSelect 
+  bind:value={filter}
+  icon={Filter}
+  iconTheme="solid"
+  options={filters}
+  placeholder="Filter by"
+/>
+```
+
+### Disabled Options
+
+```svelte
+<script>
+  import { DropdownSelect } from 'popui'
+  
+  let plan = $state('')
+  
+  const plans = [
+    { label: 'Free', value: 'free' },
+    { label: 'Pro', value: 'pro' },
+    { label: 'Enterprise', value: 'enterprise', disabled: true }
+  ]
+</script>
+
+<DropdownSelect 
+  bind:value={plan}
+  options={plans}
+  placeholder="Select plan"
+/>
+```
+
+### Stacked Layout
+
+```svelte
+<script>
+  import { DropdownSelect, Button } from 'popui'
+  
+  let action = $state('')
+  
+  const actions = [
+    { label: 'Export CSV', value: 'csv' },
+    { label: 'Export PDF', value: 'pdf' },
+    { label: 'Export JSON', value: 'json' }
+  ]
+  
+  function executeAction() {
+    console.log('Executing:', action)
+  }
+</script>
+
+<div class="flex">
+  <DropdownSelect 
+    bind:value={action}
+    options={actions}
+    placeholder="Select action"
+    stackLeft
+  />
+  <Button stackRight onclick={executeAction}>Execute</Button>
+</div>
+```
+
+### Programmatic Control
+
+```svelte
+<script>
+  import { DropdownSelect } from 'popui'
+  
+  let dropdown: DropdownSelect
+  let selected = $state('')
+  
+  const options = [
+    { label: 'Option A', value: 'a' },
+    { label: 'Option B', value: 'b' }
+  ]
+</script>
+
+<div class="space-y-4">
+  <DropdownSelect 
+    bind:this={dropdown}
+    bind:value={selected}
+    {options}
+  />
+  
+  <button onclick={() => dropdown.open()}>Open Dropdown</button>
+</div>
+```
+
+## Features
+
+- **Rich Option Types**: Support for icons, colors, flags, pictures, and custom styling
+- **Multi-Select**: Select multiple options with custom display formatting
+- **Visual Indicators**: Color dots, icons, and flags display in both trigger and dropdown
+- **Smart Display**: Shows "X items" when multiple items are selected, or "Item 1 and more"
+- **Grouped Colors**: When multiple items with colors are selected, shows stacked color dots
+- **Accessibility**: Built with proper focus management and keyboard navigation
+- **Flexible Positioning**: Uses floating-ui for smart dropdown positioning
+- **Custom Styling**: Stackable design and customizable width classes
+- **Disabled State**: Support for disabling individual options

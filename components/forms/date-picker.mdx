@@ -1,0 +1,262 @@
+---
+title: DatePicker
+description: A date range picker with calendar interface and preset periods
+---
+
+## Overview
+
+DatePicker provides a comprehensive date range selection interface with a calendar view and quick preset options like "This Week", "Last Month", etc. It supports single dates and date ranges with a rich, accessible UI.
+
+## Props
+
+<ParamField path="label" type="string" default="'Date'">
+  Label text displayed in the trigger button when no date is selected.
+</ParamField>
+
+<ParamField path="placement" type="Placement" default="'bottom-start'">
+  Placement of the calendar dropdown relative to the trigger button.
+</ParamField>
+
+<ParamField path="from" type="string" default="''">
+  Start date in ISO format (YYYY-MM-DD).
+</ParamField>
+
+<ParamField path="to" type="string" default="''">
+  End date in ISO format (YYYY-MM-DD).
+</ParamField>
+
+<ParamField path="onSelect" type="(date: {from: string, to: string}) => void">
+  Callback fired when a date range is confirmed. Returns an object with `from` and `to` ISO date strings.
+</ParamField>
+
+<ParamField path="stackLeft" type="boolean" default="false">
+  When true, styles the picker for stacking with a component on its left side.
+</ParamField>
+
+<ParamField path="stackRight" type="boolean" default="false">
+  When true, styles the picker for stacking with a component on its right side.
+</ParamField>
+
+<ParamField path="icon" type="IconSource | string" default="undefined">
+  Optional icon displayed on the left side of the trigger button.
+</ParamField>
+
+<ParamField path="iconTheme" type="IconTheme" default="'default'">
+  Theme variant for the icon ('default' | 'solid' | 'mini').
+</ParamField>
+
+<ParamField path="isOpen" type="boolean" default="false">
+  Whether the calendar dropdown is open. This prop is bindable using `bind:isOpen`.
+</ParamField>
+
+## Exported Methods
+
+<ParamField path="open()" type="function">
+  Programmatically open the date picker dropdown.
+</ParamField>
+
+<ParamField path="close()" type="function">
+  Programmatically close the date picker dropdown.
+</ParamField>
+
+<ParamField path="toggle()" type="function">
+  Toggle the date picker dropdown open/closed state.
+</ParamField>
+
+## Preset Periods
+
+The DatePicker includes the following preset date ranges:
+
+- **This Week**: Current week (start to end)
+- **Last Week**: Previous week
+- **This Month**: Current month
+- **Last Month**: Previous month
+- **This Quarter**: Current quarter
+- **Last Quarter**: Previous quarter
+- **Custom**: Allows manual date selection
+
+## Usage
+
+### Basic Date Range Picker
+
+```svelte
+<script>
+  import { DatePicker } from 'popui'
+  
+  let startDate = $state('')
+  let endDate = $state('')
+  
+  function handleDateSelect(date: {from: string, to: string}) {
+    startDate = date.from
+    endDate = date.to
+    console.log('Selected range:', startDate, 'to', endDate)
+  }
+</script>
+
+<DatePicker 
+  label="Select Date Range"
+  from={startDate}
+  to={endDate}
+  onSelect={handleDateSelect}
+/>
+```
+
+### With Icon
+
+```svelte
+<script>
+  import { DatePicker } from 'popui'
+  import { Calendar } from '@invopop/ui-icons'
+  
+  let from = $state('')
+  let to = $state('')
+</script>
+
+<DatePicker 
+  icon={Calendar}
+  iconTheme="solid"
+  {from}
+  {to}
+  onSelect={({ from: f, to: t }) => {
+    from = f
+    to = t
+  }}
+/>
+```
+
+### Stacked with Other Components
+
+```svelte
+<script>
+  import { DatePicker, Button } from 'popui'
+  
+  let from = $state('')
+  let to = $state('')
+  
+  function exportData() {
+    console.log('Exporting data from', from, 'to', to)
+  }
+</script>
+
+<div class="flex">
+  <DatePicker 
+    {from}
+    {to}
+    stackLeft
+    onSelect={({ from: f, to: t }) => {
+      from = f
+      to = t
+    }}
+  />
+  <Button stackRight onclick={exportData}>Export</Button>
+</div>
+```
+
+### Filtering Data by Date Range
+
+```svelte
+<script>
+  import { DatePicker } from 'popui'
+  
+  let dateRange = $state({ from: '', to: '' })
+  let filteredData = $state([])
+  
+  async function loadData(range: {from: string, to: string}) {
+    const response = await fetch(
+      `/api/data?from=${range.from}&to=${range.to}`
+    )
+    filteredData = await response.json()
+  }
+  
+  function handleDateChange(range: {from: string, to: string}) {
+    dateRange = range
+    if (range.from && range.to) {
+      loadData(range)
+    }
+  }
+</script>
+
+<div class="space-y-4">
+  <DatePicker 
+    label="Filter by Date"
+    from={dateRange.from}
+    to={dateRange.to}
+    onSelect={handleDateChange}
+  />
+  
+  <div class="data-list">
+    {#each filteredData as item}
+      <div>{item.name} - {item.date}</div>
+    {/each}
+  </div>
+</div>
+```
+
+### Programmatic Control
+
+```svelte
+<script>
+  import { DatePicker } from 'popui'
+  
+  let picker: DatePicker
+  let from = $state('')
+  let to = $state('')
+  
+  function openPicker() {
+    picker.open()
+  }
+</script>
+
+<div class="space-y-4">
+  <DatePicker 
+    bind:this={picker}
+    {from}
+    {to}
+    onSelect={({ from: f, to: t }) => {
+      from = f
+      to = t
+    }}
+  />
+  
+  <button onclick={openPicker}>Open Date Picker</button>
+</div>
+```
+
+### Controlling Open State
+
+```svelte
+<script>
+  import { DatePicker } from 'popui'
+  
+  let isOpen = $state(false)
+  let from = $state('')
+  let to = $state('')
+</script>
+
+<div class="space-y-2">
+  <DatePicker 
+    bind:isOpen
+    {from}
+    {to}
+    onSelect={({ from: f, to: t }) => {
+      from = f
+      to = t
+    }}
+  />
+  
+  <p>Picker is {isOpen ? 'open' : 'closed'}</p>
+</div>
+```
+
+## Features
+
+- **Dual Calendar View**: Shows two months side-by-side for easy range selection
+- **Preset Periods**: Quick selection buttons for common date ranges
+- **Custom Period**: Allows manual date selection for custom ranges
+- **Formatted Display**: Shows selected dates in DD/MM/YYYY format with arrow separator (e.g., "01/03/2024 → 31/03/2024")
+- **Confirm/Cancel Actions**: Requires explicit confirmation before applying the selection
+- **Visual States**: Clear visual distinction between open/closed states and selected/unselected dates
+- **Accessibility**: Built with proper ARIA attributes and keyboard navigation
+- **Portal Rendering**: Calendar dropdown is rendered in a portal for proper z-index layering
+- **Click Outside**: Automatically closes when clicking outside the dropdown
+- **Smart Positioning**: Uses floating-ui for intelligent dropdown positioning with flip and shift middleware

@@ -1,0 +1,170 @@
+---
+title: StepIcon
+description: Display integration and workflow step icons with tooltips
+---
+
+The StepIcon component displays service or integration icons in a workflow or step sequence, with optional masking for overlapping display and automatic tooltips.
+
+## Components
+
+### StepIcon
+
+Displays a single step icon with tooltip support.
+
+```svelte
+import { StepIcon } from '@invopop/popui'
+```
+
+<ParamField path="name" type="string">
+  The name of the step or integration (displayed in tooltip)
+</ParamField>
+
+<ParamField path="showMask" type="boolean" default="false">
+  Whether to apply a mask shape for overlapping icons in a sequence
+</ParamField>
+
+<ParamField path="tooltipContent" type="Snippet">
+  Custom tooltip content. If not provided, the `name` prop will be displayed.
+</ParamField>
+
+<ParamField path="children" type="Snippet" required>
+  The icon content to display (typically an image or SVG)
+</ParamField>
+
+### StepIconList
+
+Displays a list of step icons with automatic overflow handling.
+
+```svelte
+import { StepIconList } from '@invopop/popui'
+```
+
+<ParamField path="icons" type="StepIcon[]" default="[]">
+  Array of step icons with `name` and `url` properties
+</ParamField>
+
+## Types
+
+```typescript
+type StepIcon = {
+  name: string
+  url: string
+}
+```
+
+## Usage
+
+### Basic Step Icon
+
+```svelte
+<script>
+  import { StepIcon } from '@invopop/popui'
+</script>
+
+<StepIcon name="Stripe">
+  <div class="p-1.5 rounded-md bg-background-default-secondary">
+    <img src="/icons/stripe.svg" alt="Stripe" class="size-4" />
+  </div>
+</StepIcon>
+```
+
+### Step Icon with Mask
+
+When displaying multiple overlapping icons, use `showMask` on all but the last icon:
+
+```svelte
+<div class="flex items-center">
+  <StepIcon name="Salesforce" showMask={true}>
+    <div class="p-1.5 rounded-md bg-background-default-secondary">
+      <img src="/icons/salesforce.svg" alt="Salesforce" class="size-4" />
+    </div>
+  </StepIcon>
+  
+  <StepIcon name="Stripe" showMask={true}>
+    <div class="p-1.5 rounded-md bg-background-default-secondary ml-[-2px]">
+      <img src="/icons/stripe.svg" alt="Stripe" class="size-4" />
+    </div>
+  </StepIcon>
+  
+  <StepIcon name="QuickBooks">
+    <div class="p-1.5 rounded-md bg-background-default-secondary ml-[-2px]">
+      <img src="/icons/quickbooks.svg" alt="QuickBooks" class="size-4" />
+    </div>
+  </StepIcon>
+</div>
+```
+
+### Custom Tooltip Content
+
+```svelte
+<StepIcon name="Stripe">
+  {#snippet tooltipContent()}
+    <div>
+      <div class="font-semibold">Stripe Integration</div>
+      <div class="text-xs opacity-75">Payment processing</div>
+    </div>
+  {/snippet}
+  
+  <div class="p-1.5 rounded-md bg-background-default-secondary">
+    <img src="/icons/stripe.svg" alt="Stripe" class="size-4" />
+  </div>
+</StepIcon>
+```
+
+### Step Icon List
+
+Automatically handles displaying multiple icons with overflow:
+
+```svelte
+<script>
+  import { StepIconList } from '@invopop/popui'
+  
+  const integrations = [
+    { name: 'Salesforce', url: '/icons/salesforce.svg' },
+    { name: 'Stripe', url: '/icons/stripe.svg' },
+    { name: 'QuickBooks', url: '/icons/quickbooks.svg' },
+    { name: 'Xero', url: '/icons/xero.svg' },
+    { name: 'NetSuite', url: '/icons/netsuite.svg' },
+    { name: 'SAP', url: '/icons/sap.svg' },
+    { name: 'Oracle', url: '/icons/oracle.svg' },
+  ]
+</script>
+
+<StepIconList icons={integrations} />
+```
+
+The list automatically:
+- Shows up to 5 icons when there are more than 6 total
+- Shows up to 6 icons when there are 6 or fewer total
+- Displays a "+N" badge for remaining icons with a tooltip showing all names
+- Applies masking to all icons except the last visible one
+
+### Workflow Visualization
+
+```svelte
+<script>
+  import { StepIconList } from '@invopop/popui'
+  
+  const workflowSteps = [
+    { name: 'Data Source', url: '/icons/database.svg' },
+    { name: 'Transform', url: '/icons/transform.svg' },
+    { name: 'Validate', url: '/icons/check.svg' },
+    { name: 'Export', url: '/icons/export.svg' },
+  ]
+</script>
+
+<div class="flex items-center space-x-2">
+  <span class="text-sm text-foreground-tertiary">Pipeline:</span>
+  <StepIconList icons={workflowSteps} />
+</div>
+```
+
+## Implementation Details
+
+- Built with `TooltipAutoHide` for automatic tooltip hiding on scroll
+- Mask shape creates a distinctive notched-edge appearance for overlapping icons
+- Icons are rendered with `shrink-0` to prevent compression in flex layouts
+- Negative margins (`ml-[-2px]`) create the overlapping effect
+- TooltipProvider wraps StepIconList to manage tooltip state
+- Responsive: stacks vertically on small screens, horizontal on larger screens
+- Default background uses `bg-background-default-secondary` for subtle contrast

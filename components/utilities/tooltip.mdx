@@ -1,0 +1,148 @@
+---
+title: Tooltip
+description: Display informative tooltips on hover with auto-hide behavior
+---
+
+The Tooltip component displays contextual information when users hover over or focus on an element. Built on bits-ui, it includes auto-hide functionality when scrolling.
+
+## Components
+
+### Tooltip (Root)
+
+The root component that manages tooltip state.
+
+```svelte
+import { Tooltip } from '@invopop/popui'
+```
+
+### TooltipTrigger
+
+The element that triggers the tooltip display.
+
+```svelte
+import { TooltipTrigger } from '@invopop/popui'
+```
+
+### TooltipContent
+
+The tooltip content container with customizable placement.
+
+```svelte
+import { TooltipContent } from '@invopop/popui'
+```
+
+<ParamField path="side" type="'top' | 'bottom' | 'left' | 'right'" default="'top'">
+  The preferred side of the trigger to render against
+</ParamField>
+
+<ParamField path="sideOffset" type="number" default="0">
+  The distance in pixels from the trigger
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes to apply to the tooltip
+</ParamField>
+
+<ParamField path="arrowClasses" type="string">
+  Additional CSS classes to apply to the tooltip arrow
+</ParamField>
+
+### TooltipAutoHide
+
+A wrapper component that automatically hides the tooltip when the user scrolls.
+
+```svelte
+import { TooltipAutoHide } from '@invopop/popui'
+```
+
+## Usage
+
+### Basic Tooltip
+
+```svelte
+<script>
+  import { Tooltip, TooltipTrigger, TooltipContent, TooltipProvider } from '@invopop/popui'
+</script>
+
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger>
+      <button>Hover me</button>
+    </TooltipTrigger>
+    <TooltipContent>
+      This is a helpful tooltip
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+```
+
+### Placement Options
+
+```svelte
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger>
+      <button>Top tooltip</button>
+    </TooltipTrigger>
+    <TooltipContent side="top">
+      Appears on top
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger>
+      <button>Bottom tooltip</button>
+    </TooltipTrigger>
+    <TooltipContent side="bottom" sideOffset={8}>
+      Appears on bottom with offset
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+```
+
+### Auto-Hide Behavior
+
+Use `TooltipAutoHide` to automatically close the tooltip when scrolling:
+
+```svelte
+<script>
+  import { TooltipAutoHide, TooltipTrigger, TooltipContent } from '@invopop/popui'
+</script>
+
+<TooltipAutoHide>
+  <TooltipTrigger>
+    <button>Scroll-aware tooltip</button>
+  </TooltipTrigger>
+  <TooltipContent>
+    This tooltip will hide when you scroll
+  </TooltipContent>
+</TooltipAutoHide>
+```
+
+### With Custom Styling
+
+```svelte
+<TooltipProvider>
+  <Tooltip>
+    <TooltipTrigger>
+      <button>Custom styled</button>
+    </TooltipTrigger>
+    <TooltipContent 
+      class="bg-blue-500 text-white"
+      arrowClasses="bg-blue-500"
+    >
+      Custom colors and styles
+    </TooltipContent>
+  </Tooltip>
+</TooltipProvider>
+```
+
+## Implementation Details
+
+- Built on [bits-ui](https://bits-ui.com) Tooltip primitive
+- Includes an arrow indicator pointing to the trigger
+- Portal-based rendering ensures tooltips appear above other content
+- Default styling includes dark background with inverse text colors
+- Auto-hide variant listens to scroll events with capture phase

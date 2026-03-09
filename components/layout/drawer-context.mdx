@@ -1,0 +1,564 @@
+---
+title: 'DrawerContext'
+description: 'A powerful context menu and drawer component with drag-and-drop, grouping, keyboard navigation, and multiple selection modes'
+---
+
+## Overview
+
+DrawerContext is a comprehensive list/menu component that supports complex interactions including drag-and-drop reordering, collapsible groups, keyboard navigation, and both single and multiple selection modes. It's ideal for dropdowns, context menus, file lists, and any interface requiring sophisticated list management.
+
+## Import
+
+```svelte
+import { DrawerContext } from '@invopop/popui'
+import type { DrawerOption, DrawerGroup } from '@invopop/popui'
+```
+
+## Basic Usage
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import type { DrawerOption } from '@invopop/popui'
+  
+  const items: DrawerOption[] = [
+    { label: 'Profile', value: 'profile' },
+    { label: 'Settings', value: 'settings' },
+    { label: 'Logout', value: 'logout', destructive: true }
+  ]
+  
+  function handleClick(value: any) {
+    console.log('Selected:', value)
+  }
+</script>
+
+<DrawerContext
+  bind:items
+  onclick={handleClick}
+/>
+```
+
+## With Icons
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import { User, Cog, ArrowRightOnRectangle } from '@steeze-ui/heroicons'
+  import type { DrawerOption } from '@invopop/popui'
+  
+  const items: DrawerOption[] = [
+    { label: 'Profile', value: 'profile', icon: User },
+    { label: 'Settings', value: 'settings', icon: Cog },
+    { label: 'Logout', value: 'logout', icon: ArrowRightOnRectangle, destructive: true }
+  ]
+</script>
+
+<DrawerContext bind:items onclick={handleClick} />
+```
+
+## Multiple Selection Mode
+
+Enable checkbox selection for multiple items:
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import type { DrawerOption } from '@invopop/popui'
+  
+  let items: DrawerOption[] = [
+    { label: 'Email notifications', value: 'email', selected: true },
+    { label: 'SMS notifications', value: 'sms', selected: false },
+    { label: 'Push notifications', value: 'push', selected: true }
+  ]
+  
+  function handleSelection(selected: DrawerOption[]) {
+    console.log('Selected items:', selected)
+  }
+</script>
+
+<DrawerContext
+  bind:items
+  multiple={true}
+  onselect={handleSelection}
+/>
+```
+
+## Drag-and-Drop Reordering
+
+Enable draggable items for manual reordering:
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import type { DrawerOption } from '@invopop/popui'
+  
+  let items: DrawerOption[] = [
+    { label: 'Task 1', value: 'task-1' },
+    { label: 'Task 2', value: 'task-2' },
+    { label: 'Task 3', value: 'task-3' },
+    { label: 'Task 4', value: 'task-4', locked: true } // Cannot be moved
+  ]
+  
+  function handleReorder(reorderedItems: DrawerOption[]) {
+    console.log('New order:', reorderedItems)
+  }
+</script>
+
+<DrawerContext
+  bind:items
+  draggable={true}
+  onreorder={handleReorder}
+/>
+```
+
+<Note>
+  Items with `locked: true` cannot be dragged and maintain their position.
+</Note>
+
+## Grouping and Collapsible Groups
+
+Organize items into collapsible groups:
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import { Folder, FolderOpen } from '@steeze-ui/heroicons'
+  import type { DrawerOption, DrawerGroup } from '@invopop/popui'
+  
+  const groups: DrawerGroup[] = [
+    {
+      label: 'Work',
+      slug: 'work',
+      emptyIcon: FolderOpen,
+      emptyTitle: 'No work items',
+      emptyDescription: 'Add your first work item'
+    },
+    {
+      label: 'Personal',
+      slug: 'personal',
+      hideCounter: false
+    }
+  ]
+  
+  let items: DrawerOption[] = [
+    { label: 'Project Alpha', value: 'alpha', groupBy: 'work' },
+    { label: 'Project Beta', value: 'beta', groupBy: 'work' },
+    { label: 'Shopping List', value: 'shopping', groupBy: 'personal' },
+    { label: 'Vacation Planning', value: 'vacation', groupBy: 'personal' }
+  ]
+</script>
+
+<DrawerContext
+  bind:items
+  {groups}
+  collapsibleGroups={true}
+  onclick={handleClick}
+/>
+```
+
+## Drag Between Groups
+
+Move items between groups with drag-and-drop:
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import type { DrawerOption, DrawerGroup } from '@invopop/popui'
+  
+  const groups: DrawerGroup[] = [
+    { label: 'To Do', slug: 'todo' },
+    { label: 'In Progress', slug: 'progress' },
+    { label: 'Done', slug: 'done' }
+  ]
+  
+  let items: DrawerOption[] = [
+    { label: 'Task A', value: 'a', groupBy: 'todo' },
+    { label: 'Task B', value: 'b', groupBy: 'progress' },
+    { label: 'Task C', value: 'c', groupBy: 'done' }
+  ]
+  
+  function handleGroupChange(distribution: Record<string, DrawerOption[]>) {
+    console.log('Group distribution:', distribution)
+    // distribution = { todo: [...], progress: [...], done: [...] }
+  }
+</script>
+
+<DrawerContext
+  bind:items
+  {groups}
+  draggable={true}
+  ondropitem={handleGroupChange}
+/>
+```
+
+## Keyboard Navigation
+
+DrawerContext includes built-in keyboard navigation:
+
+- **Arrow Up/Down**: Navigate through items
+- **Enter or Space**: Select focused item
+- **Tab**: Move focus to next element
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import type { DrawerOption } from '@invopop/popui'
+  
+  let items: DrawerOption[] = [
+    { label: 'Option 1', value: '1', focused: false },
+    { label: 'Option 2', value: '2', focused: true }, // Initially focused
+    { label: 'Option 3', value: '3', focused: false }
+  ]
+</script>
+
+<DrawerContext bind:items onclick={handleClick} />
+```
+
+<Info>
+  The keyboard helpers automatically filter out disabled, locked, and separator items.
+</Info>
+
+## Advanced Item Features
+
+### With Avatars and Pictures
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import type { DrawerOption } from '@invopop/popui'
+  
+  const users: DrawerOption[] = [
+    {
+      label: 'John Doe',
+      value: 'john',
+      picture: 'https://example.com/john.jpg',
+      useAvatar: true
+    },
+    {
+      label: 'Jane Smith',
+      value: 'jane',
+      picture: 'https://example.com/jane.jpg',
+      useAvatar: true
+    }
+  ]
+</script>
+
+<DrawerContext bind:items={users} onclick={handleClick} />
+```
+
+### With Country Flags
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import type { DrawerOption } from '@invopop/popui'
+  
+  const countries: DrawerOption[] = [
+    { label: 'United States', value: 'us', country: 'US', flagPosition: 'after' },
+    { label: 'United Kingdom', value: 'uk', country: 'GB', flagPosition: 'after' },
+    { label: 'Germany', value: 'de', country: 'DE', flagPosition: 'after' }
+  ]
+</script>
+
+<DrawerContext
+  bind:items={countries}
+  flagPosition="after"
+  onclick={handleClick}
+/>
+```
+
+### With Color Dots
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import type { DrawerOption, StatusType } from '@invopop/popui'
+  
+  const items: DrawerOption[] = [
+    { label: 'Active', value: 'active', color: 'green' as StatusType },
+    { label: 'Pending', value: 'pending', color: 'yellow' as StatusType },
+    { label: 'Inactive', value: 'inactive', color: 'grey' as StatusType }
+  ]
+</script>
+
+<DrawerContext bind:items onclick={handleClick} />
+```
+
+### With Custom Actions
+
+```svelte
+<script>
+  import { DrawerContext, BaseButton } from '@invopop/popui'
+  import type { DrawerOption } from '@invopop/popui'
+  
+  const items: DrawerOption[] = [
+    {
+      label: 'Item with action',
+      value: 'item-1',
+      action: (item: DrawerOption) => {
+        return `<button onclick="console.log('Action clicked')">Edit</button>`
+      }
+    }
+  ]
+</script>
+
+<DrawerContext bind:items />
+```
+
+### With Separators
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import type { DrawerOption } from '@invopop/popui'
+  
+  const items: DrawerOption[] = [
+    { label: 'Cut', value: 'cut' },
+    { label: 'Copy', value: 'copy' },
+    { label: 'Paste', value: 'paste' },
+    { separator: true, label: '', value: 'sep1' },
+    { label: 'Delete', value: 'delete', destructive: true }
+  ]
+</script>
+
+<DrawerContext bind:items onclick={handleClick} />
+```
+
+## Props
+
+<ParamField path="items" type="DrawerOption[]" default="[]">
+  Array of items to display in the drawer. Bindable for two-way data sync.
+</ParamField>
+
+<ParamField path="multiple" type="boolean" default="false">
+  Enable multiple selection mode with checkboxes
+</ParamField>
+
+<ParamField path="draggable" type="boolean" default="false">
+  Enable drag-and-drop reordering of items
+</ParamField>
+
+<ParamField path="widthClass" type="string" default="'w-60'">
+  Tailwind width class for the drawer container
+</ParamField>
+
+<ParamField path="collapsibleGroups" type="boolean" default="true">
+  Allow groups to be collapsed/expanded. When false, all groups remain open.
+</ParamField>
+
+<ParamField path="flagPosition" type="'before' | 'after'" default="'after'">
+  Position of country flags relative to label text
+</ParamField>
+
+<ParamField path="onclick" type="(value: AnyProp) => void">
+  Callback when an item is clicked (single selection mode)
+</ParamField>
+
+<ParamField path="onselect" type="(selected: DrawerOption[]) => void">
+  Callback when selection changes (multiple selection mode)
+</ParamField>
+
+<ParamField path="onreorder" type="(items: DrawerOption[]) => void">
+  Callback when items are reordered via drag-and-drop
+</ParamField>
+
+<ParamField path="ondropitem" type="(groups: Record<string, DrawerOption[]>) => void">
+  Callback when items are moved between groups. Receives object with group slugs as keys.
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  Svelte snippet for custom header content at the top of the drawer
+</ParamField>
+
+<ParamField path="groups" type="DrawerGroup[]">
+  Array of group definitions for organizing items
+</ParamField>
+
+## TypeScript Interfaces
+
+### DrawerOption
+
+```typescript
+export type DrawerOption = SelectOption & {
+  separator?: boolean
+  destructive?: boolean
+  selected?: boolean
+  focused?: boolean
+  icon?: IconSource | string | undefined
+  rightIcon?: IconSource | undefined
+  country?: string
+  color?: StatusType
+  picture?: string
+  sandbox?: boolean
+  iconClass?: string
+  disabled?: boolean
+  locked?: boolean
+  groupBy?: string
+  useAvatar?: boolean
+  action?: Snippet<[DrawerOption]>
+  flagPosition?: 'before' | 'after'
+}
+
+export type SelectOption = {
+  label: string
+  value: AnyProp
+}
+```
+
+### DrawerGroup
+
+```typescript
+export type DrawerGroup = {
+  label: string
+  slug: string
+  emptyIcon?: IconSource
+  emptyTitle?: string
+  emptyDescription?: string
+  hideCounter?: boolean
+}
+```
+
+### DrawerContextProps
+
+```typescript
+export interface DrawerContextProps {
+  items?: DrawerOption[]
+  multiple?: boolean
+  draggable?: boolean
+  widthClass?: string
+  collapsibleGroups?: boolean
+  flagPosition?: 'before' | 'after'
+  onclick?: (value: AnyProp) => void
+  onselect?: (selected: DrawerOption[]) => void
+  onreorder?: (items: DrawerOption[]) => void
+  ondropitem?: (groups: Record<string, DrawerOption[]>) => void
+  children?: Snippet
+  groups?: DrawerGroup[]
+}
+```
+
+## Keyboard Helpers
+
+The drawer includes keyboard navigation utilities from `drawer-keyboard-helpers.ts`:
+
+### getFocusableItems
+
+Filters items to only those that can receive focus (excludes separators, disabled, and locked items).
+
+```typescript
+function getFocusableItems(items: DrawerOption[]): DrawerOption[]
+```
+
+### getNextFocusedIndex
+
+Calculates the next focused index based on arrow key direction.
+
+```typescript
+function getNextFocusedIndex(
+  currentIndex: number,
+  direction: 'up' | 'down',
+  itemsCount: number
+): number
+```
+
+### selectFocusedItem
+
+Handles selection of the currently focused item.
+
+```typescript
+function selectFocusedItem(
+  items: DrawerOption[],
+  focusedIndex: number,
+  multiple: boolean
+): { item: DrawerOption; shouldUpdate: boolean } | null
+```
+
+## Styling
+
+- Border and shadow for container
+- Rounded corners (`rounded-2xl`)
+- Max height with scrolling (`max-h-[568px]`)
+- Hover states for items
+- Selected state highlighting
+- Smooth transitions for drag operations
+- Drop indicators during drag-and-drop
+
+## Accessibility
+
+- Keyboard navigation support (Arrow keys, Enter, Space)
+- Proper focus management
+- ARIA attributes for screen readers
+- Disabled and locked states properly communicated
+- Scroll behavior for selected items
+
+## Examples
+
+### File Manager
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import { Folder, Document, Photo } from '@steeze-ui/heroicons'
+  import type { DrawerOption, DrawerGroup } from '@invopop/popui'
+  
+  const groups: DrawerGroup[] = [
+    { label: 'Folders', slug: 'folders' },
+    { label: 'Files', slug: 'files' }
+  ]
+  
+  let items: DrawerOption[] = [
+    { label: 'Documents', value: 'docs', icon: Folder, groupBy: 'folders' },
+    { label: 'Images', value: 'images', icon: Folder, groupBy: 'folders' },
+    { label: 'report.pdf', value: 'report', icon: Document, groupBy: 'files' },
+    { label: 'photo.jpg', value: 'photo', icon: Photo, groupBy: 'files' }
+  ]
+  
+  function handleFileClick(value: any) {
+    console.log('Opening:', value)
+  }
+</script>
+
+<DrawerContext
+  bind:items
+  {groups}
+  draggable={true}
+  onclick={handleFileClick}
+  widthClass="w-80"
+/>
+```
+
+### Task Board
+
+```svelte
+<script>
+  import { DrawerContext } from '@invopop/popui'
+  import { CheckCircle, Clock, XCircle } from '@steeze-ui/heroicons'
+  import type { DrawerOption, DrawerGroup } from '@invopop/popui'
+  
+  const groups: DrawerGroup[] = [
+    { label: 'To Do', slug: 'todo', emptyTitle: 'No tasks', emptyDescription: 'Add a new task' },
+    { label: 'In Progress', slug: 'progress' },
+    { label: 'Completed', slug: 'done' }
+  ]
+  
+  let tasks: DrawerOption[] = [
+    { label: 'Design homepage', value: 't1', groupBy: 'todo', color: 'blue' },
+    { label: 'Build API', value: 't2', groupBy: 'progress', color: 'yellow' },
+    { label: 'Write tests', value: 't3', groupBy: 'done', color: 'green' }
+  ]
+  
+  function handleTaskMove(distribution: Record<string, DrawerOption[]>) {
+    console.log('Tasks by status:', distribution)
+    // Update backend with new task statuses
+  }
+</script>
+
+<DrawerContext
+  bind:items={tasks}
+  {groups}
+  draggable={true}
+  collapsibleGroups={false}
+  ondropitem={handleTaskMove}
+  widthClass="w-96"
+/>
+```

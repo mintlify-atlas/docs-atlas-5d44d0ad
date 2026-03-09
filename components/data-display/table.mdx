@@ -1,0 +1,442 @@
+---
+title: Table
+description: A composable table component for building custom table layouts.
+---
+
+<Note>
+  Table is a low-level component for building custom table layouts. For a full-featured data table with sorting, filtering, and pagination, use the [DataTable](/components/data-display/data-table) component.
+</Note>
+
+## Import
+
+```svelte
+import { 
+  Table, 
+  TableHeader, 
+  TableBody, 
+  TableRow, 
+  TableHead, 
+  TableCell,
+  TableFooter,
+  TableCaption
+} from 'popui'
+```
+
+## Basic Usage
+
+```svelte
+<script lang="ts">
+  import { 
+    Table, 
+    TableHeader, 
+    TableBody, 
+    TableRow, 
+    TableHead, 
+    TableCell 
+  } from 'popui'
+  
+  const invoices = [
+    { id: 'INV001', status: 'Paid', method: 'Credit Card', amount: '$250.00' },
+    { id: 'INV002', status: 'Pending', method: 'PayPal', amount: '$150.00' },
+    { id: 'INV003', status: 'Unpaid', method: 'Bank Transfer', amount: '$350.00' }
+  ]
+</script>
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Invoice</TableHead>
+      <TableHead>Status</TableHead>
+      <TableHead>Method</TableHead>
+      <TableHead>Amount</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {#each invoices as invoice}
+      <TableRow>
+        <TableCell>{invoice.id}</TableCell>
+        <TableCell>{invoice.status}</TableCell>
+        <TableCell>{invoice.method}</TableCell>
+        <TableCell>{invoice.amount}</TableCell>
+      </TableRow>
+    {/each}
+  </TableBody>
+</Table>
+```
+
+## With Footer
+
+```svelte
+<script lang="ts">
+  import { 
+    Table, 
+    TableHeader, 
+    TableBody,
+    TableFooter,
+    TableRow, 
+    TableHead, 
+    TableCell 
+  } from 'popui'
+</script>
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Item</TableHead>
+      <TableHead>Quantity</TableHead>
+      <TableHead>Price</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>Product A</TableCell>
+      <TableCell>5</TableCell>
+      <TableCell>$50.00</TableCell>
+    </TableRow>
+    <TableRow>
+      <TableCell>Product B</TableCell>
+      <TableCell>3</TableCell>
+      <TableCell>$30.00</TableCell>
+    </TableRow>
+  </TableBody>
+  <TableFooter>
+    <TableRow>
+      <TableCell colspan="2">Total</TableCell>
+      <TableCell>$80.00</TableCell>
+    </TableRow>
+  </TableFooter>
+</Table>
+```
+
+## With Caption
+
+```svelte
+<script lang="ts">
+  import { 
+    Table, 
+    TableCaption,
+    TableHeader, 
+    TableBody, 
+    TableRow, 
+    TableHead, 
+    TableCell 
+  } from 'popui'
+</script>
+
+<Table>
+  <TableCaption>A list of your recent invoices.</TableCaption>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Invoice</TableHead>
+      <TableHead>Status</TableHead>
+      <TableHead>Amount</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell>INV001</TableCell>
+      <TableCell>Paid</TableCell>
+      <TableCell>$250.00</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+## Clickable Rows
+
+```svelte
+<script lang="ts">
+  function handleRowClick(invoice) {
+    console.log('Clicked:', invoice)
+  }
+</script>
+
+<Table>
+  <TableHeader>
+    <TableRow>
+      <TableHead>Invoice</TableHead>
+      <TableHead>Status</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    {#each invoices as invoice}
+      <TableRow 
+        onclick={() => handleRowClick(invoice)}
+        class="cursor-pointer"
+      >
+        <TableCell>{invoice.id}</TableCell>
+        <TableCell>{invoice.status}</TableCell>
+      </TableRow>
+    {/each}
+  </TableBody>
+</Table>
+```
+
+## Row States
+
+Table rows support different visual states through data attributes:
+
+```svelte
+<TableBody>
+  <TableRow data-state="selected">
+    <TableCell>Selected row</TableCell>
+  </TableRow>
+  
+  <TableRow data-state="error">
+    <TableCell>Error state</TableCell>
+  </TableRow>
+  
+  <TableRow data-state="warning">
+    <TableCell>Warning state</TableCell>
+  </TableRow>
+  
+  <TableRow data-state="success">
+    <TableCell>Success state</TableCell>
+  </TableRow>
+</TableBody>
+```
+
+## Custom Styling
+
+```svelte
+<Table class="border border-border">
+  <TableHeader class="bg-gray-50">
+    <TableRow>
+      <TableHead class="font-bold">Name</TableHead>
+      <TableHead class="font-bold text-right">Amount</TableHead>
+    </TableRow>
+  </TableHeader>
+  <TableBody>
+    <TableRow>
+      <TableCell class="font-medium">John Doe</TableCell>
+      <TableCell class="text-right font-mono">$250.00</TableCell>
+    </TableRow>
+  </TableBody>
+</Table>
+```
+
+## Sticky Header
+
+The TableHeader component is sticky by default and remains visible when scrolling:
+
+```svelte
+<div class="h-96 overflow-auto">
+  <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHead>Column 1</TableHead>
+        <TableHead>Column 2</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      {#each Array(50) as _, i}
+        <TableRow>
+          <TableCell>Row {i + 1}</TableCell>
+          <TableCell>Data {i + 1}</TableCell>
+        </TableRow>
+      {/each}
+    </TableBody>
+  </Table>
+</div>
+```
+
+## Responsive Table
+
+```svelte
+<div class="overflow-x-auto">
+  <Table>
+    <TableHeader>
+      <TableRow>
+        <TableHead class="min-w-[100px]">ID</TableHead>
+        <TableHead class="min-w-[200px]">Name</TableHead>
+        <TableHead class="min-w-[150px]">Email</TableHead>
+        <TableHead class="min-w-[100px]">Status</TableHead>
+      </TableRow>
+    </TableHeader>
+    <TableBody>
+      {#each data as item}
+        <TableRow>
+          <TableCell>{item.id}</TableCell>
+          <TableCell>{item.name}</TableCell>
+          <TableCell>{item.email}</TableCell>
+          <TableCell>{item.status}</TableCell>
+        </TableRow>
+      {/each}
+    </TableBody>
+  </Table>
+</div>
+```
+
+## Components
+
+### Table
+
+The root table container.
+
+<ParamField path="ref" type="HTMLTableElement">
+  Reference to the underlying table element.
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes.
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  Table content (Header, Body, Footer, Caption).
+</ParamField>
+
+### TableHeader
+
+The table header section (sticky by default).
+
+<ParamField path="ref" type="HTMLTableSectionElement">
+  Reference to the thead element.
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes.
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  TableRow components with TableHead cells.
+</ParamField>
+
+### TableBody
+
+The table body section.
+
+<ParamField path="ref" type="HTMLTableSectionElement">
+  Reference to the tbody element.
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes.
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  TableRow components.
+</ParamField>
+
+### TableFooter
+
+The table footer section.
+
+<ParamField path="ref" type="HTMLTableSectionElement">
+  Reference to the tfoot element.
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes.
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  TableRow components.
+</ParamField>
+
+### TableRow
+
+A table row.
+
+<ParamField path="ref" type="HTMLTableRowElement">
+  Reference to the tr element.
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes.
+</ParamField>
+
+<ParamField path="onclick" type="(event: MouseEvent) => void">
+  Click handler.
+</ParamField>
+
+<ParamField path="oncontextmenu" type="(event: MouseEvent) => void">
+  Context menu handler.
+</ParamField>
+
+<ParamField path="onkeydown" type="(event: KeyboardEvent) => void">
+  Keydown handler.
+</ParamField>
+
+<ParamField path="onmouseover" type="(event: MouseEvent) => void">
+  Mouse over handler.
+</ParamField>
+
+<ParamField path="onfocus" type="(event: FocusEvent) => void">
+  Focus handler.
+</ParamField>
+
+<ParamField path="data-state" type="'selected' | 'checked' | 'error' | 'warning' | 'success'">
+  Row visual state.
+</ParamField>
+
+<ParamField path="data-focused" type="boolean">
+  Whether the row is focused.
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  TableCell or TableHead components.
+</ParamField>
+
+### TableHead
+
+A header cell.
+
+<ParamField path="ref" type="HTMLTableCellElement">
+  Reference to the th element.
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes.
+</ParamField>
+
+<ParamField path="colspan" type="number">
+  Number of columns to span.
+</ParamField>
+
+<ParamField path="rowspan" type="number">
+  Number of rows to span.
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  Cell content.
+</ParamField>
+
+### TableCell
+
+A data cell.
+
+<ParamField path="ref" type="HTMLTableCellElement">
+  Reference to the td element.
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes.
+</ParamField>
+
+<ParamField path="colspan" type="number">
+  Number of columns to span.
+</ParamField>
+
+<ParamField path="rowspan" type="number">
+  Number of rows to span.
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  Cell content.
+</ParamField>
+
+### TableCaption
+
+A table caption.
+
+<ParamField path="ref" type="HTMLTableCaptionElement">
+  Reference to the caption element.
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes.
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  Caption content.
+</ParamField>

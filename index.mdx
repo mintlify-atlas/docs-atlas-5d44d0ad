@@ -1,97 +1,113 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: "Popui"
+description: "A comprehensive library of reusable Svelte UI components built with Svelte 5 and Tailwind CSS"
 ---
 
-## Setting up
+<div className="flex flex-col items-center justify-center text-center py-12">
+  <h1 className="text-5xl font-bold mb-4">Beautiful UI Components for Svelte</h1>
+  <p className="text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-2xl">
+    70+ production-ready Svelte 5 components with built-in Tailwind CSS theming and comprehensive TypeScript support
+  </p>
+</div>
 
-Get your documentation site up and running in minutes.
+## Get Started
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Install Popui in your Svelte project
+  </Card>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Build your first UI with Popui components
+  </Card>
+</CardGroup>
+
+## Component Categories
+
+Explore our comprehensive collection of UI components organized by functionality.
+
+<CardGroup cols={3}>
+  <Card title="Form Components" icon="input-text" href="/components/forms/input-text">
+    Inputs, selects, checkboxes, toggles, and date pickers
+  </Card>
+  <Card title="Buttons" icon="hand-pointer" href="/components/buttons/base-button">
+    Buttons with multiple variants and built-in actions
+  </Card>
+  <Card title="Data Display" icon="table" href="/components/data-display/data-table">
+    Tables, lists, avatars, and data visualization
+  </Card>
+  <Card title="Navigation" icon="compass" href="/components/navigation/breadcrumbs">
+    Breadcrumbs, menus, tabs, and search components
+  </Card>
+  <Card title="Feedback & Status" icon="bell" href="/components/feedback/alert-dialog">
+    Alerts, notifications, progress bars, and status indicators
+  </Card>
+  <Card title="Layout" icon="table-layout" href="/components/layout/base-card">
+    Cards, drawers, and structural components
+  </Card>
+</CardGroup>
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="Built with Svelte 5" icon="svelte">
+    Leverage the latest Svelte features including runes and snippets
+  </Card>
+  <Card title="Tailwind CSS Theme" icon="palette">
+    Customizable design system with built-in theme configuration
+  </Card>
+  <Card title="TypeScript First" icon="code">
+    Fully typed components with comprehensive prop interfaces
+  </Card>
+  <Card title="Accessible" icon="universal-access">
+    WCAG compliant components built with accessibility in mind
+  </Card>
+  <Card title="Advanced Features" icon="wand-magic-sparkles">
+    Drag-and-drop, data tables with sorting, and complex interactions
+  </Card>
+  <Card title="Storybook Ready" icon="book">
+    Explore all components in an interactive Storybook environment
+  </Card>
+</CardGroup>
+
+## Quick Example
+
+Here's how easy it is to use Popui components in your Svelte application:
+
+```svelte
+<script>
+  import { InputText, BaseButton } from '@invopop/popui'
+  
+  let name = ''
+  
+  function handleSubmit() {
+    console.log('Hello,', name)
+  }
+</script>
+
+<form>
+  <InputText
+    label="Name"
+    placeholder="Enter your name"
+    bind:value={name}
+  />
+  
+  <BaseButton
+    variant="primary"
+    onclick={handleSubmit}
+  >
+    Submit
+  </BaseButton>
+</form>
+```
+
+## Theming & Customization
+
+<Card title="Tailwind Theme Configuration" icon="brush" href="/theming/tailwind-theme">
+  Learn how to customize the Popui design system to match your brand
 </Card>
 
-## Make it yours
+## API Reference
 
-Design a docs site that looks great and empowers your users.
-
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
-
-## Create beautiful pages
-
-Everything you need to create world-class documentation.
-
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
-
-## Need inspiration?
-
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
+<Card title="Types & Interfaces" icon="brackets-curly" href="/api/types">
+  Explore the complete TypeScript API documentation
 </Card>

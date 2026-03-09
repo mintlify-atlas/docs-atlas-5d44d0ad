@@ -1,0 +1,391 @@
+---
+title: FeedViewer
+description: A component for displaying a vertical feed of chronological events or activities.
+---
+
+<Note>
+  FeedViewer displays a vertical list of feed items with timestamps, status indicators, and optional view actions.
+</Note>
+
+## Import
+
+```svelte
+import { FeedViewer } from 'popui'
+```
+
+## Basic Usage
+
+```svelte
+<script lang="ts">
+  import { FeedViewer } from 'popui'
+  import { Check, AlertTriangle } from '@invopop/ui-icons'
+  
+  const items = [
+    {
+      icon: Check,
+      title: 'Invoice sent',
+      date: new Date('2024-03-15T10:30:00'),
+      status: 'success'
+    },
+    {
+      icon: AlertTriangle,
+      title: 'Payment failed',
+      date: new Date('2024-03-14T15:45:00'),
+      status: 'failure'
+    }
+  ]
+</script>
+
+<FeedViewer {items} />
+```
+
+## With Status Types
+
+FeedViewer supports different status types:
+
+```svelte
+<script lang="ts">
+  import { FeedViewer } from 'popui'
+  import { Check, Clock, AlertTriangle, XCircle, Play, Skip } from '@invopop/ui-icons'
+  
+  const items = [
+    {
+      icon: Check,
+      title: 'Task completed successfully',
+      date: new Date('2024-03-15T10:30:00'),
+      status: 'success' // Green checkmark
+    },
+    {
+      icon: Clock,
+      title: 'Task is running',
+      date: new Date('2024-03-15T10:25:00'),
+      status: 'run' // Blue indicator
+    },
+    {
+      icon: Clock,
+      title: 'Task queued',
+      date: new Date('2024-03-15T10:20:00'),
+      status: 'queued' // Grey indicator
+    },
+    {
+      icon: XCircle,
+      title: 'Task failed',
+      date: new Date('2024-03-15T10:15:00'),
+      status: 'failure' // Red X
+    },
+    {
+      icon: AlertTriangle,
+      title: 'Warning detected',
+      date: new Date('2024-03-15T10:10:00'),
+      status: 'alert' // Yellow warning
+    },
+    {
+      icon: Skip,
+      title: 'Task skipped',
+      date: new Date('2024-03-15T10:05:00'),
+      status: 'skip' // Grey skip
+    },
+    {
+      icon: Check,
+      title: 'Document signed',
+      date: new Date('2024-03-15T10:00:00'),
+      status: 'signed' // Signed indicator
+    }
+  ]
+</script>
+
+<FeedViewer {items} />
+```
+
+## With User Information
+
+```svelte
+<script lang="ts">
+  import { FeedViewer } from 'popui'
+  import { FileText } from '@invopop/ui-icons'
+  
+  const items = [
+    {
+      icon: FileText,
+      title: 'Created invoice',
+      date: new Date('2024-03-15T10:30:00'),
+      user: {
+        name: 'John Doe',
+        picture: 'https://example.com/avatar.jpg'
+      }
+    },
+    {
+      icon: FileText,
+      title: 'Updated invoice',
+      date: new Date('2024-03-15T09:15:00'),
+      user: {
+        name: 'Jane Smith'
+      }
+    }
+  ]
+</script>
+
+<FeedViewer {items} />
+```
+
+## With Viewable Actions
+
+```svelte
+<script lang="ts">
+  import { FeedViewer } from 'popui'
+  import { FileText } from '@invopop/ui-icons'
+  
+  const items = [
+    {
+      icon: FileText,
+      title: 'Invoice #INV-001',
+      date: new Date('2024-03-15T10:30:00'),
+      status: 'success',
+      viewable: true,
+      viewableText: 'View Details',
+      slug: 'inv-001'
+    },
+    {
+      icon: FileText,
+      title: 'Invoice #INV-002',
+      date: new Date('2024-03-14T15:20:00'),
+      status: 'success',
+      viewable: true,
+      slug: 'inv-002'
+    }
+  ]
+  
+  function handleView(slug: string) {
+    console.log('View item:', slug)
+    // Navigate to detail view
+  }
+</script>
+
+<FeedViewer {items} onView={handleView} />
+```
+
+## With Extra Text
+
+```svelte
+<script lang="ts">
+  import { FeedViewer } from 'popui'
+  import { FileText, Mail, CreditCard } from '@invopop/ui-icons'
+  
+  const items = [
+    {
+      icon: FileText,
+      title: 'Invoice created',
+      date: new Date('2024-03-15T10:30:00'),
+      extraText: '$1,234.56',
+      status: 'success'
+    },
+    {
+      icon: Mail,
+      title: 'Email sent',
+      date: new Date('2024-03-15T10:25:00'),
+      extraText: 'to customer@example.com',
+      status: 'success'
+    },
+    {
+      icon: CreditCard,
+      title: 'Payment received',
+      date: new Date('2024-03-15T10:20:00'),
+      extraText: '$1,234.56',
+      status: 'success'
+    }
+  ]
+</script>
+
+<FeedViewer {items} />
+```
+
+## Activity Feed Example
+
+```svelte
+<script lang="ts">
+  import { FeedViewer } from 'popui'
+  import { 
+    FileText, 
+    Mail, 
+    CreditCard, 
+    CheckCircle,
+    AlertTriangle 
+  } from '@invopop/ui-icons'
+  
+  const activities = [
+    {
+      icon: CheckCircle,
+      title: 'Invoice approved',
+      date: new Date('2024-03-15T14:30:00'),
+      status: 'success',
+      user: {
+        name: 'John Doe',
+        picture: 'https://example.com/john.jpg'
+      },
+      extraText: 'INV-001',
+      viewable: true,
+      slug: 'inv-001'
+    },
+    {
+      icon: CreditCard,
+      title: 'Payment processed',
+      date: new Date('2024-03-15T13:15:00'),
+      status: 'success',
+      extraText: '$5,432.10',
+      viewable: true,
+      slug: 'payment-123'
+    },
+    {
+      icon: Mail,
+      title: 'Email notification sent',
+      date: new Date('2024-03-15T12:00:00'),
+      status: 'success',
+      user: {
+        name: 'System'
+      },
+      extraText: 'to 3 recipients'
+    },
+    {
+      icon: AlertTriangle,
+      title: 'Payment failed',
+      date: new Date('2024-03-15T10:45:00'),
+      status: 'failure',
+      extraText: 'Insufficient funds',
+      viewable: true,
+      slug: 'payment-122'
+    },
+    {
+      icon: FileText,
+      title: 'Invoice created',
+      date: new Date('2024-03-15T09:30:00'),
+      status: 'success',
+      user: {
+        name: 'Jane Smith',
+        picture: 'https://example.com/jane.jpg'
+      },
+      extraText: 'INV-001',
+      viewable: true,
+      slug: 'inv-001'
+    }
+  ]
+  
+  function handleView(slug: string) {
+    console.log('Viewing:', slug)
+  }
+</script>
+
+<div class="max-w-md p-4 border border-border rounded-lg">
+  <h3 class="text-lg font-semibold mb-4">Recent Activity</h3>
+  <FeedViewer items={activities} onView={handleView} />
+</div>
+```
+
+## Without Icons
+
+Feed items can be displayed without icons:
+
+```svelte
+<script lang="ts">
+  const items = [
+    {
+      title: 'Simple feed item',
+      date: new Date('2024-03-15T10:30:00'),
+      extraText: 'No icon'
+    },
+    {
+      title: 'Another item',
+      date: new Date('2024-03-15T09:15:00'),
+      extraText: 'Also no icon'
+    }
+  ]
+</script>
+
+<FeedViewer {items} />
+```
+
+## Props
+
+### FeedViewer
+
+<ParamField path="items" type="FeedItemProps[]" default="[]">
+  Array of feed items to display.
+</ParamField>
+
+<ParamField path="onView" type="(slug: string) => void">
+  Callback function when a viewable item's view button is clicked.
+</ParamField>
+
+### FeedItem Props
+
+<ParamField path="status" type="'success' | 'failure' | 'run' | 'queued' | 'alert' | 'skip' | 'signed'">
+  Status indicator for the feed item. Displays an icon based on the status type.
+</ParamField>
+
+<ParamField path="icon" type="IconSource">
+  Icon to display for the feed item (from @steeze-ui/svelte-icon).
+</ParamField>
+
+<ParamField path="title" type="string" default="''">
+  Main title text for the feed item.
+</ParamField>
+
+<ParamField path="date" type="Date">
+  Date and time of the feed item. Formatted as "MMM DD, YYYY HH:MM".
+</ParamField>
+
+<ParamField path="hasNext" type="boolean" default="false">
+  Whether this item has a next item (used internally for connecting lines).
+</ParamField>
+
+<ParamField path="slug" type="string" default="''">
+  Unique identifier for the feed item, used in the onView callback.
+</ParamField>
+
+<ParamField path="viewable" type="boolean" default="false">
+  Whether to show a view button for this item.
+</ParamField>
+
+<ParamField path="viewableText" type="string" default="'View'">
+  Text to display on the view button.
+</ParamField>
+
+<ParamField path="user" type="FeedItemUser">
+  User information to display with the feed item.
+</ParamField>
+
+<ParamField path="extraText" type="string" default="''">
+  Additional text to display below the title (e.g., amount, recipient, etc.).
+</ParamField>
+
+<ParamField path="onView" type="(slug: string) => void">
+  Callback function when the view button is clicked.
+</ParamField>
+
+### FeedItemUser
+
+<ParamField path="name" type="string" required>
+  User's display name.
+</ParamField>
+
+<ParamField path="picture" type="string">
+  URL to user's profile picture.
+</ParamField>
+
+## Status Types
+
+- **success**: Green checkmark icon
+- **failure**: Red X icon
+- **run**: Blue running indicator
+- **queued**: Grey queued indicator
+- **alert**: Yellow warning icon
+- **skip**: Grey skip indicator
+- **signed**: Signed document indicator
+
+## Styling
+
+FeedViewer items are styled with:
+- Connecting vertical lines between items (when icon is present)
+- Hover effects on viewable items
+- Responsive layout that adjusts to container width
+- Minimum width of 344px
+- Consistent spacing between items

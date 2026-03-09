@@ -1,0 +1,436 @@
+---
+title: 'Helper Functions'
+description: 'Utility functions and helpers available in Popui'
+---
+
+## Text Utilities
+
+### toPascalCase
+
+Converts a kebab-case or dash-separated string to PascalCase.
+
+```typescript
+function toPascalCase(text: string): string
+```
+
+**Parameters:**
+- `text` - String to convert (e.g., "my-component-name")
+
+**Returns:** PascalCase string (e.g., "MyComponentName")
+
+**Example:**
+```typescript
+import { toPascalCase } from 'popui'
+
+const result = toPascalCase('my-component-name')
+// result: "MyComponentName"
+```
+
+### capitalize
+
+Capitalizes the first letter of a string.
+
+```typescript
+function capitalize(text: string): string
+```
+
+**Parameters:**
+- `text` - String to capitalize
+
+**Returns:** String with first letter capitalized
+
+**Example:**
+```typescript
+import { capitalize } from 'popui'
+
+const result = capitalize('hello world')
+// result: "Hello world"
+```
+
+## Icon Utilities
+
+### resolveIcon
+
+Asynchronously resolves an icon from a string name or returns the IconSource directly.
+
+```typescript
+async function resolveIcon(
+  icon: IconSource | string | undefined = undefined
+): Promise<IconSource | undefined>
+```
+
+**Parameters:**
+- `icon` - Icon name as string or IconSource object. If string, attempts to import from `@invopop/ui-icons`
+
+**Returns:** Promise resolving to IconSource or undefined
+
+**Example:**
+```typescript
+import { resolveIcon } from 'popui'
+
+// Resolve from string
+const icon = await resolveIcon('check-circle')
+// Attempts to import CheckCircle from @invopop/ui-icons
+
+// Pass through IconSource
+import { CheckCircle } from '@invopop/ui-icons'
+const icon2 = await resolveIcon(CheckCircle)
+// Returns CheckCircle directly
+```
+
+## Country Utilities
+
+### getCountryName
+
+Gets the full country name from a country code using the Intl API.
+
+```typescript
+function getCountryName(code: string): string | undefined
+```
+
+**Parameters:**
+- `code` - ISO 3166-1 alpha-2 country code (e.g., "US", "GB") or "global"
+
+**Returns:** Full country name in English, or "Global" for the "global" code
+
+**Example:**
+```typescript
+import { getCountryName } from 'popui'
+
+const name1 = getCountryName('US')
+// name1: "United States"
+
+const name2 = getCountryName('gb')
+// name2: "United Kingdom"
+
+const name3 = getCountryName('global')
+// name3: "Global"
+```
+
+## Status Utilities
+
+### getStatusType
+
+Maps status code strings to FeedItemStatus types.
+
+```typescript
+function getStatusType(status: string): FeedItemStatus
+```
+
+**Parameters:**
+- `status` - Status code string ("OK", "KO", "ERR", "RUN", "QUEUED", "SKIP", "SIGNED")
+
+**Returns:** Corresponding FeedItemStatus type
+
+**Example:**
+```typescript
+import { getStatusType } from 'popui'
+
+const status1 = getStatusType('OK')
+// status1: "success"
+
+const status2 = getStatusType('KO')
+// status2: "failure"
+
+const status3 = getStatusType('ERR')
+// status3: "alert"
+```
+
+**Status Mappings:**
+- `OK` → `success`
+- `KO` → `failure`
+- `ERR` → `alert`
+- `RUN` → `run`
+- `QUEUED` → `queued`
+- `SKIP` → `skip`
+- `SIGNED` → `signed`
+
+## Scroll Utilities
+
+### getScrollableContainer
+
+Finds the nearest scrollable parent element.
+
+```typescript
+function getScrollableContainer(element: HTMLElement): HTMLElement | undefined
+```
+
+**Parameters:**
+- `element` - Starting element to search from
+
+**Returns:** The nearest parent with overflow scroll/auto, or document.documentElement if none found
+
+**Example:**
+```typescript
+import { getScrollableContainer } from 'popui'
+
+const element = document.getElementById('my-element')
+const container = getScrollableContainer(element)
+// Returns the nearest scrollable parent
+```
+
+### scrollIntoTableView
+
+Scrolls an element into view within a table, accounting for sticky headers and row heights.
+
+```typescript
+function scrollIntoTableView(element: HTMLElement): void
+```
+
+**Parameters:**
+- `element` - Table row or cell element to scroll into view
+
+**Description:** 
+This function provides smooth scrolling behavior optimized for table layouts. It accounts for:
+- Sticky table headers (80px offset)
+- Additional row visibility for context
+- Smooth scrolling behavior
+- Both above and below viewport scenarios
+
+**Example:**
+```typescript
+import { scrollIntoTableView } from 'popui'
+
+const row = document.querySelector('[data-row-id="123"]')
+scrollIntoTableView(row)
+// Smoothly scrolls the row into view with proper offset
+```
+
+## Focus Utilities
+
+### isInputFocused
+
+Checks if any text input, textarea, or contenteditable element currently has focus.
+
+```typescript
+function isInputFocused(): boolean
+```
+
+**Returns:** `true` if an input element has focus, `false` otherwise
+
+**Description:**
+Useful for determining whether keyboard shortcuts should be active. Detects focus on:
+- Text inputs (type: text, search, email, password, url)
+- Textarea elements
+- ContentEditable elements
+
+**Example:**
+```typescript
+import { isInputFocused } from 'popui'
+
+function handleKeyboardShortcut(event: KeyboardEvent) {
+  if (isInputFocused()) {
+    // Don't trigger shortcuts when typing in an input
+    return
+  }
+  
+  // Handle shortcut
+  if (event.key === '/') {
+    openSearch()
+  }
+}
+```
+
+## Date Utilities
+
+### toCalendarDate
+
+Converts a JavaScript Date to a CalendarDate object for use with date pickers.
+
+```typescript
+function toCalendarDate(date: Date): DateValue
+```
+
+**Parameters:**
+- `date` - JavaScript Date object
+
+**Returns:** CalendarDate instance from `@internationalized/date`
+
+**Example:**
+```typescript
+import { toCalendarDate } from 'popui'
+
+const jsDate = new Date('2024-03-15')
+const calendarDate = toCalendarDate(jsDate)
+// Use with DatePicker component
+```
+
+### datesFromToday
+
+Generates a comprehensive set of date ranges relative to today.
+
+```typescript
+function datesFromToday(): DatesFromToday
+```
+
+**Returns:** Object containing pre-calculated date ranges for common time periods
+
+**Example:**
+```typescript
+import { datesFromToday } from 'popui'
+
+const dates = datesFromToday()
+
+console.log(dates.today)              // Today's date
+console.log(dates.startOfThisWeek)    // Monday of current week
+console.log(dates.endOfThisWeek)      // Sunday of current week
+console.log(dates.startOfLastWeek)    // Monday of last week
+console.log(dates.endOfLastWeek)      // Sunday of last week
+console.log(dates.startOfThisMonth)   // First day of current month
+console.log(dates.endOfThisMonth)     // Last day of current month
+console.log(dates.startOfLastMonth)   // First day of last month
+console.log(dates.endOfLastMonth)     // Last day of last month
+console.log(dates.startOfThisQuarter) // First day of current quarter
+console.log(dates.endOfThisQuarter)   // Last day of current quarter
+console.log(dates.startOfLastQuarter) // First day of last quarter
+console.log(dates.endOfLastQuarter)   // Last day of last quarter
+```
+
+**Use Case:**
+```typescript
+import { datesFromToday } from 'popui'
+import { DatePicker } from 'popui'
+
+const dates = datesFromToday()
+
+// Set default date range to current month
+<DatePicker
+  from={dates.startOfThisMonth.toISOString()}
+  to={dates.endOfThisMonth.toISOString()}
+  onSelect={(range) => console.log(range)}
+/>
+```
+
+## Style Utilities (from utils.ts)
+
+### cn
+
+Merges and deduplicates Tailwind CSS classes using clsx and tailwind-merge.
+
+```typescript
+function cn(...inputs: ClassValue[]): string
+```
+
+**Parameters:**
+- `...inputs` - Class names, objects, or arrays to merge
+
+**Returns:** Merged and deduplicated class string
+
+**Example:**
+```typescript
+import { cn } from 'popui'
+
+const className = cn(
+  'text-base',
+  'text-lg', // Overwrites text-base
+  { 'font-bold': true },
+  ['mt-4', 'mb-4']
+)
+// Result: "text-lg font-bold mt-4 mb-4"
+```
+
+### styleToString
+
+Converts a style object to a CSS string.
+
+```typescript
+function styleToString(
+  style: Record<string, number | string | undefined>
+): string
+```
+
+**Parameters:**
+- `style` - Object with CSS property keys and values
+
+**Returns:** CSS style string
+
+**Example:**
+```typescript
+import { styleToString } from 'popui'
+
+const styleStr = styleToString({
+  width: '100px',
+  height: 50,
+  margin: undefined // Ignored
+})
+// Result: "width:100px;height:50;"
+```
+
+### flyAndScale
+
+Creates a fly-in and scale animation for Svelte transitions.
+
+```typescript
+function flyAndScale(
+  node: Element,
+  params?: FlyAndScaleParams
+): TransitionConfig
+```
+
+**Parameters:**
+- `node` - DOM element to animate
+- `params` - Optional animation parameters
+  - `y` - Vertical offset in pixels (default: -8)
+  - `x` - Horizontal offset in pixels (default: 0)
+  - `start` - Initial scale (default: 0.95)
+  - `duration` - Animation duration in ms (default: 150)
+
+**Returns:** Svelte TransitionConfig
+
+**Example:**
+```svelte
+<script>
+import { flyAndScale } from 'popui'
+</script>
+
+<div transition:flyAndScale={{ y: -8, duration: 200 }}>
+  Content with smooth entrance animation
+</div>
+```
+
+## Action Utilities (from clickOutside.js)
+
+### clickOutside
+
+Svelte action that dispatches a custom event when clicking outside an element.
+
+```typescript
+function clickOutside(node: HTMLElement): { destroy: () => void }
+```
+
+**Parameters:**
+- `node` - Element to watch for outside clicks
+
+**Returns:** Object with destroy method for cleanup
+
+**Events:**
+- `click_outside` - Dispatched when clicking outside the element
+
+**Example:**
+```svelte
+<script>
+import { clickOutside } from 'popui'
+
+let isOpen = true
+
+function handleClickOutside() {
+  isOpen = false
+}
+</script>
+
+<div
+  use:clickOutside
+  on:click_outside={handleClickOutside}
+>
+  Click outside this element to close
+</div>
+```
+
+**Description:**
+This action is commonly used for:
+- Closing dropdowns when clicking outside
+- Dismissing modals
+- Hiding tooltips or popovers
+- Any "click away" behavior
+
+The action handles both regular clicks and context menu events.

@@ -1,0 +1,178 @@
+---
+title: InputText
+description: A text input component with label, error handling, and customizable styling
+---
+
+## Overview
+
+InputText is a versatile text input component that supports labels, error messages, validation states, and various sizing options. It includes debounced input handling and can be stacked with other components.
+
+## Props
+
+<ParamField path="id" type="any" default="Random string">
+  Unique identifier for the input element. If not provided, a random ID is generated.
+</ParamField>
+
+<ParamField path="label" type="string" default="''">
+  Label text displayed above the input field.
+</ParamField>
+
+<ParamField path="placeholder" type="string" default="''">
+  Placeholder text shown when the input is empty.
+</ParamField>
+
+<ParamField path="errorText" type="string" default="''">
+  Error message displayed below the input. When present, the input displays an error state.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  When true, the input is read-only and styled as disabled.
+</ParamField>
+
+<ParamField path="value" type="string | number" default="''">
+  The input value. This prop is bindable using `bind:value`.
+</ParamField>
+
+<ParamField path="focusOnLoad" type="boolean" default="false">
+  When true, the input automatically receives focus when mounted.
+</ParamField>
+
+<ParamField path="stackLeft" type="boolean" default="false">
+  When true, styles the input for stacking with a component on its left side.
+</ParamField>
+
+<ParamField path="stackRight" type="boolean" default="false">
+  When true, styles the input for stacking with a component on its right side.
+</ParamField>
+
+<ParamField path="widthClass" type="string" default="''">
+  Custom width class for the input. If not provided, defaults to full width.
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md'" default="'md'">
+  Size variant of the input:
+  - `xs`: Height 26px
+  - `sm`: Height 28px
+  - `md`: Height 32px
+</ParamField>
+
+<ParamField path="oninput" type="(value: string) => void">
+  Callback fired when the input value changes. Debounced by 750ms.
+</ParamField>
+
+<ParamField path="onfocus" type="(event: FocusEvent) => void">
+  Callback fired when the input receives focus.
+</ParamField>
+
+<ParamField path="onblur" type="(event: FocusEvent) => void">
+  Callback fired when the input loses focus.
+</ParamField>
+
+<ParamField path="onkeydown" type="(event: KeyboardEvent) => void">
+  Callback fired when a key is pressed while the input is focused.
+</ParamField>
+
+## Usage
+
+### Basic Input
+
+```svelte
+<script>
+  import { InputText } from 'popui'
+  
+  let value = $state('')
+</script>
+
+<InputText 
+  bind:value 
+  label="Username" 
+  placeholder="Enter your username" 
+/>
+```
+
+### With Error State
+
+```svelte
+<script>
+  import { InputText } from 'popui'
+  
+  let email = $state('')
+  let error = $state('')
+  
+  function validateEmail(value: string) {
+    if (!value.includes('@')) {
+      error = 'Please enter a valid email address'
+    } else {
+      error = ''
+    }
+  }
+</script>
+
+<InputText 
+  bind:value={email}
+  label="Email Address"
+  placeholder="user@example.com"
+  errorText={error}
+  oninput={validateEmail}
+/>
+```
+
+### Different Sizes
+
+```svelte
+<InputText size="xs" placeholder="Extra small" />
+<InputText size="sm" placeholder="Small" />
+<InputText size="md" placeholder="Medium" />
+```
+
+### Stacked with Other Components
+
+```svelte
+<div class="flex">
+  <InputText 
+    bind:value 
+    placeholder="Search" 
+    stackLeft 
+  />
+  <Button stackRight>Search</Button>
+</div>
+```
+
+### Auto-focus on Load
+
+```svelte
+<InputText 
+  bind:value 
+  label="First Name"
+  focusOnLoad 
+/>
+```
+
+### With Event Handlers
+
+```svelte
+<script>
+  let value = $state('')
+  
+  function handleKeyDown(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      console.log('Submitted:', value)
+    }
+  }
+</script>
+
+<InputText 
+  bind:value
+  label="Quick Search"
+  onkeydown={handleKeyDown}
+  oninput={(val) => console.log('Input changed:', val)}
+/>
+```
+
+## Features
+
+- **Debounced Input**: The `oninput` callback is automatically debounced by 750ms to reduce excessive function calls
+- **Error Validation**: Built-in error state styling with error message display
+- **Accessibility**: Properly linked labels using the `for` attribute
+- **Flexible Sizing**: Three size variants to fit different UI contexts
+- **Stackable Design**: Can be combined with other components using `stackLeft` and `stackRight` props

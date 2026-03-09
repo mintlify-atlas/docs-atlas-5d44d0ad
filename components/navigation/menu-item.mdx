@@ -1,0 +1,169 @@
+---
+title: "MenuItem"
+description: "Collapsible navigation menu item with icon support and nested children"
+icon: "list"
+---
+
+The MenuItem component creates navigation menu items with support for icons, active states, nested children, and collapsible sections.
+
+## Usage
+
+```svelte
+<script>
+  import { MenuItem } from '@invopop/popui'
+  import { Home } from '@invopop/ui-icons'
+
+  function handleClick(url) {
+    console.log('Navigate to:', url)
+  }
+</script>
+
+<MenuItem
+  label="Dashboard"
+  url="/dashboard"
+  icon={Home}
+  active={true}
+  onclick={handleClick}
+/>
+```
+
+## With Icon
+
+```svelte
+<script>
+  import { MenuItem } from '@invopop/popui'
+  import { Settings } from '@invopop/ui-icons'
+</script>
+
+<MenuItem
+  label="Settings"
+  url="/settings"
+  icon={Settings}
+  iconTheme="solid"
+  onclick={(url) => console.log(url)}
+/>
+```
+
+## Nested Menu Items
+
+```svelte
+<script>
+  import { MenuItem } from '@invopop/popui'
+  import { FolderL } from '@invopop/ui-icons'
+
+  let open = $state(true)
+
+  const children = [
+    { label: 'Invoices', url: '/documents/invoices', active: false },
+    { label: 'Receipts', url: '/documents/receipts', active: false },
+    { label: 'Reports', url: '/documents/reports', active: true }
+  ]
+</script>
+
+<MenuItem
+  label="Documents"
+  icon={FolderL}
+  collapsable={true}
+  bind:open
+  {children}
+  onclick={(url) => console.log(url)}
+/>
+```
+
+## Collapsed Sidebar
+
+```svelte
+<script>
+  import { MenuItem } from '@invopop/popui'
+  import { Chart } from '@invopop/ui-icons'
+
+  const children = [
+    { label: 'Overview', url: '/analytics/overview' },
+    { label: 'Reports', url: '/analytics/reports' }
+  ]
+</script>
+
+<MenuItem
+  label="Analytics"
+  url="/analytics"
+  icon={Chart}
+  collapsedSidebar={true}
+  {children}
+  onclick={(url) => console.log(url)}
+/>
+```
+
+## Beta Label
+
+```svelte
+<script>
+  import { MenuItem } from '@invopop/popui'
+  import { Sparkles } from '@invopop/ui-icons'
+</script>
+
+<MenuItem
+  label="AI Assistant"
+  url="/ai"
+  icon={Sparkles}
+  beta={true}
+  onclick={(url) => console.log(url)}
+/>
+```
+
+## Props
+
+<ParamField path="label" type="string" default="''">
+  The text label for the menu item
+</ParamField>
+
+<ParamField path="url" type="string" default="''">
+  The URL to navigate to when clicked
+</ParamField>
+
+<ParamField path="icon" type="IconSource | string">
+  Icon to display next to the label. Can be an IconSource from @steeze-ui/svelte-icon or a string path
+</ParamField>
+
+<ParamField path="iconTheme" type="'default' | 'solid' | 'mini'" default="'default'">
+  The icon theme variant
+</ParamField>
+
+<ParamField path="active" type="boolean" default="false">
+  Whether this menu item is currently active/selected
+</ParamField>
+
+<ParamField path="collapsable" type="boolean" default="false">
+  Whether the menu item can be collapsed to show/hide children
+</ParamField>
+
+<ParamField path="open" type="boolean" default="false">
+  Controls the open/closed state of collapsable menu items. Use `bind:open` for two-way binding
+</ParamField>
+
+<ParamField path="collapsedSidebar" type="boolean" default="false">
+  When true, displays a compact version suitable for collapsed sidebars. Shows only the icon
+</ParamField>
+
+<ParamField path="isFolderItem" type="boolean" default="false">
+  Styles the item as a nested folder item with indentation and border
+</ParamField>
+
+<ParamField path="beta" type="boolean" default="false">
+  Shows a beta badge next to the label
+</ParamField>
+
+<ParamField path="children" type="MenuItemProps[]">
+  Array of child menu items to display when expanded. Each child has the same props as MenuItem
+</ParamField>
+
+<ParamField path="onclick" type="(url: string) => void">
+  Callback function when the menu item is clicked. Receives the URL as parameter
+</ParamField>
+
+## Behavior
+
+- Active menu items are highlighted with a selected background
+- When `collapsedSidebar` is true and the item has children, hovering shows a floating context menu
+- Clicking a collapsable item without a URL toggles the open/closed state
+- Nested items (children) are automatically styled with indentation and connecting borders
+- The component uses Svelte's floating-ui for positioning hover menus in collapsed mode

@@ -1,0 +1,313 @@
+---
+title: ProfileAvatar
+description: A component for displaying user profile avatars with support for images, initials, icons, and country flags.
+---
+
+<Note>
+  ProfileAvatar displays user avatars with multiple fallback options and size variants.
+</Note>
+
+## Import
+
+```svelte
+import { ProfileAvatar } from 'popui'
+```
+
+## Basic Usage
+
+```svelte
+<script lang="ts">
+  import { ProfileAvatar } from 'popui'
+</script>
+
+<ProfileAvatar name="John Doe" />
+```
+
+## Sizes
+
+ProfileAvatar supports five size variants:
+
+```svelte
+<script lang="ts">
+  import { ProfileAvatar } from 'popui'
+</script>
+
+<div class="flex items-center gap-4">
+  <ProfileAvatar name="John Doe" variant="xs" />
+  <ProfileAvatar name="John Doe" variant="sm" />
+  <ProfileAvatar name="John Doe" variant="md" />
+  <ProfileAvatar name="John Doe" variant="lg" />
+  <ProfileAvatar name="John Doe" variant="xl" />
+</div>
+```
+
+## With Picture
+
+```svelte
+<ProfileAvatar 
+  name="John Doe" 
+  picture="https://example.com/avatar.jpg"
+/>
+```
+
+If the image fails to load, it falls back to showing the user's initial.
+
+## With Icon
+
+```svelte
+<script lang="ts">
+  import { ProfileAvatar } from 'popui'
+  import { User } from '@invopop/ui-icons'
+</script>
+
+<ProfileAvatar name="John Doe" icon={User} />
+```
+
+## With Country Flag
+
+```svelte
+<ProfileAvatar 
+  name="John Doe" 
+  picture="https://example.com/avatar.jpg"
+  country="US"
+/>
+```
+
+The country flag appears as a badge in the bottom-right corner.
+
+## Dark Theme
+
+```svelte
+<ProfileAvatar name="John Doe" dark={true} />
+```
+
+## Display Priority
+
+ProfileAvatar displays content in the following priority order:
+
+1. **Picture** - If provided and loads successfully
+2. **Icon** - If provided
+3. **Initial** - First character of the name (uppercase)
+
+```svelte
+<script lang="ts">
+  import { ProfileAvatar } from 'popui'
+  import { User } from '@invopop/ui-icons'
+</script>
+
+<div class="flex gap-4">
+  <!-- Shows picture -->
+  <ProfileAvatar 
+    name="John Doe" 
+    picture="https://example.com/avatar.jpg"
+  />
+  
+  <!-- Shows icon (no picture) -->
+  <ProfileAvatar 
+    name="John Doe" 
+    icon={User}
+  />
+  
+  <!-- Shows initial "J" (no picture or icon) -->
+  <ProfileAvatar name="John Doe" />
+</div>
+```
+
+## User List Example
+
+```svelte
+<script lang="ts">
+  import { ProfileAvatar } from 'popui'
+  
+  const users = [
+    { 
+      name: 'John Doe', 
+      picture: 'https://example.com/john.jpg',
+      country: 'US'
+    },
+    { 
+      name: 'Jane Smith', 
+      picture: 'https://example.com/jane.jpg',
+      country: 'GB'
+    },
+    { 
+      name: 'Bob Wilson',
+      country: 'CA'
+    }
+  ]
+</script>
+
+<div class="space-y-3">
+  {#each users as user}
+    <div class="flex items-center gap-3">
+      <ProfileAvatar 
+        name={user.name} 
+        picture={user.picture}
+        country={user.country}
+        variant="md"
+      />
+      <div>
+        <div class="font-medium">{user.name}</div>
+        <div class="text-sm text-gray-500">{user.country}</div>
+      </div>
+    </div>
+  {/each}
+</div>
+```
+
+## Avatar Grid
+
+```svelte
+<script lang="ts">
+  import { ProfileAvatar } from 'popui'
+  
+  const team = [
+    { name: 'John Doe', picture: 'https://example.com/john.jpg' },
+    { name: 'Jane Smith', picture: 'https://example.com/jane.jpg' },
+    { name: 'Bob Wilson' },
+    { name: 'Alice Johnson' },
+    { name: 'Charlie Brown' }
+  ]
+</script>
+
+<div class="flex -space-x-2">
+  {#each team.slice(0, 4) as member}
+    <ProfileAvatar 
+      name={member.name} 
+      picture={member.picture}
+      variant="sm"
+    />
+  {/each}
+  {#if team.length > 4}
+    <div class="size-5 rounded-md bg-gray-200 flex items-center justify-center text-xs">
+      +{team.length - 4}
+    </div>
+  {/if}
+</div>
+```
+
+## With Tooltip
+
+```svelte
+<script lang="ts">
+  import { ProfileAvatar } from 'popui'
+  import { TooltipAutoHide, TooltipTrigger, TooltipContent } from 'popui'
+</script>
+
+<TooltipAutoHide>
+  <TooltipTrigger>
+    <ProfileAvatar name="John Doe" picture="https://example.com/avatar.jpg" />
+  </TooltipTrigger>
+  <TooltipContent>
+    John Doe (john@example.com)
+  </TooltipContent>
+</TooltipAutoHide>
+```
+
+## Status Indicator
+
+```svelte
+<script lang="ts">
+  import { ProfileAvatar } from 'popui'
+</script>
+
+<div class="relative inline-block">
+  <ProfileAvatar name="John Doe" variant="md" />
+  <span class="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-green-500 ring-2 ring-white"></span>
+</div>
+```
+
+## All Variants Comparison
+
+```svelte
+<script lang="ts">
+  import { ProfileAvatar } from 'popui'
+</script>
+
+<div class="space-y-4">
+  <div class="flex items-center gap-4">
+    <ProfileAvatar name="John Doe" variant="xs" />
+    <span>Extra Small (xs) - 16px</span>
+  </div>
+  
+  <div class="flex items-center gap-4">
+    <ProfileAvatar name="John Doe" variant="sm" />
+    <span>Small (sm) - 20px</span>
+  </div>
+  
+  <div class="flex items-center gap-4">
+    <ProfileAvatar name="John Doe" variant="md" />
+    <span>Medium (md) - 28px</span>
+  </div>
+  
+  <div class="flex items-center gap-4">
+    <ProfileAvatar name="John Doe" variant="lg" />
+    <span>Large (lg) - 32px</span>
+  </div>
+  
+  <div class="flex items-center gap-4">
+    <ProfileAvatar name="John Doe" variant="xl" />
+    <span>Extra Large (xl) - 40px</span>
+  </div>
+</div>
+```
+
+## Props
+
+<ParamField path="name" type="string" default="''">
+  User's name. Used to display the initial when no picture or icon is provided.
+</ParamField>
+
+<ParamField path="variant" type="'xs' | 'sm' | 'md' | 'lg' | 'xl'" default="'sm'">
+  Size variant of the avatar.
+  - xs: 16px (size-4)
+  - sm: 20px (size-5)
+  - md: 28px (size-7)
+  - lg: 32px (size-8)
+  - xl: 40px (size-10)
+</ParamField>
+
+<ParamField path="dark" type="boolean" default="false">
+  Use dark theme styling.
+</ParamField>
+
+<ParamField path="picture" type="string" default="''">
+  URL of the user's profile picture. Falls back to initial if image fails to load.
+</ParamField>
+
+<ParamField path="country" type="string" default="''">
+  Two-letter country code (e.g., "US", "GB"). Displays a country flag badge in the bottom-right corner.
+</ParamField>
+
+<ParamField path="icon" type="IconSource">
+  Icon to display instead of initial (from @steeze-ui/svelte-icon).
+</ParamField>
+
+## Size Reference
+
+| Variant | Pixels | Tailwind Class | Icon Size | Text Size |
+|---------|--------|----------------|-----------|----------|
+| xs      | 16px   | size-4         | 12px      | text-sm  |
+| sm      | 20px   | size-5         | 12px      | text-sm  |
+| md      | 28px   | size-7         | 16px      | text-base|
+| lg      | 32px   | size-8         | 25px      | text-lg  |
+| xl      | 40px   | size-10        | 25px      | text-xl  |
+
+## Styling
+
+The avatar includes:
+- Rounded corners (varies by size)
+- Shadow overlay for depth
+- Automatic image error handling
+- Responsive text sizing
+- Proper alignment and centering
+
+### Default Theme
+- Background: `bg-background`
+- Text: `text-foreground-default-secondary`
+- Shadow: `shadow-avatar`
+
+### Dark Theme
+- Background: `bg-background-inverse`
+- Text: `text-foreground-inverse-secondary`
+- Shadow: `shadow-avatar-inverse`

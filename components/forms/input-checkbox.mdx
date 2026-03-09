@@ -1,0 +1,177 @@
+---
+title: InputCheckbox
+description: A styled checkbox input with optional label and indeterminate state
+---
+
+## Overview
+
+InputCheckbox provides a checkbox input with consistent styling, optional label text, and support for indeterminate state. It's ideal for forms, settings, and multi-selection interfaces.
+
+## Props
+
+<ParamField path="id" type="string" default="Random string">
+  Unique identifier for the checkbox element. If not provided, a random ID is generated.
+</ParamField>
+
+<ParamField path="checked" type="boolean" default="false">
+  Whether the checkbox is checked. This prop is bindable using `bind:checked`.
+</ParamField>
+
+<ParamField path="indeterminate" type="boolean" default="false">
+  When true, the checkbox displays an indeterminate state (partially checked).
+</ParamField>
+
+<ParamField path="label" type="string" default="''">
+  Label text displayed next to the checkbox.
+</ParamField>
+
+<ParamField path="onchange" type="(checked: boolean) => void">
+  Callback fired when the checkbox state changes.
+</ParamField>
+
+<ParamField path="onclick" type="(event: MouseEvent) => void">
+  Callback fired when the checkbox is clicked.
+</ParamField>
+
+## Usage
+
+### Basic Checkbox
+
+```svelte
+<script>
+  import { InputCheckbox } from 'popui'
+  
+  let agreed = $state(false)
+</script>
+
+<InputCheckbox 
+  bind:checked={agreed}
+  label="I agree to the terms and conditions" 
+/>
+```
+
+### Without Label
+
+```svelte
+<script>
+  import { InputCheckbox } from 'popui'
+  
+  let selected = $state(false)
+</script>
+
+<InputCheckbox bind:checked={selected} />
+```
+
+### Indeterminate State
+
+```svelte
+<script>
+  import { InputCheckbox } from 'popui'
+  
+  let selectAll = $state(false)
+  let isIndeterminate = $state(true)
+</script>
+
+<InputCheckbox 
+  bind:checked={selectAll}
+  indeterminate={isIndeterminate}
+  label="Select All" 
+/>
+```
+
+### Multiple Checkboxes
+
+```svelte
+<script>
+  import { InputCheckbox } from 'popui'
+  
+  let preferences = $state({
+    newsletter: false,
+    updates: false,
+    promotions: false
+  })
+</script>
+
+<div class="flex flex-col gap-3">
+  <InputCheckbox 
+    bind:checked={preferences.newsletter}
+    label="Subscribe to newsletter" 
+  />
+  <InputCheckbox 
+    bind:checked={preferences.updates}
+    label="Receive product updates" 
+  />
+  <InputCheckbox 
+    bind:checked={preferences.promotions}
+    label="Get promotional offers" 
+  />
+</div>
+```
+
+### With Change Handler
+
+```svelte
+<script>
+  import { InputCheckbox } from 'popui'
+  
+  let enabled = $state(false)
+  
+  function handleChange(checked: boolean) {
+    console.log('Checkbox changed:', checked)
+    // Perform additional logic
+  }
+</script>
+
+<InputCheckbox 
+  bind:checked={enabled}
+  label="Enable feature"
+  onchange={handleChange}
+/>
+```
+
+### Select All Pattern
+
+```svelte
+<script>
+  import { InputCheckbox } from 'popui'
+  
+  let items = $state([
+    { id: 1, name: 'Item 1', selected: false },
+    { id: 2, name: 'Item 2', selected: false },
+    { id: 3, name: 'Item 3', selected: false }
+  ])
+  
+  let allSelected = $derived(items.every(item => item.selected))
+  let someSelected = $derived(items.some(item => item.selected))
+  let isIndeterminate = $derived(someSelected && !allSelected)
+  
+  function toggleAll(checked: boolean) {
+    items = items.map(item => ({ ...item, selected: checked }))
+  }
+</script>
+
+<div class="flex flex-col gap-2">
+  <InputCheckbox 
+    checked={allSelected}
+    indeterminate={isIndeterminate}
+    label="Select All"
+    onchange={toggleAll}
+  />
+  <div class="ml-6 flex flex-col gap-2">
+    {#each items as item}
+      <InputCheckbox 
+        bind:checked={item.selected}
+        label={item.name}
+      />
+    {/each}
+  </div>
+</div>
+```
+
+## Features
+
+- **Indeterminate State**: Support for the indeterminate state, useful for "select all" checkboxes
+- **Accessible**: Properly linked label with `for` attribute and cursor pointer
+- **Styled**: Custom styling that fits the design system while maintaining native checkbox functionality
+- **Flexible**: Can be used with or without a label
+- **Event Handling**: Both `onchange` and `onclick` callbacks available

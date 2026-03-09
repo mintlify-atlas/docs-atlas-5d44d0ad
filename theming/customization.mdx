@@ -1,0 +1,408 @@
+---
+title: Theme Customization
+description: Customize Popui's theme with CSS variables and Tailwind configuration
+---
+
+## Overview
+
+Popui's theming system is built on CSS custom properties (variables), making it easy to customize colors, spacing, and other design tokens without modifying the core theme files.
+
+## Accent Color Customization
+
+The easiest way to customize Popui is by changing the accent color. The accent color is used throughout components for primary actions, selections, and focus states.
+
+### Setting a Custom Accent
+
+Define the `--color-base-accent` variable in your CSS:
+
+```css
+:root {
+  --color-base-accent: rgba(112, 69, 212, 1); /* Purple accent */
+}
+```
+
+The theme automatically generates hover, pressed, and alpha variants:
+
+```css
+/* Automatically derived from --color-base-accent */
+--color-accent-50: var(--color-base-accent, var(--color-green-50));
+--color-accent-60: color-mix(in srgb, var(--color-accent-50) 84%, black);
+--color-accent-70: color-mix(in srgb, var(--color-accent-50) 68%, black);
+--color-accent-alpha-10: color-mix(in srgb, var(--color-accent-50) 10%, transparent);
+--color-accent-alpha-20: color-mix(in srgb, var(--color-accent-50) 20%, transparent);
+/* ... */
+```
+
+<Tip>
+You can also set `--color-base-accent-bg` to customize the darkest accent shade used for bold backgrounds.
+</Tip>
+
+### Accent Color Examples
+
+<CodeGroup>
+```css Blue
+:root {
+  --color-base-accent: rgba(18, 148, 223, 1);
+}
+```
+
+```css Purple
+:root {
+  --color-base-accent: rgba(112, 69, 212, 1);
+}
+```
+
+```css Pink
+:root {
+  --color-base-accent: rgba(236, 38, 108, 1);
+}
+```
+
+```css Orange
+:root {
+  --color-base-accent: rgba(236, 109, 27, 1);
+}
+```
+</CodeGroup>
+
+## Overriding Theme Variables
+
+You can override any design token by redefining it after importing the Popui theme:
+
+```css
+/* Import Popui theme first */
+@import "@invopop/popui/tailwind.theme.css";
+
+/* Override specific tokens */
+:root {
+  /* Custom accent color */
+  --color-base-accent: rgba(112, 69, 212, 1);
+  
+  /* Custom border radius */
+  --radius-xl: 1rem;
+  --radius-2xl: 1.5rem;
+  
+  /* Custom spacing */
+  --spacing-18: 5rem;
+  
+  /* Custom typography */
+  --text-base: 16px;
+  --text-base--line-height: 24px;
+  
+  /* Custom shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+```
+
+<Note>
+Always import the Popui theme before adding your overrides to ensure proper variable resolution.
+</Note>
+
+## Dark Mode Customization
+
+Customize dark mode by targeting the `.dark` class:
+
+```css
+@import "@invopop/popui/tailwind.theme.css";
+
+.dark {
+  /* Override dark mode background */
+  --color-background-default-default: #0a0a0f;
+  
+  /* Adjust dark mode accent */
+  --color-accent-50: rgba(150, 120, 255, 1);
+  
+  /* Increase border contrast in dark mode */
+  --color-border-default-default: var(--color-neutral-white-alpha-20);
+}
+```
+
+## Per-Component Customization
+
+You can scope variable overrides to specific components or sections:
+
+```css
+/* Sidebar with different accent */
+.sidebar {
+  --color-base-accent: rgba(18, 148, 223, 1);
+}
+
+/* Card with custom background */
+.custom-card {
+  --color-background-default-secondary: var(--color-mint-alpha-5);
+  --color-border-default-default: var(--color-mint-alpha-20);
+}
+
+/* Form with increased text size */
+.form-large {
+  --text-base: 16px;
+  --text-base--line-height: 24px;
+}
+```
+
+## Tailwind Configuration Integration
+
+While Popui uses Tailwind v4's `@theme` directive, you can still extend the configuration if needed.
+
+### Vite Configuration
+
+Add the Tailwind CSS plugin to your Vite config:
+
+```typescript vite.config.ts
+import { defineConfig } from "vite";
+import tailwindcss from "@tailwindcss/vite";
+
+export default defineConfig({
+  plugins: [tailwindcss()],
+});
+```
+
+### Custom CSS File
+
+Create a custom CSS file that imports Popui and adds your customizations:
+
+<CodeGroup>
+```css app.css
+/* Import Popui theme */
+@import "@invopop/popui/tailwind.theme.css";
+
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap');
+
+/* Your customizations */
+:root {
+  --color-base-accent: rgba(112, 69, 212, 1);
+  --font-sans: Inter, system-ui, sans-serif;
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+```
+
+```javascript main.js
+import './app.css';
+```
+</CodeGroup>
+
+## Using Primitive Colors Directly
+
+For specialized use cases, you can access primitive colors directly:
+
+```css
+.mint-badge {
+  background-color: var(--color-mint-50);
+  color: var(--color-mint-100);
+  border: 1px solid var(--color-mint-60);
+}
+
+.sherwood-card {
+  background: linear-gradient(
+    135deg, 
+    var(--color-sherwood-10), 
+    var(--color-sherwood-20)
+  );
+}
+
+/* Using alpha variants for overlays */
+.overlay {
+  background-color: var(--color-grey-alpha-80);
+  backdrop-filter: blur(8px);
+}
+```
+
+## Creating Custom Semantic Colors
+
+Extend the semantic color system with your own named palettes:
+
+```css
+@import "@invopop/popui/tailwind.theme.css";
+
+@theme {
+  /* Custom semantic colors */
+  --color-brand-primary-50: var(--color-sherwood-50);
+  --color-brand-primary-60: var(--color-sherwood-60);
+  --color-brand-secondary-50: var(--color-mint-50);
+  
+  /* Custom status colors */
+  --color-status-pending-bg: var(--color-sky-alpha-10);
+  --color-status-pending-fg: var(--color-sky-60);
+  --color-status-approved-bg: var(--color-positive-alpha-10);
+  --color-status-approved-fg: var(--color-positive-60);
+}
+```
+
+Use them with Tailwind utilities:
+
+```html
+<div class="bg-[var(--color-brand-primary-50)] text-white">
+  Brand content
+</div>
+
+<span class="bg-[var(--color-status-pending-bg)] text-[var(--color-status-pending-fg)]">
+  Pending
+</span>
+```
+
+## Typography Customization
+
+Override font families and text scales:
+
+```css
+:root {
+  /* Custom font families */
+  --font-sans: 'Satoshi', 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Geist Mono', monospace;
+  
+  /* Larger base text size */
+  --text-base: 16px;
+  --text-base--line-height: 24px;
+  --text-base--letter-spacing: -0.01em;
+  
+  /* Custom heading sizes */
+  --text-2xl: 32px;
+  --text-2xl--line-height: 40px;
+  --text-xl: 24px;
+  --text-xl--line-height: 32px;
+}
+```
+
+<Note>
+Don't forget to import your custom fonts if you change the font family variables.
+</Note>
+
+## Real-World Example
+
+Here's a complete example of a customized theme based on the Storybook configuration:
+
+```css app.css
+/* Import Popui theme */
+@import "@invopop/popui/tailwind.theme.css";
+
+/* Import fonts */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Geist+Mono:wght@100..900&display=swap');
+
+/* Light mode customization */
+:root {
+  /* Purple accent color */
+  --color-base-accent: rgba(112, 69, 212, 1);
+  
+  /* Slightly larger base text */
+  --text-base: 15px;
+  --text-base--line-height: 22px;
+  
+  /* More rounded corners */
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  
+  /* Softer shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode adjustments */
+.dark {
+  /* Darker background for OLED screens */
+  --color-background-default-default: #000000;
+  
+  /* Brighter accent in dark mode */
+  --color-accent-50: rgba(150, 120, 255, 1);
+}
+
+/* Global styles */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+```
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use semantic tokens over primitives">
+    Prefer using semantic tokens like `--color-foreground` and `--color-background-accent` instead of primitive colors. This ensures your UI adapts properly to dark mode and theme changes.
+    
+    ```css
+    /* Good */
+    .button {
+      background-color: var(--color-background-accent);
+      color: var(--color-foreground-inverse);
+    }
+    
+    /* Avoid */
+    .button {
+      background-color: var(--color-green-50);
+      color: var(--color-white);
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="Test both light and dark modes">
+    Always test your customizations in both light and dark modes to ensure proper contrast and readability.
+    
+    ```css
+    /* Define for both modes */
+    :root {
+      --custom-highlight: var(--color-accent-alpha-10);
+    }
+    
+    .dark {
+      --custom-highlight: var(--color-accent-alpha-20);
+    }
+    ```
+  </Accordion>
+  
+  <Accordion title="Maintain color contrast ratios">
+    Ensure your custom colors meet WCAG accessibility standards (4.5:1 for normal text, 3:1 for large text).
+    
+    Use browser DevTools or online contrast checkers to verify your color combinations.
+  </Accordion>
+  
+  <Accordion title="Keep customizations in one place">
+    Centralize your theme customizations in a single CSS file to make them easier to maintain and update.
+    
+    ```
+    src/
+      styles/
+        theme-custom.css  ← All customizations here
+      app.css             ← Import theme-custom.css
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Color Mixing with CSS
+
+Popui uses modern CSS `color-mix()` to generate color variants. You can use the same technique for your custom colors:
+
+```css
+:root {
+  --my-brand-color: rgba(255, 100, 50, 1);
+  
+  /* Lighter variant (mix with white) */
+  --my-brand-color-light: color-mix(in srgb, var(--my-brand-color) 50%, white);
+  
+  /* Darker variant (mix with black) */
+  --my-brand-color-dark: color-mix(in srgb, var(--my-brand-color) 80%, black);
+  
+  /* Alpha variant (mix with transparent) */
+  --my-brand-color-alpha-20: color-mix(in srgb, var(--my-brand-color) 20%, transparent);
+}
+```
+
+<Tip>
+The `color-mix()` function is supported in all modern browsers. Use the `in srgb` color space for consistent results.
+</Tip>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Tailwind Theme" icon="swatchbook" href="/theming/tailwind-theme">
+    Review all available design tokens and color palettes
+  </Card>
+  <Card title="Components" icon="cube" href="/components/forms/input-text">
+    See how components use the theming system
+  </Card>
+</CardGroup>

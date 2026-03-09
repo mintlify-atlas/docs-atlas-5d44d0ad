@@ -1,0 +1,232 @@
+---
+title: Installation
+description: Install Popui in your Svelte project and configure Tailwind CSS for optimal styling.
+---
+
+# Installation
+
+Get started with Popui by installing the package and configuring your Svelte project.
+
+## Prerequisites
+
+Before installing Popui, ensure your project meets these requirements:
+
+<CardGroup cols={2}>
+  <Card title="Svelte 5" icon="code">
+    Popui requires Svelte 5.0.0 or higher
+  </Card>
+  <Card title="Node.js" icon="server">
+    Node.js 16.x or higher recommended
+  </Card>
+</CardGroup>
+
+<Note>
+  Popui is built specifically for **Svelte 5** and uses its latest features including runes and snippets. It is not compatible with earlier Svelte versions.
+</Note>
+
+## Install the Package
+
+Install Popui using your preferred package manager:
+
+<CodeGroup>
+```bash npm
+npm install @invopop/popui
+```
+
+```bash yarn
+yarn add @invopop/popui
+```
+
+```bash pnpm
+pnpm add @invopop/popui
+```
+</CodeGroup>
+
+### Package Details
+
+- **Package name:** `@invopop/popui`
+- **Current version:** `0.1.54`
+- **License:** MIT
+- **Peer dependencies:** Svelte ^5.0.0
+
+## Configure Tailwind CSS
+
+Popui is styled with Tailwind CSS and requires it to be configured in your project.
+
+<Steps>
+  <Step title="Install Tailwind CSS (if not already installed)">
+    If you don't have Tailwind CSS in your project, install it:
+
+    <CodeGroup>
+    ```bash npm
+    npm install -D tailwindcss @tailwindcss/vite
+    ```
+
+    ```bash yarn
+    yarn add -D tailwindcss @tailwindcss/vite
+    ```
+
+    ```bash pnpm
+    pnpm add -D tailwindcss @tailwindcss/vite
+    ```
+    </CodeGroup>
+  </Step>
+
+  <Step title="Import Popui's Tailwind theme">
+    Add the Popui theme to your main CSS file (e.g., `app.css` or `global.css`):
+
+    ```css app.css
+    @import "@invopop/popui/tailwind.theme.css";
+
+    @tailwind base;
+    @tailwind components;
+    @tailwind utilities;
+    ```
+
+    <Note>
+      The theme import should come **before** the Tailwind directives to ensure proper style loading.
+    </Note>
+  </Step>
+
+  <Step title="Configure Tailwind content paths">
+    Update your `tailwind.config.js` to include Popui components:
+
+    ```javascript tailwind.config.js
+    /** @type {import('tailwindcss').Config} */
+    export default {
+      content: [
+        './src/**/*.{html,js,svelte,ts}',
+        './node_modules/@invopop/popui/**/*.{js,svelte,ts}'
+      ],
+      theme: {
+        extend: {}
+      },
+      plugins: []
+    }
+    ```
+  </Step>
+</Steps>
+
+## Optional: Add Tailwind Plugins
+
+For enhanced functionality with form components, consider installing these Tailwind plugins:
+
+<CodeGroup>
+```bash npm
+npm install -D @tailwindcss/forms @tailwindcss/typography
+```
+
+```bash yarn
+yarn add -D @tailwindcss/forms @tailwindcss/typography
+```
+
+```bash pnpm
+pnpm add -D @tailwindcss/forms @tailwindcss/typography
+```
+</CodeGroup>
+
+Then add them to your `tailwind.config.js`:
+
+```javascript tailwind.config.js
+export default {
+  // ... other config
+  plugins: [
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/typography')
+  ]
+}
+```
+
+## Verify Installation
+
+Test your installation by importing and using a simple component:
+
+```svelte +page.svelte
+<script>
+  import { BaseButton } from '@invopop/popui'
+</script>
+
+<BaseButton variant="primary">
+  Hello Popui!
+</BaseButton>
+```
+
+If the button renders with proper styling, your installation is successful!
+
+## SvelteKit Configuration
+
+If you're using SvelteKit, ensure your `svelte.config.js` is configured correctly:
+
+```javascript svelte.config.js
+import adapter from '@sveltejs/adapter-auto'
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte'
+
+/** @type {import('@sveltejs/kit').Config} */
+const config = {
+  preprocess: vitePreprocess(),
+  kit: {
+    adapter: adapter()
+  }
+}
+
+export default config
+```
+
+## TypeScript Support
+
+Popui includes full TypeScript definitions. No additional setup is required for TypeScript support.
+
+You can import types from the package:
+
+```typescript
+import type { BaseButtonProps } from '@invopop/popui/types'
+```
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Components don't have styling">
+    This usually means Tailwind isn't configured correctly. Ensure:
+    1. You've imported the Popui theme CSS
+    2. Your Tailwind content paths include the Popui package
+    3. Your build tool is processing the CSS files
+  </Accordion>
+
+  <Accordion title="TypeScript errors about missing types">
+    Make sure you're using Svelte 5.0.0 or higher. Check your `package.json`:
+    ```json
+    {
+      "dependencies": {
+        "svelte": "^5.0.0"
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Import errors">
+    Verify that the package is installed correctly:
+    ```bash
+    npm list @invopop/popui
+    ```
+    If not found, try reinstalling:
+    ```bash
+    npm install @invopop/popui
+    ```
+  </Accordion>
+
+  <Accordion title="Build errors with Vite">
+    If you encounter build errors, ensure you're using compatible versions:
+    - Vite 5.x or higher
+    - @sveltejs/vite-plugin-svelte 4.x or higher
+  </Accordion>
+</AccordionGroup>
+
+<Note>
+  For more help, check the [GitHub Issues](https://github.com/invopop/popui/issues) or view the [Storybook examples](https://popui-svelte.netlify.app/).
+</Note>
+
+## Next Steps
+
+<Card title="Quick Start Guide" icon="rocket" href="/quickstart">
+  Ready to build? Follow our quick start guide to create your first component.
+</Card>

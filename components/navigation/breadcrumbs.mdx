@@ -1,0 +1,102 @@
+---
+title: "Breadcrumbs"
+description: "Navigation breadcrumbs component with country flag and copyable support"
+icon: "arrow-right"
+---
+
+The Breadcrumbs component displays hierarchical navigation with support for links, country flags, and copyable breadcrumb items.
+
+## Usage
+
+```svelte
+<script>
+  import { Breadcrumbs } from '@invopop/popui'
+
+  const breadcrumbs = [
+    { label: 'Home', url: '/' },
+    { label: 'Products', url: '/products' },
+    { label: 'Item Details' }
+  ]
+
+  function handleCopied(label) {
+    console.log(`Copied: ${label}`)
+  }
+</script>
+
+<Breadcrumbs {breadcrumbs} oncopied={handleCopied} />
+```
+
+## With Country Flags
+
+```svelte
+<script>
+  import { Breadcrumbs } from '@invopop/popui'
+
+  const breadcrumbs = [
+    { label: 'Companies', url: '/companies' },
+    { label: 'Acme Corp', country: 'US' },
+    { label: 'Invoice #1234' }
+  ]
+</script>
+
+<Breadcrumbs {breadcrumbs} />
+```
+
+## Copyable Breadcrumbs
+
+```svelte
+<script>
+  import { Breadcrumbs } from '@invopop/popui'
+
+  const breadcrumbs = [
+    { label: 'Documents', url: '/documents' },
+    { label: 'INV-2024-001', copiable: true },
+    { label: 'Details' }
+  ]
+
+  function handleCopied(label) {
+    // Show toast notification
+    console.log(`Copied to clipboard: ${label}`)
+  }
+</script>
+
+<Breadcrumbs {breadcrumbs} oncopied={handleCopied} />
+```
+
+## Props
+
+<ParamField path="breadcrumbs" type="Breadcrumb[]" default="[]">
+  Array of breadcrumb items to display
+</ParamField>
+
+<ParamField path="oncopied" type="(label: string) => void">
+  Callback function when a copyable breadcrumb is clicked
+</ParamField>
+
+## Breadcrumb Type
+
+Each breadcrumb item in the array has the following structure:
+
+<ParamField path="label" type="string" required>
+  The text to display for the breadcrumb
+</ParamField>
+
+<ParamField path="url" type="string">
+  Optional URL to navigate to when clicked. If provided, the breadcrumb renders as a link
+</ParamField>
+
+<ParamField path="country" type="string">
+  Optional ISO country code to display a flag next to the breadcrumb (e.g., 'US', 'GB', 'ES')
+</ParamField>
+
+<ParamField path="copiable" type="boolean" default="false">
+  If true, clicking the breadcrumb copies its label to the clipboard and triggers the oncopied callback
+</ParamField>
+
+## Behavior
+
+- The last breadcrumb in the array is styled as bold and active
+- Breadcrumbs with a `url` property render as clickable links
+- Breadcrumbs with `copiable: true` render as buttons that copy the label to clipboard
+- Country flags are displayed after the breadcrumb label when the `country` property is provided
+- Breadcrumbs are separated by a slash icon

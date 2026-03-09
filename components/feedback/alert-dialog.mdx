@@ -1,0 +1,210 @@
+---
+title: "AlertDialog"
+description: "A modal dialog component for important confirmations and destructive actions"
+---
+
+## Overview
+
+The `AlertDialog` component displays a modal dialog that requires user confirmation before proceeding with an action. It supports both normal and destructive variants, making it ideal for delete confirmations, data loss warnings, and other critical user decisions.
+
+## Basic Usage
+
+```svelte
+<script>
+  import { AlertDialog } from '@invopop/popui'
+  
+  let open = $state(false)
+  
+  function handleConfirm() {
+    console.log('Action confirmed')
+    open = false
+  }
+  
+  function handleCancel() {
+    console.log('Action cancelled')
+    open = false
+  }
+</script>
+
+<AlertDialog
+  bind:open
+  title="Are you sure?"
+  descriptionText="This action cannot be undone."
+  actionText="Confirm"
+  cancelText="Cancel"
+  onconfirm={handleConfirm}
+  oncancel={handleCancel}
+/>
+```
+
+## Destructive Variant
+
+Use the `destructive` prop for dangerous actions like deletions:
+
+```svelte
+<script>
+  import { AlertDialog } from '@invopop/popui'
+  
+  let open = $state(false)
+  
+  function handleDelete() {
+    // Perform delete operation
+    open = false
+  }
+</script>
+
+<AlertDialog
+  bind:open
+  destructive
+  title="Delete Item"
+  descriptionText="This will permanently delete the item. This action cannot be undone."
+  actionText="Delete"
+  cancelText="Cancel"
+  onconfirm={handleDelete}
+/>
+```
+
+## With Trigger Button
+
+Use the `children` snippet to provide a trigger element:
+
+```svelte
+<script>
+  import { AlertDialog, BaseButton } from '@invopop/popui'
+  
+  let open = $state(false)
+</script>
+
+<AlertDialog
+  bind:open
+  destructive
+  title="Delete Account"
+  descriptionText="This will permanently delete your account and all associated data."
+  actionText="Delete Account"
+  onconfirm={() => console.log('Account deleted')}
+>
+  {#snippet children()}
+    <BaseButton variant="danger">Delete Account</BaseButton>
+  {/snippet}
+</AlertDialog>
+```
+
+## Custom Description with Snippet
+
+Provide rich content using the `description` snippet:
+
+```svelte
+<script>
+  import { AlertDialog } from '@invopop/popui'
+  
+  let open = $state(false)
+</script>
+
+<AlertDialog
+  bind:open
+  title="Unsaved Changes"
+  actionText="Discard"
+  cancelText="Keep Editing"
+  onconfirm={() => console.log('Changes discarded')}
+>
+  {#snippet description()}
+    <div>
+      <p>You have unsaved changes in:</p>
+      <ul class="mt-2 ml-4 list-disc">
+        <li>Profile settings</li>
+        <li>Notification preferences</li>
+      </ul>
+      <p class="mt-2">Are you sure you want to discard these changes?</p>
+    </div>
+  {/snippet}
+</AlertDialog>
+```
+
+## Props
+
+<ParamField path="open" type="boolean" default="false">
+  Controls the dialog's open state. Use `bind:open` for two-way binding.
+</ParamField>
+
+<ParamField path="destructive" type="boolean" default="false">
+  When `true`, the action button uses the danger variant (red). Use for destructive actions like deletions.
+</ParamField>
+
+<ParamField path="title" type="string" default="''">
+  The dialog title displayed in the header.
+</ParamField>
+
+<ParamField path="descriptionText" type="string" default="''">
+  Simple text description. Use this for plain text or the `description` snippet for rich content.
+</ParamField>
+
+<ParamField path="cancelText" type="string" default="'Cancel'">
+  Text displayed on the cancel button.
+</ParamField>
+
+<ParamField path="actionText" type="string" default="'OK'">
+  Text displayed on the action (confirm) button.
+</ParamField>
+
+<ParamField path="cancelActionEl" type="HTMLButtonElement | null" default="null">
+  Bindable reference to the cancel button element.
+</ParamField>
+
+<ParamField path="okActionEl" type="HTMLButtonElement | null" default="null">
+  Bindable reference to the action button element.
+</ParamField>
+
+<ParamField path="oncancel" type="() => void">
+  Callback fired when the dialog is cancelled (via cancel button, ESC key, or backdrop click).
+</ParamField>
+
+<ParamField path="onconfirm" type="() => void">
+  Callback fired when the action button is clicked.
+</ParamField>
+
+<ParamField path="description" type="Snippet">
+  Svelte snippet for custom description content. Use this instead of `descriptionText` for rich HTML content.
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  Svelte snippet for the trigger element. When provided, clicking this element opens the dialog.
+</ParamField>
+
+## Behavior
+
+### Auto-closing
+
+The dialog automatically closes when:
+- The user clicks the cancel button
+- The user clicks the action button
+- The user presses the ESC key
+- The user clicks outside the dialog (backdrop)
+
+<Note>
+  The `oncancel` callback is fired for ESC and backdrop clicks, but not when the action button is clicked.
+</Note>
+
+### Focus Management
+
+When the dialog opens, focus is automatically placed on the action button (the second button in the footer). This allows users to quickly confirm by pressing Enter.
+
+## Accessibility
+
+- Built on `bits-ui` AlertDialog primitives with full ARIA support
+- Keyboard navigation: ESC to close, Tab to navigate between buttons
+- Focus trap: keeps focus within the dialog while open
+- Backdrop click to dismiss
+- Screen reader announcements for dialog title and description
+
+## TypeScript
+
+The component is fully typed with the `AlertDialogProps` interface:
+
+```typescript
+import type { AlertDialogProps } from '@invopop/popui'
+```
+
+## Related Components
+
+- [Notification](/components/feedback/notification) - For non-blocking feedback
+- [BaseButton](/components/buttons/base-button) - For dialog triggers and actions

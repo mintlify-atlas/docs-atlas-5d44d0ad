@@ -1,0 +1,354 @@
+---
+title: ButtonFile
+description: A file button component for displaying and interacting with file attachments
+---
+
+## Overview
+
+The `ButtonFile` component displays file information with preview and download actions. It's designed for file lists, attachments, and document management interfaces.
+
+## Import
+
+```svelte
+import { ButtonFile } from '@invopop/popui'
+```
+
+## Props
+
+<ParamField path="name" type="string" default="''">
+  The name of the file to display.
+</ParamField>
+
+<ParamField path="date" type="string" default="''">
+  Date information to display below the filename (e.g., upload date, modified date).
+</ParamField>
+
+<ParamField path="fileType" type="ButtonFileType" default="'pdf'">
+  The type of file, which determines the avatar appearance:
+  - `pdf` - Shows "PDF" with document-pdf foreground color
+  - `xml` - Shows "XML" with document-xml foreground color
+  - `png` - Shows "PNG" with document-png foreground color
+  - `generic` - Shows an invoice icon for other file types
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Whether the button is disabled. Disabled buttons have 30% opacity and no pointer events.
+</ParamField>
+
+<ParamField path="onPreview" type="() => void">
+  Callback function triggered when clicking on the file button (anywhere except the download button).
+</ParamField>
+
+<ParamField path="onDownload" type="() => void">
+  Callback function triggered when clicking the download button. The click event is stopped from propagating.
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes to apply to the button container.
+</ParamField>
+
+## Basic Usage
+
+```svelte
+<script>
+  function handlePreview() {
+    console.log('Preview file')
+  }
+
+  function handleDownload() {
+    console.log('Download file')
+  }
+</script>
+
+<ButtonFile
+  name="invoice-2024-03.pdf"
+  date="March 9, 2024"
+  fileType="pdf"
+  onPreview={handlePreview}
+  onDownload={handleDownload}
+/>
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonFile.svelte:1-74`
+
+## File Types
+
+<Tabs>
+  <Tab title="PDF">
+    ```svelte
+    <ButtonFile
+      name="document.pdf"
+      date="Today"
+      fileType="pdf"
+      onPreview={handlePreview}
+      onDownload={handleDownload}
+    />
+    ```
+
+    Shows "PDF" text in document-pdf color.
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonFile.svelte:23`
+  </Tab>
+
+  <Tab title="XML">
+    ```svelte
+    <ButtonFile
+      name="data.xml"
+      date="Yesterday"
+      fileType="xml"
+      onPreview={handlePreview}
+      onDownload={handleDownload}
+    />
+    ```
+
+    Shows "XML" text in document-xml color.
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonFile.svelte:24`
+  </Tab>
+
+  <Tab title="PNG">
+    ```svelte
+    <ButtonFile
+      name="image.png"
+      date="March 8, 2024"
+      fileType="png"
+      onPreview={handlePreview}
+      onDownload={handleDownload}
+    />
+    ```
+
+    Shows "PNG" text in document-png color.
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonFile.svelte:25`
+  </Tab>
+
+  <Tab title="Generic">
+    ```svelte
+    <ButtonFile
+      name="report.xlsx"
+      date="March 1, 2024"
+      fileType="generic"
+      onPreview={handlePreview}
+      onDownload={handleDownload}
+    />
+    ```
+
+    Shows an invoice icon for all other file types.
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonFile.svelte:48-50`
+  </Tab>
+</Tabs>
+
+## Event Handlers
+
+### Preview Handler
+
+Triggered when clicking anywhere on the button except the download icon:
+
+```svelte
+<script>
+  function handlePreview() {
+    // Open file in viewer
+    openFileViewer(fileUrl)
+  }
+</script>
+
+<ButtonFile
+  name="contract.pdf"
+  date="March 9, 2024"
+  fileType="pdf"
+  onPreview={handlePreview}
+  onDownload={handleDownload}
+/>
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonFile.svelte:30-33`
+
+### Download Handler
+
+Triggered only when clicking the download button. The event is stopped from propagating:
+
+```svelte
+<script>
+  function handleDownload() {
+    // Download file
+    downloadFile(fileUrl, fileName)
+  }
+</script>
+
+<ButtonFile
+  name="report.pdf"
+  date="Today"
+  fileType="pdf"
+  onPreview={handlePreview}
+  onDownload={handleDownload}
+/>
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonFile.svelte:68-71`
+
+## States
+
+### Disabled State
+
+Disabled file buttons have reduced opacity and no interaction:
+
+```svelte
+<ButtonFile
+  name="locked-document.pdf"
+  date="Access Denied"
+  fileType="pdf"
+  disabled
+  onPreview={handlePreview}
+  onDownload={handleDownload}
+/>
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonFile.svelte:39`
+
+## Styling
+
+### File Avatar
+
+The file type indicator has these characteristics:
+- Size: 32px (size-8)
+- Rounded: medium (rounded-md)
+- Border with default border color
+- Monospace font with black weight
+- Uppercase text
+- Centered icon for generic type
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonFile.svelte:19-28`
+
+### Container
+
+The button container includes:
+- Padding: 8px (p-2)
+- Border radius: 10px
+- Full width with flex layout
+- Hover: secondary background
+- Gap: 12px between elements
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/ButtonFile.svelte:36-44`
+
+## Advanced Examples
+
+### File List
+
+```svelte
+<script>
+  let files = [
+    { name: 'invoice-001.pdf', date: 'March 9, 2024', type: 'pdf', url: '/files/invoice-001.pdf' },
+    { name: 'receipt.png', date: 'March 8, 2024', type: 'png', url: '/files/receipt.png' },
+    { name: 'data.xml', date: 'March 7, 2024', type: 'xml', url: '/files/data.xml' }
+  ]
+
+  function previewFile(file) {
+    window.open(file.url, '_blank')
+  }
+
+  function downloadFile(file) {
+    const link = document.createElement('a')
+    link.href = file.url
+    link.download = file.name
+    link.click()
+  }
+</script>
+
+<div class="flex flex-col gap-2">
+  {#each files as file}
+    <ButtonFile
+      name={file.name}
+      date={file.date}
+      fileType={file.type}
+      onPreview={() => previewFile(file)}
+      onDownload={() => downloadFile(file)}
+    />
+  {/each}
+</div>
+```
+
+### With Custom Date Formatting
+
+```svelte
+<script>
+  import { format } from 'date-fns'
+
+  let uploadDate = new Date('2024-03-09')
+  let formattedDate = format(uploadDate, 'MMM d, yyyy')
+</script>
+
+<ButtonFile
+  name="document.pdf"
+  date={formattedDate}
+  fileType="pdf"
+  onPreview={handlePreview}
+  onDownload={handleDownload}
+/>
+```
+
+### With File Size
+
+```svelte
+<script>
+  let fileName = 'large-file.pdf'
+  let fileSize = '2.5 MB'
+  let uploadDate = 'March 9, 2024'
+</script>
+
+<ButtonFile
+  name={fileName}
+  date={`${uploadDate} • ${fileSize}`}
+  fileType="pdf"
+  onPreview={handlePreview}
+  onDownload={handleDownload}
+/>
+```
+
+### Conditional Disabled
+
+```svelte
+<script>
+  let hasPermission = $state(false)
+  let file = {
+    name: 'confidential.pdf',
+    date: 'March 9, 2024',
+    type: 'pdf'
+  }
+</script>
+
+<ButtonFile
+  name={file.name}
+  date={hasPermission ? file.date : 'No access'}
+  fileType={file.type}
+  disabled={!hasPermission}
+  onPreview={handlePreview}
+  onDownload={handleDownload}
+/>
+```
+
+## Accessibility
+
+- The download button uses the `secondary` variant for clear visual hierarchy
+- Click events are properly stopped from propagating to prevent conflicts
+- Disabled state uses `pointer-events-none` for proper interaction blocking
+- File names and dates truncate with ellipsis to maintain layout
+- Minimum touch target size maintained for mobile interaction
+
+## Type Definitions
+
+The component uses TypeScript interfaces defined in `types.ts:316-327`:
+
+```typescript
+export type ButtonFileType = 'pdf' | 'xml' | 'png' | 'generic';
+
+export interface ButtonFileProps {
+  name?: string;
+  disabled?: boolean;
+  date?: string;
+  fileType?: ButtonFileType;
+  onPreview?: () => void;
+  onDownload?: () => void;
+  class?: string;
+}
+```

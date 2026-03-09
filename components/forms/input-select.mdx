@@ -1,0 +1,200 @@
+---
+title: InputSelect
+description: A native select dropdown component with optional icon and error handling
+---
+
+## Overview
+
+InputSelect is a styled native HTML select element that supports icons, labels, error states, and various sizing options. It maintains a consistent look with custom dropdown styling.
+
+## Props
+
+<ParamField path="id" type="any" default="Random string">
+  Unique identifier for the select element. If not provided, a random ID is generated.
+</ParamField>
+
+<ParamField path="name" type="string" default="''">
+  The name attribute for the select element, useful for form submission.
+</ParamField>
+
+<ParamField path="label" type="string" default="''">
+  Label text displayed above the select.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  When true, the select is disabled.
+</ParamField>
+
+<ParamField path="value" type="string" default="''">
+  The selected value. This prop is bindable using `bind:value`.
+</ParamField>
+
+<ParamField path="icon" type="IconSource | string | undefined" default="undefined">
+  Optional icon displayed on the left side of the select. Can be an IconSource or a string path to resolve.
+</ParamField>
+
+<ParamField path="iconTheme" type="IconTheme" default="'default'">
+  Theme variant for the icon ('default' | 'solid' | 'mini').
+</ParamField>
+
+<ParamField path="options" type="SelectOption[]" default="[]">
+  Array of options to display. Each option has:
+  - `label`: Display text
+  - `value`: Option value
+</ParamField>
+
+<ParamField path="placeholder" type="string" default="'Select one...'">
+  Placeholder text shown when no option is selected.
+</ParamField>
+
+<ParamField path="disablePlaceholder" type="boolean" default="true">
+  When true, the placeholder option is disabled and cannot be selected.
+</ParamField>
+
+<ParamField path="errorText" type="string" default="''">
+  Error message displayed below the select.
+</ParamField>
+
+<ParamField path="size" type="'xs' | 'sm' | 'md'" default="'md'">
+  Size variant of the select:
+  - `xs`: Height 26px
+  - `sm`: Height 28px
+  - `md`: Height 32px
+</ParamField>
+
+<ParamField path="onchange" type="(value: string) => void">
+  Callback fired when the selected value changes.
+</ParamField>
+
+## Usage
+
+### Basic Select
+
+```svelte
+<script>
+  import { InputSelect } from 'popui'
+  
+  let country = $state('')
+  
+  const countries = [
+    { label: 'United States', value: 'US' },
+    { label: 'Canada', value: 'CA' },
+    { label: 'United Kingdom', value: 'GB' },
+    { label: 'Australia', value: 'AU' }
+  ]
+</script>
+
+<InputSelect 
+  bind:value={country}
+  label="Country"
+  options={countries}
+  placeholder="Select a country"
+/>
+```
+
+### With Icon
+
+```svelte
+<script>
+  import { InputSelect } from 'popui'
+  import { Globe } from '@invopop/ui-icons'
+  
+  let language = $state('')
+  
+  const languages = [
+    { label: 'English', value: 'en' },
+    { label: 'Spanish', value: 'es' },
+    { label: 'French', value: 'fr' }
+  ]
+</script>
+
+<InputSelect 
+  bind:value={language}
+  label="Language"
+  icon={Globe}
+  iconTheme="solid"
+  options={languages}
+/>
+```
+
+### Different Sizes
+
+```svelte
+<InputSelect size="xs" options={options} placeholder="Extra small" />
+<InputSelect size="sm" options={options} placeholder="Small" />
+<InputSelect size="md" options={options} placeholder="Medium" />
+```
+
+### With Error Validation
+
+```svelte
+<script>
+  import { InputSelect } from 'popui'
+  
+  let category = $state('')
+  let error = $state('')
+  
+  const categories = [
+    { label: 'Electronics', value: 'electronics' },
+    { label: 'Clothing', value: 'clothing' },
+    { label: 'Books', value: 'books' }
+  ]
+  
+  function validateCategory(value: string) {
+    if (!value) {
+      error = 'Please select a category'
+    } else {
+      error = ''
+    }
+  }
+</script>
+
+<InputSelect 
+  bind:value={category}
+  label="Category"
+  options={categories}
+  errorText={error}
+  onchange={validateCategory}
+/>
+```
+
+### In a Form
+
+```svelte
+<script>
+  import { InputSelect } from 'popui'
+  
+  let priority = $state('medium')
+  
+  const priorities = [
+    { label: 'Low', value: 'low' },
+    { label: 'Medium', value: 'medium' },
+    { label: 'High', value: 'high' },
+    { label: 'Critical', value: 'critical' }
+  ]
+  
+  function handleSubmit() {
+    console.log('Selected priority:', priority)
+  }
+</script>
+
+<form onsubmit={handleSubmit}>
+  <InputSelect 
+    bind:value={priority}
+    name="priority"
+    label="Priority Level"
+    options={priorities}
+    disablePlaceholder={false}
+  />
+  <button type="submit">Submit</button>
+</form>
+```
+
+## Features
+
+- **Native HTML Select**: Uses the native `<select>` element for best accessibility and mobile experience
+- **Custom Styling**: Custom dropdown arrow and consistent design system styling
+- **Icon Support**: Optional icon on the left side of the select
+- **Error States**: Built-in error styling and message display
+- **Flexible Sizing**: Three size variants to fit different contexts
+- **Type Safety**: Proper TypeScript types for SelectOption

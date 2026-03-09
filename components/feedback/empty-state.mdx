@@ -1,0 +1,226 @@
+---
+title: "EmptyState"
+description: "Display empty states with icons, titles, descriptions, and call-to-action buttons"
+---
+
+## Overview
+
+The `EmptyState` component displays a centered message when there's no content to show. It's commonly used in lists, tables, and search results to guide users on what to do next.
+
+## Basic Usage
+
+```svelte
+<script>
+  import { EmptyState } from '@invopop/popui'
+  import { Folder } from '@invopop/ui-icons'
+</script>
+
+<EmptyState
+  iconSource={Folder}
+  title="No items found"
+  description="Get started by creating your first item."
+/>
+```
+
+## With Action Button
+
+Use the `children` snippet to add a call-to-action button:
+
+```svelte
+<script>
+  import { EmptyState, BaseButton } from '@invopop/popui'
+  import { Plus } from '@invopop/ui-icons'
+  
+  function createItem() {
+    console.log('Creating new item...')
+  }
+</script>
+
+<EmptyState
+  iconSource={Plus}
+  title="No projects yet"
+  description="Create your first project to get started."
+>
+  {#snippet children()}
+    <BaseButton
+      variant="primary"
+      onclick={createItem}
+    >
+      Create Project
+    </BaseButton>
+  {/snippet}
+</EmptyState>
+```
+
+## With Check Badge
+
+Add a check badge overlay to indicate completion or success:
+
+```svelte
+<script>
+  import { EmptyState } from '@invopop/popui'
+  import { CheckCircle } from '@invopop/ui-icons'
+</script>
+
+<EmptyState
+  iconSource={CheckCircle}
+  title="All caught up!"
+  description="You've completed all your tasks."
+  check
+/>
+```
+
+## Custom Icon with Snippet
+
+For complete control over the icon area, use the `icon` snippet:
+
+```svelte
+<script>
+  import { EmptyState } from '@invopop/popui'
+</script>
+
+<EmptyState
+  title="No search results"
+  description="Try adjusting your search terms or filters."
+>
+  {#snippet icon()}
+    <div class="w-24 h-24 rounded-full bg-gray-100 flex items-center justify-center">
+      <svg class="w-12 h-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+      </svg>
+    </div>
+  {/snippet}
+</EmptyState>
+```
+
+## Search Results Empty State
+
+```svelte
+<script>
+  import { EmptyState } from '@invopop/popui'
+  import { Search } from '@invopop/ui-icons'
+</script>
+
+<EmptyState
+  iconSource={Search}
+  title="No results for \"solar panels\""
+  description="Try different keywords or check your spelling."
+/>
+```
+
+## Multiple Actions
+
+```svelte
+<script>
+  import { EmptyState, BaseButton } from '@invopop/popui'
+  import { Upload } from '@invopop/ui-icons'
+</script>
+
+<EmptyState
+  iconSource={Upload}
+  title="No files uploaded"
+  description="Upload files or import from your cloud storage."
+>
+  {#snippet children()}
+    <div class="flex gap-3">
+      <BaseButton variant="primary">
+        Upload Files
+      </BaseButton>
+      <BaseButton variant="secondary">
+        Import from Cloud
+      </BaseButton>
+    </div>
+  {/snippet}
+</EmptyState>
+```
+
+## Props
+
+<ParamField path="icon" type="Snippet">
+  Custom Svelte snippet for the icon area. Provides complete control over the icon design and layout.
+</ParamField>
+
+<ParamField path="iconSource" type="IconSource">
+  Icon from `@steeze-ui/svelte-icon` compatible library. Displayed with the default empty state styling.
+</ParamField>
+
+<ParamField path="title" type="string" default="''">
+  The main heading text, typically describing the empty state (e.g., "No items found").
+</ParamField>
+
+<ParamField path="description" type="string" default="''">
+  Secondary text providing context or suggesting next steps.
+</ParamField>
+
+<ParamField path="check" type="boolean" default="false">
+  When `true` and using `iconSource`, displays a check badge overlay on the icon. Useful for success or completion states.
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  Svelte snippet for action buttons or additional content below the description.
+</ParamField>
+
+## Icon Options
+
+You have two ways to provide an icon:
+
+1. **iconSource** (recommended): Use any `@steeze-ui/svelte-icon` compatible icon. This automatically includes the default styling with the icon container.
+
+2. **icon snippet**: Provide your own custom SVG or component for complete control over the appearance.
+
+<Note>
+  Only use one icon method at a time. If both `icon` and `iconSource` are provided, the `icon` snippet takes precedence.
+</Note>
+
+## Layout
+
+The component uses a centered flex layout:
+- Icon: 120px height, 352px max width container
+- Text: Centered alignment with 0.5rem gap between title and description
+- Actions: 1rem top margin (when using `children` snippet)
+
+## Styling
+
+### Default Icon Styling
+
+When using `iconSource`:
+- Icon size: 40px (size-10)
+- Icon color: `text-icon-accent`
+- Container: Relative positioned with IconEmpty background component
+- Check badge: Absolute positioned overlay (when `check={true}`)
+
+### Typography
+
+- **Title**: `text-base`, `font-medium`, `text-foreground`
+- **Description**: `text-base`, `text-foreground-default-secondary`
+
+## Use Cases
+
+- **Empty lists or tables**: "No invoices found"
+- **Search with no results**: "No results for your query"
+- **Filtered data with no matches**: "No items match your filters"
+- **Onboarding states**: "Welcome! Create your first project"
+- **Success states**: "All done! No pending items"
+- **Error recovery**: "Something went wrong. Try again"
+
+## Accessibility
+
+- Semantic HTML with proper heading hierarchy (h4 for title)
+- Centered layout ensures visibility
+- Action buttons receive proper focus styling
+- Icon is decorative and doesn't interfere with screen readers
+
+## TypeScript
+
+The component is fully typed with the `EmptyStateProps` interface:
+
+```typescript
+import type { EmptyStateProps } from '@invopop/popui'
+import type { IconSource } from '@steeze-ui/svelte-icon'
+```
+
+## Related Components
+
+- [BaseCard](/components/layout/base-card) - For empty state within cards
+- [Notification](/components/feedback/notification) - For temporary feedback messages
+- [BaseButton](/components/buttons/base-button) - For action buttons in empty states

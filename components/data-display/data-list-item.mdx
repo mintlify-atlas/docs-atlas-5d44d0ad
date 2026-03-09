@@ -1,0 +1,251 @@
+---
+title: DataListItem
+description: A component for displaying label-value pairs in a horizontal layout.
+---
+
+<Note>
+  DataListItem displays a label and value pair in a horizontal layout, commonly used for displaying object properties or form data.
+</Note>
+
+## Import
+
+```svelte
+import { DataListItem } from 'popui'
+```
+
+## Basic Usage
+
+```svelte
+<script lang="ts">
+  import { DataListItem } from 'popui'
+</script>
+
+<DataListItem label="Name" value="John Doe" />
+<DataListItem label="Email" value="john@example.com" />
+<DataListItem label="Status" value="Active" />
+```
+
+## Monospaced Font
+
+Use monospaced font for values like IDs or codes:
+
+```svelte
+<DataListItem 
+  label="User ID" 
+  value="usr_1234567890" 
+  monospaced={true}
+/>
+
+<DataListItem 
+  label="API Key" 
+  value="sk_test_1234567890abcdef" 
+  monospaced={true}
+/>
+```
+
+## Monospaced Numbers
+
+Use monospaced numbers for values with tabular data:
+
+```svelte
+<DataListItem 
+  label="Order Total" 
+  value="$1,234.56" 
+  monospacedNums={true}
+/>
+
+<DataListItem 
+  label="Quantity" 
+  value="42" 
+  monospacedNums={true}
+/>
+
+<DataListItem 
+  label="Date" 
+  value="2024-03-15" 
+  monospacedNums={true}
+/>
+```
+
+## Full Width
+
+Make the value take full available width:
+
+```svelte
+<DataListItem 
+  label="Description" 
+  value="This is a very long description that needs more space to display properly."
+  fullWidth={true}
+/>
+```
+
+## Custom Content
+
+Use the children snippet for custom value content:
+
+```svelte
+<script lang="ts">
+  import { DataListItem, TagStatus } from 'popui'
+</script>
+
+<DataListItem label="Status">
+  <TagStatus label="Active" status="green" />
+</DataListItem>
+
+<DataListItem label="Tags">
+  <div class="flex gap-2">
+    <TagStatus label="Premium" status="blue" />
+    <TagStatus label="Verified" status="green" />
+  </div>
+</DataListItem>
+```
+
+## With Components
+
+```svelte
+<script lang="ts">
+  import { DataListItem, UuidCopy, ProfileAvatar } from 'popui'
+</script>
+
+<DataListItem label="User ID">
+  <UuidCopy uuid="550e8400-e29b-41d4-a716-446655440000" />
+</DataListItem>
+
+<DataListItem label="Owner">
+  <ProfileAvatar name="John Doe" picture="https://example.com/avatar.jpg" />
+</DataListItem>
+```
+
+## List of Items
+
+```svelte
+<script lang="ts">
+  import { DataListItem } from 'popui'
+  
+  const user = {
+    name: 'John Doe',
+    email: 'john@example.com',
+    phone: '+1 (555) 123-4567',
+    address: '123 Main St, New York, NY 10001',
+    member_since: 'January 2020'
+  }
+</script>
+
+<div class="space-y-2">
+  <DataListItem label="Name" value={user.name} />
+  <DataListItem label="Email" value={user.email} />
+  <DataListItem label="Phone" value={user.phone} monospacedNums={true} />
+  <DataListItem label="Address" value={user.address} fullWidth={true} />
+  <DataListItem label="Member Since" value={user.member_since} />
+</div>
+```
+
+## Styling
+
+```svelte
+<script lang="ts">
+  import { DataListItem } from 'popui'
+</script>
+
+<div class="space-y-1">
+  <DataListItem label="Regular" value="Normal weight text" />
+  <DataListItem label="Amount" value="$1,234.56" monospacedNums={true} />
+  <DataListItem label="Code" value="ABC-123-XYZ" monospaced={true} />
+</div>
+```
+
+## Complex Example
+
+```svelte
+<script lang="ts">
+  import { DataListItem, UuidCopy, TagStatus, ProfileAvatar } from 'popui'
+  
+  const invoice = {
+    id: '550e8400-e29b-41d4-a716-446655440000',
+    number: 'INV-2024-001',
+    customer: 'John Doe',
+    amount: '$1,234.56',
+    status: 'paid',
+    date: '2024-03-15',
+    description: 'Monthly subscription fee for premium plan'
+  }
+</script>
+
+<div class="space-y-2 p-4 border border-border rounded-lg">
+  <DataListItem label="Invoice ID">
+    <UuidCopy uuid={invoice.id} />
+  </DataListItem>
+  
+  <DataListItem 
+    label="Invoice Number" 
+    value={invoice.number} 
+    monospaced={true}
+  />
+  
+  <DataListItem label="Customer" value={invoice.customer} />
+  
+  <DataListItem 
+    label="Amount" 
+    value={invoice.amount} 
+    monospacedNums={true}
+  />
+  
+  <DataListItem label="Status">
+    <TagStatus 
+      label="Paid" 
+      status="green" 
+      dot={true}
+    />
+  </DataListItem>
+  
+  <DataListItem 
+    label="Date" 
+    value={invoice.date} 
+    monospacedNums={true}
+  />
+  
+  <DataListItem 
+    label="Description" 
+    value={invoice.description}
+    fullWidth={true}
+  />
+</div>
+```
+
+## Props
+
+<ParamField path="label" type="string" default="''">
+  The label text displayed on the left side.
+</ParamField>
+
+<ParamField path="value" type="string" default="''">
+  The value text displayed on the right side. Ignored if children snippet is provided.
+</ParamField>
+
+<ParamField path="monospaced" type="boolean" default="false">
+  Use monospace font for the value (useful for IDs, codes, etc.).
+</ParamField>
+
+<ParamField path="monospacedNums" type="boolean" default="false">
+  Use monospace font for numbers in the value (useful for amounts, dates, etc.).
+</ParamField>
+
+<ParamField path="fullWidth" type="boolean" default="false">
+  Make the value take full available width.
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  Custom content to display instead of the value prop.
+</ParamField>
+
+## Styling
+
+The component includes hover effects with a subtle background change. The label has a minimum width of 125px to ensure consistent alignment across multiple items.
+
+### Default Classes
+
+- **Container**: `flex gap-6 items-center px-3 py-1 rounded-lg hover:bg-background-default-secondary`
+- **Label**: `text-foreground-default-secondary text-base min-w-[125px]`
+- **Value**: `text-foreground font-medium text-base`
+- **Monospaced**: `font-mono`
+- **Monospaced Numbers**: `slashed-zero tabular-nums lining-nums`

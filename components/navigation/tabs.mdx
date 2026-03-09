@@ -1,0 +1,198 @@
+---
+title: "Tabs"
+description: "Composable tab components for building tabbed interfaces"
+icon: "bars"
+---
+
+The Tabs component provides a composable interface for creating tabbed navigation with multiple content panels.
+
+## Components
+
+The tab system consists of four composable components:
+
+- **Tabs** - Root wrapper that manages tab state
+- **TabsList** - Container for tab triggers
+- **TabsTrigger** - Individual tab button
+- **TabsContent** - Content panel for each tab
+
+## Basic Usage
+
+```svelte
+<script>
+  import { Tabs, TabsList, TabsTrigger, TabsContent } from '@invopop/popui'
+
+  let value = $state('account')
+</script>
+
+<Tabs bind:value>
+  <TabsList>
+    <TabsTrigger value="account">Account</TabsTrigger>
+    <TabsTrigger value="password">Password</TabsTrigger>
+    <TabsTrigger value="security">Security</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="account">
+    <h2>Account Settings</h2>
+    <p>Manage your account information and preferences.</p>
+  </TabsContent>
+
+  <TabsContent value="password">
+    <h2>Password Settings</h2>
+    <p>Change your password and security settings.</p>
+  </TabsContent>
+
+  <TabsContent value="security">
+    <h2>Security Settings</h2>
+    <p>Configure two-factor authentication and security options.</p>
+  </TabsContent>
+</Tabs>
+```
+
+## Large Variant
+
+```svelte
+<script>
+  import { Tabs, TabsList, TabsTrigger, TabsContent } from '@invopop/popui'
+
+  let value = $state('overview')
+</script>
+
+<Tabs bind:value>
+  <TabsList variant="lg">
+    <TabsTrigger value="overview" variant="lg">Overview</TabsTrigger>
+    <TabsTrigger value="analytics" variant="lg">Analytics</TabsTrigger>
+    <TabsTrigger value="reports" variant="lg">Reports</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="overview">
+    Overview content
+  </TabsContent>
+  <TabsContent value="analytics">
+    Analytics content
+  </TabsContent>
+  <TabsContent value="reports">
+    Reports content
+  </TabsContent>
+</Tabs>
+```
+
+## Controlled Tabs
+
+```svelte
+<script>
+  import { Tabs, TabsList, TabsTrigger, TabsContent } from '@invopop/popui'
+
+  let selectedTab = $state('details')
+
+  function handleTabChange(newValue) {
+    console.log('Tab changed to:', newValue)
+    // Perform any side effects
+  }
+
+  $effect(() => {
+    handleTabChange(selectedTab)
+  })
+</script>
+
+<Tabs bind:value={selectedTab}>
+  <TabsList>
+    <TabsTrigger value="details">Details</TabsTrigger>
+    <TabsTrigger value="history">History</TabsTrigger>
+  </TabsList>
+
+  <TabsContent value="details">Details panel</TabsContent>
+  <TabsContent value="history">History panel</TabsContent>
+</Tabs>
+```
+
+## Props
+
+### Tabs
+
+<ParamField path="value" type="string" default="''">
+  The currently active tab value. Use `bind:value` for two-way binding
+</ParamField>
+
+<ParamField path="ref" type="HTMLElement | null" default="null">
+  Reference to the root element. Use `bind:ref` to access the DOM node
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes to apply to the root element
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  Child components (TabsList and TabsContent)
+</ParamField>
+
+### TabsList
+
+<ParamField path="variant" type="'md' | 'lg'" default="'md'">
+  Size variant of the tabs list:
+  - `md`: Medium size (height: 7, rounded-md)
+  - `lg`: Large size (height: 8, rounded-lg)
+</ParamField>
+
+<ParamField path="ref" type="HTMLElement | null" default="null">
+  Reference to the list element
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes to apply to the list element
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  TabsTrigger components
+</ParamField>
+
+### TabsTrigger
+
+<ParamField path="value" type="string" required>
+  Unique identifier for this tab. Must match the value in corresponding TabsContent
+</ParamField>
+
+<ParamField path="variant" type="'md' | 'lg'" default="'md'">
+  Size variant matching the parent TabsList:
+  - `md`: Medium size (rounded)
+  - `lg`: Large size (rounded-md)
+</ParamField>
+
+<ParamField path="ref" type="HTMLElement | null" default="null">
+  Reference to the trigger button element
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes to apply to the trigger
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  Content to display in the tab trigger (usually text)
+</ParamField>
+
+### TabsContent
+
+<ParamField path="value" type="string" required>
+  Unique identifier for this content panel. Must match the value of corresponding TabsTrigger
+</ParamField>
+
+<ParamField path="ref" type="HTMLElement | null" default="null">
+  Reference to the content element
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes to apply to the content panel
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  Content to display when this tab is active
+</ParamField>
+
+## Behavior
+
+- Only one tab can be active at a time
+- Active tab trigger receives `data-[state=active]` attribute with elevated background and shadow
+- Content panels are shown/hidden based on matching `value` prop with active tab
+- Tab content has overflow-y-auto for scrollable content
+- The component uses bits-ui's Tabs primitive under the hood for accessibility
+- Keyboard navigation is automatically supported (arrow keys, home, end)
+- Focus management follows ARIA tabs pattern

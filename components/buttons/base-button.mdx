@@ -1,0 +1,417 @@
+---
+title: BaseButton
+description: A versatile button component with multiple variants, sizes, and icon support
+---
+
+## Overview
+
+The `BaseButton` component is the foundation of Popui's button system. It provides a comprehensive set of variants, sizes, and configuration options for building interactive user interfaces.
+
+## Import
+
+```svelte
+import { BaseButton } from '@invopop/popui'
+```
+
+## Props
+
+<ParamField path="variant" type="ButtonVariant" default="outline">
+  The visual style variant of the button. Available options:
+  - `primary` - Accent background with inverse text
+  - `secondary` - Tertiary background with default text
+  - `danger` - Critical styling for destructive actions
+  - `warning` - Warning background for caution actions
+  - `outline` - Border with transparent background
+  - `ghost` - No border, transparent background
+  - `selected` - Selected state styling
+  - `dark` - Dark theme variant
+  - `dark-ghost` - Dark theme ghost variant
+</ParamField>
+
+<ParamField path="size" type="'sm' | 'md' | 'lg'" default="md">
+  The size of the button:
+  - `sm` - Height 24px (6)
+  - `md` - Height 28px (7)
+  - `lg` - Height 32px (8)
+</ParamField>
+
+<ParamField path="icon" type="IconSource">
+  Icon to display in the button. Uses `@steeze-ui/svelte-icon` format. When used alone (without children), the button becomes icon-only.
+</ParamField>
+
+<ParamField path="iconTheme" type="'default' | 'solid' | 'mini'" default="default">
+  The icon theme variant to use.
+</ParamField>
+
+<ParamField path="iconPosition" type="'left' | 'right'" default="left">
+  Position of the icon relative to the text content.
+</ParamField>
+
+<ParamField path="type" type="'button' | 'submit' | 'reset'" default="button">
+  HTML button type attribute.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Whether the button is disabled. Disabled buttons have reduced opacity (30%) and no pointer events.
+</ParamField>
+
+<ParamField path="dangerIcon" type="boolean" default="false">
+  Applies critical icon styling (`text-icon-critical`) to the icon.
+</ParamField>
+
+<ParamField path="shortcut" type="boolean" default="false">
+  Wraps the icon in a shortcut wrapper component.
+</ParamField>
+
+<ParamField path="fullwidth" type="boolean" default="false">
+  Makes the button take up the full width of its container (`w-full`).
+</ParamField>
+
+<ParamField path="notification" type="boolean" default="false">
+  Adds notification indicator styling to the button.
+</ParamField>
+
+<ParamField path="stackedLeft" type="boolean" default="false">
+  Removes left border radius for stacking buttons horizontally.
+</ParamField>
+
+<ParamField path="stackedRight" type="boolean" default="false">
+  Removes right border radius for stacking buttons horizontally.
+</ParamField>
+
+<ParamField path="onclick" type="(event: MouseEvent) => void">
+  Click event handler.
+</ParamField>
+
+<ParamField path="class" type="string">
+  Additional CSS classes to apply to the button.
+</ParamField>
+
+## Variants
+
+<Tabs>
+  <Tab title="Primary">
+    Primary buttons are used for the main action on a page. They have an accent background with inverse text.
+
+    ```svelte
+    <BaseButton variant="primary">
+      Save Changes
+    </BaseButton>
+    ```
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/button/button.svelte:11-12`
+  </Tab>
+
+  <Tab title="Secondary">
+    Secondary buttons are used for less prominent actions. They have a tertiary background.
+
+    ```svelte
+    <BaseButton variant="secondary">
+      Cancel
+    </BaseButton>
+    ```
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/button/button.svelte:21-22`
+  </Tab>
+
+  <Tab title="Danger">
+    Danger buttons are used for destructive actions like deleting. They have critical styling with hover effects.
+
+    ```svelte
+    <BaseButton variant="danger">
+      Delete Account
+    </BaseButton>
+    ```
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/button/button.svelte:15-16`
+  </Tab>
+
+  <Tab title="Warning">
+    Warning buttons are used for actions that require caution.
+
+    ```svelte
+    <BaseButton variant="warning">
+      Proceed with Caution
+    </BaseButton>
+    ```
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/button/button.svelte:13-14`
+  </Tab>
+
+  <Tab title="Outline">
+    Outline buttons have a border with transparent background. This is the default variant.
+
+    ```svelte
+    <BaseButton variant="outline">
+      View Details
+    </BaseButton>
+    ```
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/button/button.svelte:17-18`
+  </Tab>
+
+  <Tab title="Ghost">
+    Ghost buttons have no border and a transparent background. They show background on hover.
+
+    ```svelte
+    <BaseButton variant="ghost">
+      Learn More
+    </BaseButton>
+    ```
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/button/button.svelte:19-20`
+  </Tab>
+
+  <Tab title="Selected">
+    Selected buttons indicate an active or selected state.
+
+    ```svelte
+    <BaseButton variant="selected">
+      Active Tab
+    </BaseButton>
+    ```
+
+    **Source reference:** `/home/daytona/workspace/source/svelte/src/lib/button/button.svelte:23-24`
+  </Tab>
+</Tabs>
+
+## Icon Support
+
+### Icon with Text
+
+Buttons can include icons alongside text. By default, icons appear on the left.
+
+```svelte
+<script>
+  import { Plus } from '@invopop/ui-icons'
+</script>
+
+<BaseButton icon={Plus} variant="primary">
+  Add Item
+</BaseButton>
+```
+
+### Icon Position
+
+Control icon placement with the `iconPosition` prop:
+
+```svelte
+<script>
+  import { ChevronRight } from '@invopop/ui-icons'
+</script>
+
+<BaseButton icon={ChevronRight} iconPosition="right" variant="outline">
+  Next
+</BaseButton>
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/button/button.svelte:211-214`
+
+### Icon-Only Buttons
+
+When no children are provided, the button automatically becomes icon-only with appropriate sizing:
+
+```svelte
+<script>
+  import { Search } from '@invopop/ui-icons'
+</script>
+
+<BaseButton icon={Search} variant="ghost" />
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/button/button.svelte:200-201`
+
+### Danger Icon
+
+Apply critical styling to icons for destructive actions:
+
+```svelte
+<script>
+  import { Trash } from '@invopop/ui-icons'
+</script>
+
+<BaseButton icon={Trash} dangerIcon variant="secondary">
+  Delete
+</BaseButton>
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/BaseButton.svelte:25`
+
+## Sizes
+
+<Tabs>
+  <Tab title="Small">
+    ```svelte
+    <BaseButton size="sm" variant="primary">
+      Small Button
+    </BaseButton>
+    ```
+
+    Height: 24px (h-6)
+  </Tab>
+
+  <Tab title="Medium">
+    ```svelte
+    <BaseButton size="md" variant="primary">
+      Medium Button
+    </BaseButton>
+    ```
+
+    Height: 28px (h-7) - Default size
+  </Tab>
+
+  <Tab title="Large">
+    ```svelte
+    <BaseButton size="lg" variant="primary">
+      Large Button
+    </BaseButton>
+    ```
+
+    Height: 32px (h-8)
+  </Tab>
+</Tabs>
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/button/button.svelte:29-33`
+
+## States
+
+### Disabled State
+
+Disabled buttons have reduced opacity and no pointer interaction:
+
+```svelte
+<BaseButton disabled variant="primary">
+  Disabled Button
+</BaseButton>
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/button/button.svelte:8`
+
+### Full Width
+
+Make buttons span the full width of their container:
+
+```svelte
+<BaseButton fullwidth variant="primary">
+  Full Width Button
+</BaseButton>
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/BaseButton.svelte:26`
+
+### Stacked Buttons
+
+Create button groups by removing border radius on adjacent sides:
+
+```svelte
+<div class="flex">
+  <BaseButton stackedRight variant="outline">
+    Left
+  </BaseButton>
+  <BaseButton stackedLeft stackedRight variant="outline">
+    Middle
+  </BaseButton>
+  <BaseButton stackedLeft variant="outline">
+    Right
+  </BaseButton>
+</div>
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/button/button.svelte:142-150`
+
+## Event Handlers
+
+### Click Handler
+
+```svelte
+<script>
+  let count = $state(0)
+
+  function handleClick() {
+    count++
+  }
+</script>
+
+<BaseButton onclick={handleClick} variant="primary">
+  Clicked {count} times
+</BaseButton>
+```
+
+**Source reference:** `/home/daytona/workspace/source/svelte/src/lib/types.ts:224`
+
+## Advanced Examples
+
+### Submit Button in Form
+
+```svelte
+<form onsubmit={handleSubmit}>
+  <input type="text" name="email" />
+  <BaseButton type="submit" variant="primary">
+    Subscribe
+  </BaseButton>
+</form>
+```
+
+### Button with Custom Styling
+
+```svelte
+<BaseButton 
+  variant="primary" 
+  class="shadow-lg hover:shadow-xl"
+>
+  Custom Styled
+</BaseButton>
+```
+
+### Loading State with Disabled
+
+```svelte
+<script>
+  let isLoading = $state(false)
+
+  async function handleSave() {
+    isLoading = true
+    await saveData()
+    isLoading = false
+  }
+</script>
+
+<BaseButton 
+  onclick={handleSave} 
+  disabled={isLoading}
+  variant="primary"
+>
+  {isLoading ? 'Saving...' : 'Save'}
+</BaseButton>
+```
+
+## Accessibility
+
+- Disabled buttons set `pointer-events-none` and reduce opacity to 30%
+- Focus visible states use ring styling for keyboard navigation
+- Button type defaults to `"button"` to prevent unintended form submissions
+- All interactive elements maintain minimum touch target sizes
+
+## Type Definitions
+
+The component uses TypeScript interfaces defined in `types.ts:208-225`:
+
+```typescript
+export interface BaseButtonProps {
+  icon?: IconSource;
+  iconTheme?: IconTheme;
+  iconPosition?: IconPosition;
+  type?: 'button' | 'submit' | 'reset' | null;
+  variant?: ButtonVariant;
+  disabled?: boolean;
+  size?: 'sm' | 'md' | 'lg';
+  dangerIcon?: boolean;
+  shortcut?: boolean;
+  fullwidth?: boolean;
+  notification?: boolean;
+  stackedLeft?: boolean;
+  stackedRight?: boolean;
+  children?: Snippet;
+  onclick?: (event: MouseEvent) => void;
+}
+```

@@ -1,122 +1,136 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Popui",
+  "theme": "palm",
   "colors": {
-    "primary": "#16A34A",
-    "light": "#07C983",
-    "dark": "#15803D"
+    "primary": "#cb0404",
+    "light": "#f3d2d2",
+    "dark": "#e37b84"
   },
-  "favicon": "/favicon.svg",
+  "favicon": "/favicon.png",
+  "logo": {
+    "light": "/logo-light.png",
+    "dark": "/logo-dark.png"
+  },
+  "navbar": {
+    "primary": {
+      "type": "github",
+      "href": "https://github.com/invopop/popui"
+    }
+  },
+  "footer": {
+    "socials": {
+      "github": "https://github.com/invopop/popui"
+    }
+  },
   "navigation": {
     "tabs": [
       {
-        "tab": "Guides",
+        "tab": "Documentation",
         "groups": [
           {
-            "group": "Getting started",
+            "group": "Get Started",
             "pages": [
-              "index",
-              "quickstart",
-              "development"
+              "introduction",
+              "installation",
+              "quickstart"
             ]
           },
           {
-            "group": "Customization",
+            "group": "Form Components",
             "pages": [
-              "essentials/settings",
-              "essentials/navigation"
+              "components/forms/input-text",
+              "components/forms/input-textarea",
+              "components/forms/input-select",
+              "components/forms/input-checkbox",
+              "components/forms/input-radio",
+              "components/forms/input-toggle",
+              "components/forms/input-search",
+              "components/forms/date-picker",
+              "components/forms/dropdown-select"
             ]
           },
           {
-            "group": "Writing content",
+            "group": "Button Components",
             "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
+              "components/buttons/base-button",
+              "components/buttons/button-file",
+              "components/buttons/button-search",
+              "components/buttons/button-uuid-copy"
             ]
           },
           {
-            "group": "AI tools",
+            "group": "Data Display",
             "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
+              "components/data-display/data-table",
+              "components/data-display/table",
+              "components/data-display/data-list-item",
+              "components/data-display/feed-viewer",
+              "components/data-display/profile-avatar",
+              "components/data-display/uuid-copy"
+            ]
+          },
+          {
+            "group": "Navigation",
+            "pages": [
+              "components/navigation/breadcrumbs",
+              "components/navigation/menu-item",
+              "components/navigation/tabs",
+              "components/navigation/global-search"
+            ]
+          },
+          {
+            "group": "Feedback & Status",
+            "pages": [
+              "components/feedback/alert-dialog",
+              "components/feedback/notification",
+              "components/feedback/empty-state",
+              "components/feedback/status-label",
+              "components/feedback/tag-status",
+              "components/feedback/progress-bar"
+            ]
+          },
+          {
+            "group": "Layout & Structure",
+            "pages": [
+              "components/layout/base-card",
+              "components/layout/card-checkbox",
+              "components/layout/card-relation",
+              "components/layout/drawer-context",
+              "components/layout/separator"
+            ]
+          },
+          {
+            "group": "Utilities & Helpers",
+            "pages": [
+              "components/utilities/tooltip",
+              "components/utilities/skeleton",
+              "components/utilities/base-flag",
+              "components/utilities/step-icon"
+            ]
+          },
+          {
+            "group": "Theming",
+            "pages": [
+              "theming/tailwind-theme",
+              "theming/customization"
             ]
           }
         ]
       },
       {
-        "tab": "API reference",
+        "tab": "API Reference",
         "groups": [
           {
-            "group": "API documentation",
+            "group": "Types & Interfaces",
             "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
+              "api/types",
+              "api/component-props",
+              "api/helpers"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Documentation",
-          "href": "https://mintlify.com/docs",
-          "icon": "book-open-cover"
-        },
-        {
-          "anchor": "Blog",
-          "href": "https://mintlify.com/blog",
-          "icon": "newspaper"
-        }
-      ]
-    }
-  },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
-  "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
-    "primary": {
-      "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
-    }
-  },
-  "contextual": {
-    "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
-  },
-  "footer": {
-    "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
-    }
+    ]
   }
 }

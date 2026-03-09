@@ -1,0 +1,350 @@
+---
+title: 'CardCheckbox'
+description: 'A selectable card component with radio button or checkbox functionality for creating choice interfaces'
+---
+
+## Overview
+
+CardCheckbox combines a card layout with selection controls, perfect for creating option pickers, plan selectors, or any interface where users need to choose between multiple options. It supports both single and multiple selection modes.
+
+## Import
+
+```svelte
+import { CardCheckbox } from '@invopop/popui'
+```
+
+## Basic Usage
+
+```svelte
+<script>
+  import { CardCheckbox } from '@invopop/popui'
+  
+  let selected = $state(false)
+</script>
+
+<CardCheckbox
+  title="Basic Plan"
+  description="Perfect for individuals and small teams"
+  bind:checked={selected}
+/>
+```
+
+## With Icon
+
+Add icons to make options more visually distinctive:
+
+```svelte
+<script>
+  import { CardCheckbox } from '@invopop/popui'
+  import { CreditCard } from '@steeze-ui/heroicons'
+  
+  let paymentMethod = $state(false)
+</script>
+
+<CardCheckbox
+  icon={CreditCard}
+  title="Credit Card"
+  description="Pay with Visa, Mastercard, or American Express"
+  bind:checked={paymentMethod}
+/>
+```
+
+## Selection Patterns
+
+### Single Selection (Radio Group)
+
+Create a mutually exclusive selection group:
+
+```svelte
+<script>
+  import { CardCheckbox } from '@invopop/popui'
+  import { Server, Cloud, Database } from '@steeze-ui/heroicons'
+  
+  let selectedPlan = $state('basic')
+  
+  const plans = [
+    { id: 'basic', title: 'Basic', description: 'Up to 10 users', icon: Server },
+    { id: 'pro', title: 'Professional', description: 'Up to 50 users', icon: Cloud },
+    { id: 'enterprise', title: 'Enterprise', description: 'Unlimited users', icon: Database }
+  ]
+</script>
+
+<div class="flex flex-col gap-3">
+  {#each plans as plan}
+    <CardCheckbox
+      name="plan"
+      icon={plan.icon}
+      title={plan.title}
+      description={plan.description}
+      checked={selectedPlan === plan.id}
+      onchange={() => selectedPlan = plan.id}
+    />
+  {/each}
+</div>
+```
+
+### Multiple Selection
+
+Allow users to select multiple options:
+
+```svelte
+<script>
+  import { CardCheckbox } from '@invopop/popui'
+  import { Bell, Mail, Phone } from '@steeze-ui/heroicons'
+  
+  let notifications = $state({
+    email: true,
+    sms: false,
+    push: true
+  })
+</script>
+
+<div class="flex flex-col gap-3">
+  <CardCheckbox
+    icon={Mail}
+    title="Email Notifications"
+    description="Receive updates via email"
+    bind:checked={notifications.email}
+  />
+  
+  <CardCheckbox
+    icon={Phone}
+    title="SMS Notifications"
+    description="Get text message alerts"
+    bind:checked={notifications.sms}
+  />
+  
+  <CardCheckbox
+    icon={Bell}
+    title="Push Notifications"
+    description="Browser and mobile push alerts"
+    bind:checked={notifications.push}
+  />
+</div>
+```
+
+## With Accent Text
+
+Highlight important information:
+
+```svelte
+<script>
+  import { CardCheckbox } from '@invopop/popui'
+</script>
+
+<CardCheckbox
+  title="Annual Billing"
+  accentText="Save 20%"
+  description="Billed once per year"
+  bind:checked={isAnnual}
+/>
+```
+
+## With Footer Content
+
+Add additional details or actions:
+
+```svelte
+<script>
+  import { CardCheckbox, TagStatus } from '@invopop/popui'
+  import { Star } from '@steeze-ui/heroicons'
+  
+  let selected = $state(false)
+</script>
+
+<CardCheckbox
+  icon={Star}
+  title="Premium Plan"
+  description="All features included"
+  bind:checked={selected}
+>
+  {#snippet footer()}
+    <div class="flex gap-2 items-center">
+      <span class="text-2xl font-bold">$49</span>
+      <span class="text-sm text-gray-600">/month</span>
+      <TagStatus label="Popular" status="blue" />
+    </div>
+  {/snippet}
+</CardCheckbox>
+```
+
+## Hide Radio Button
+
+For cleaner designs, hide the radio button while maintaining functionality:
+
+```svelte
+<CardCheckbox
+  title="Option without visible radio"
+  description="Selection is indicated by border color"
+  hideRadio={true}
+  bind:checked={selected}
+/>
+```
+
+## Disabled State
+
+```svelte
+<CardCheckbox
+  title="Disabled Option"
+  description="This option is not available"
+  disabled={true}
+/>
+```
+
+## Props
+
+<ParamField path="id" type="any">
+  Unique identifier for the input element. Auto-generated if not provided.
+</ParamField>
+
+<ParamField path="name" type="string" default="''">
+  Name attribute for radio button grouping. Cards with the same name form a radio group.
+</ParamField>
+
+<ParamField path="title" type="string" default="''">
+  Main heading text for the card
+</ParamField>
+
+<ParamField path="description" type="string" default="''">
+  Secondary descriptive text displayed below the title
+</ParamField>
+
+<ParamField path="accentText" type="string" default="''">
+  Highlighted text displayed before the description (e.g., "Save 20%", "Popular")
+</ParamField>
+
+<ParamField path="checked" type="boolean" default="false">
+  Selected state of the card. Use `bind:checked` for two-way binding.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  Disables the card and prevents interaction. Card appears with reduced opacity.
+</ParamField>
+
+<ParamField path="icon" type="IconSource | undefined">
+  Icon to display at the start of the card content (from @steeze-ui/svelte-icon)
+</ParamField>
+
+<ParamField path="hideRadio" type="boolean" default="false">
+  Hides the radio button while maintaining selection functionality. Selected state is shown via border color.
+</ParamField>
+
+<ParamField path="footer" type="Snippet">
+  Svelte snippet for custom footer content below the main card text
+</ParamField>
+
+<ParamField path="onchange" type="(checked: boolean) => void">
+  Callback function called when the selection state changes
+</ParamField>
+
+## TypeScript Interface
+
+```typescript
+export interface CardCheckboxProps {
+  id?: any
+  name?: string
+  title?: string
+  description?: string
+  accentText?: string
+  checked?: boolean
+  disabled?: boolean
+  icon?: IconSource | undefined
+  hideRadio?: boolean
+  footer?: Snippet
+  onchange?: (checked: boolean) => void
+}
+```
+
+## Visual States
+
+### Border Styling
+- **Selected**: Shows accent border color (`border-foreground-selected`)
+- **Unselected**: Shows default border color (`border-border`)
+- **Disabled**: Gray background overlay (`bg-background-default-secondary`)
+
+### Layout
+- Icon appears on the left (optional)
+- Title and description stack vertically
+- Radio button or checkmark on the right
+- Footer content at the bottom with proper spacing
+
+## Accessibility
+
+- Uses semantic HTML with `<label>` wrapping the card
+- Radio button properly associated with label via `id` and `for` attributes
+- Disabled state prevents interaction and updates visual appearance
+- Keyboard navigable and supports Enter/Space key activation
+- Screen reader compatible with proper ARIA attributes
+
+## Examples
+
+### Pricing Plan Selector
+
+```svelte
+<script>
+  import { CardCheckbox, TagStatus } from '@invopop/popui'
+  import { Zap, Star, Rocket } from '@steeze-ui/heroicons'
+  
+  let selectedPlan = $state('pro')
+  
+  const plans = [
+    {
+      id: 'starter',
+      icon: Zap,
+      title: 'Starter',
+      description: 'Essential features for getting started',
+      price: '$9',
+      features: ['5 projects', '10 GB storage', 'Email support']
+    },
+    {
+      id: 'pro',
+      icon: Star,
+      title: 'Professional',
+      description: 'Advanced features for growing teams',
+      price: '$29',
+      popular: true,
+      features: ['Unlimited projects', '100 GB storage', 'Priority support']
+    },
+    {
+      id: 'enterprise',
+      icon: Rocket,
+      title: 'Enterprise',
+      description: 'Custom solutions for large organizations',
+      price: 'Custom',
+      features: ['Custom projects', 'Unlimited storage', 'Dedicated support']
+    }
+  ]
+</script>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  {#each plans as plan}
+    <CardCheckbox
+      name="pricing"
+      icon={plan.icon}
+      title={plan.title}
+      description={plan.description}
+      checked={selectedPlan === plan.id}
+      onchange={() => selectedPlan = plan.id}
+    >
+      {#snippet footer()}
+        <div class="space-y-3">
+          <div class="flex items-baseline gap-1">
+            <span class="text-3xl font-bold">{plan.price}</span>
+            {#if plan.price !== 'Custom'}
+              <span class="text-sm text-gray-600">/month</span>
+            {/if}
+            {#if plan.popular}
+              <TagStatus label="Popular" status="blue" />
+            {/if}
+          </div>
+          <ul class="space-y-2 text-sm">
+            {#each plan.features as feature}
+              <li>✓ {feature}</li>
+            {/each}
+          </ul>
+        </div>
+      {/snippet}
+    </CardCheckbox>
+  {/each}
+</div>
+```

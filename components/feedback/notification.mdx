@@ -1,0 +1,238 @@
+---
+title: "Notification"
+description: "Inline notification component for displaying contextual feedback with status indicators"
+---
+
+## Overview
+
+The `Notification` component displays inline messages with visual status indicators. It supports five status types (success, warning, error, info, neutral) and can include action buttons or custom content.
+
+## Basic Usage
+
+```svelte
+<script>
+  import { Notification } from '@invopop/popui'
+</script>
+
+<Notification
+  type="success"
+  title="Changes saved"
+  description="Your profile has been updated successfully."
+/>
+```
+
+## Status Types
+
+### Success
+
+For positive confirmations and successful operations:
+
+```svelte
+<Notification
+  type="success"
+  title="Payment processed"
+  description="Your payment has been received and processed."
+/>
+```
+
+### Warning
+
+For cautionary messages that need attention:
+
+```svelte
+<Notification
+  type="warning"
+  title="Storage almost full"
+  description="You've used 90% of your storage quota. Consider upgrading your plan."
+/>
+```
+
+### Error
+
+For error messages and failed operations:
+
+```svelte
+<Notification
+  type="error"
+  title="Upload failed"
+  description="The file could not be uploaded. Please check your connection and try again."
+/>
+```
+
+### Info
+
+For informational messages:
+
+```svelte
+<Notification
+  type="info"
+  title="New features available"
+  description="We've added new export formats. Check them out in the settings."
+/>
+```
+
+### Neutral
+
+For general notifications without status emphasis:
+
+```svelte
+<Notification
+  type="neutral"
+  title="Maintenance scheduled"
+  description="System maintenance is planned for this weekend."
+/>
+```
+
+## Title Only
+
+For compact notifications without descriptions:
+
+```svelte
+<Notification
+  type="success"
+  title="Item added to cart"
+/>
+```
+
+## With Action Buttons
+
+Use the `children` snippet to add action buttons:
+
+```svelte
+<script>
+  import { Notification, BaseButton } from '@invopop/popui'
+  
+  function handleUndo() {
+    console.log('Undoing action...')
+  }
+</script>
+
+<Notification
+  type="info"
+  title="Item deleted"
+  description="The item has been moved to trash."
+>
+  {#snippet children()}
+    <BaseButton
+      size="sm"
+      variant="ghost"
+      onclick={handleUndo}
+    >
+      Undo
+    </BaseButton>
+  {/snippet}
+</Notification>
+```
+
+## Multiple Actions
+
+```svelte
+<script>
+  import { Notification, BaseButton } from '@invopop/popui'
+</script>
+
+<Notification
+  type="warning"
+  title="Update available"
+  description="A new version is available with security fixes."
+>
+  {#snippet children()}
+    <div class="flex gap-2">
+      <BaseButton size="sm" variant="primary">
+        Update Now
+      </BaseButton>
+      <BaseButton size="sm" variant="ghost">
+        Later
+      </BaseButton>
+    </div>
+  {/snippet}
+</Notification>
+```
+
+## Props
+
+<ParamField path="title" type="string" default="''">
+  The main notification message.
+</ParamField>
+
+<ParamField path="description" type="string" default="''">
+  Optional secondary text providing additional context.
+</ParamField>
+
+<ParamField path="type" type="Status" default="'neutral'">
+  The notification status type. Determines the color scheme and icon.
+  
+  **Possible values:**
+  - `'success'` - Green scheme with success icon
+  - `'warning'` - Yellow scheme with warning icon
+  - `'error'` - Red scheme with error icon
+  - `'info'` - Blue scheme with info icon
+  - `'neutral'` - Default gray scheme with info icon
+</ParamField>
+
+<ParamField path="children" type="Snippet">
+  Svelte snippet for custom content or action buttons displayed on the right side of the notification.
+</ParamField>
+
+## Visual Styles
+
+The notification automatically adjusts its styling based on the `type` prop:
+
+| Type | Background | Text Color | Icon |
+|------|-----------|-----------|------|
+| `success` | Light green | Green | Success checkmark |
+| `warning` | Light yellow | Yellow/orange | Warning triangle |
+| `error` | Light red | Red | Error X |
+| `info` | Light blue | Blue | Info circle |
+| `neutral` | Gray border | Default | Info circle |
+
+## Layout Behavior
+
+- **With description**: Icon aligns to the top, allowing multi-line descriptions
+- **Title only**: Icon centers vertically for a more compact appearance
+- **With children**: Additional padding is added to accommodate action buttons
+
+## Toast Integration
+
+While this component is designed for inline use, you can integrate it with a toast library like [Sonner](https://sonner.emilkowal.ski/) for temporary notifications:
+
+```svelte
+<script>
+  import { toast } from 'svelte-sonner'
+  import { Notification } from '@invopop/popui'
+  
+  function showNotification() {
+    toast.custom((t) => {
+      return Notification({
+        type: 'success',
+        title: 'Changes saved',
+        description: 'Your settings have been updated.'
+      })
+    })
+  }
+</script>
+```
+
+## Accessibility
+
+- Semantic HTML with proper heading hierarchy
+- Color is not the only indicator of status (icons are also used)
+- Sufficient color contrast ratios for text and icons
+- Focus management for interactive elements (buttons)
+
+## TypeScript
+
+The component is fully typed with the `NotificationProps` interface:
+
+```typescript
+import type { NotificationProps, Status } from '@invopop/popui'
+
+// Status type definition
+type Status = 'success' | 'warning' | 'error' | 'info' | 'neutral'
+```
+
+## Related Components
+
+- [AlertDialog](/components/feedback/alert-dialog) - For modal confirmations
+- [StatusLabel](/components/feedback/status-label) - For inline status indicators
+- [TagStatus](/components/feedback/tag-status) - For status badges

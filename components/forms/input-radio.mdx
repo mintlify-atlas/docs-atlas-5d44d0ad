@@ -1,0 +1,214 @@
+---
+title: InputRadio
+description: A styled radio button input with optional label
+---
+
+## Overview
+
+InputRadio provides a radio button input with consistent styling and optional label text. Radio buttons are used when users need to select a single option from a group.
+
+## Props
+
+<ParamField path="checked" type="boolean" default="false">
+  Whether the radio button is checked. This prop is bindable using `bind:checked`.
+</ParamField>
+
+<ParamField path="disabled" type="boolean" default="false">
+  When true, the radio button is disabled and cannot be interacted with.
+</ParamField>
+
+<ParamField path="id" type="any" default="Random string">
+  Unique identifier for the radio element. If not provided, a random ID is generated.
+</ParamField>
+
+<ParamField path="name" type="string" default="''">
+  The name attribute for grouping radio buttons. All radio buttons with the same name are part of the same group.
+</ParamField>
+
+<ParamField path="label" type="string" default="undefined">
+  Label text displayed next to the radio button.
+</ParamField>
+
+<ParamField path="onchange" type="(checked: boolean) => void">
+  Callback fired when the radio button state changes.
+</ParamField>
+
+## Usage
+
+### Basic Radio Group
+
+```svelte
+<script>
+  import { InputRadio } from 'popui'
+  
+  let size = $state('medium')
+</script>
+
+<div class="flex flex-col gap-2">
+  <InputRadio 
+    name="size"
+    checked={size === 'small'}
+    label="Small"
+    onchange={() => size = 'small'}
+  />
+  <InputRadio 
+    name="size"
+    checked={size === 'medium'}
+    label="Medium"
+    onchange={() => size = 'medium'}
+  />
+  <InputRadio 
+    name="size"
+    checked={size === 'large'}
+    label="Large"
+    onchange={() => size = 'large'}
+  />
+</div>
+```
+
+### Without Labels
+
+```svelte
+<script>
+  import { InputRadio } from 'popui'
+  
+  let selected = $state('option1')
+</script>
+
+<div class="flex gap-4">
+  <InputRadio 
+    name="options"
+    checked={selected === 'option1'}
+    onchange={() => selected = 'option1'}
+  />
+  <InputRadio 
+    name="options"
+    checked={selected === 'option2'}
+    onchange={() => selected = 'option2'}
+  />
+</div>
+```
+
+### Disabled State
+
+```svelte
+<script>
+  import { InputRadio } from 'popui'
+  
+  let plan = $state('basic')
+</script>
+
+<div class="flex flex-col gap-2">
+  <InputRadio 
+    name="plan"
+    checked={plan === 'basic'}
+    label="Basic (Available)"
+    onchange={() => plan = 'basic'}
+  />
+  <InputRadio 
+    name="plan"
+    checked={plan === 'premium'}
+    label="Premium (Coming Soon)"
+    disabled
+  />
+</div>
+```
+
+### Payment Method Selection
+
+```svelte
+<script>
+  import { InputRadio } from 'popui'
+  
+  let paymentMethod = $state('credit-card')
+  
+  const methods = [
+    { value: 'credit-card', label: 'Credit Card' },
+    { value: 'paypal', label: 'PayPal' },
+    { value: 'bank-transfer', label: 'Bank Transfer' }
+  ]
+</script>
+
+<div class="flex flex-col gap-3">
+  <h3>Select Payment Method</h3>
+  {#each methods as method}
+    <InputRadio 
+      name="payment"
+      checked={paymentMethod === method.value}
+      label={method.label}
+      onchange={() => paymentMethod = method.value}
+    />
+  {/each}
+</div>
+```
+
+### Horizontal Radio Group
+
+```svelte
+<script>
+  import { InputRadio } from 'popui'
+  
+  let theme = $state('light')
+</script>
+
+<div class="flex gap-6">
+  <InputRadio 
+    name="theme"
+    checked={theme === 'light'}
+    label="Light"
+    onchange={() => theme = 'light'}
+  />
+  <InputRadio 
+    name="theme"
+    checked={theme === 'dark'}
+    label="Dark"
+    onchange={() => theme = 'dark'}
+  />
+  <InputRadio 
+    name="theme"
+    checked={theme === 'auto'}
+    label="Auto"
+    onchange={() => theme = 'auto'}
+  />
+</div>
+```
+
+### With Change Handler
+
+```svelte
+<script>
+  import { InputRadio } from 'popui'
+  
+  let subscription = $state('monthly')
+  
+  function handleSubscriptionChange(value: string) {
+    subscription = value
+    console.log('Subscription changed to:', value)
+    // Additional logic here
+  }
+</script>
+
+<div class="flex flex-col gap-2">
+  <InputRadio 
+    name="subscription"
+    checked={subscription === 'monthly'}
+    label="Monthly ($10/mo)"
+    onchange={() => handleSubscriptionChange('monthly')}
+  />
+  <InputRadio 
+    name="subscription"
+    checked={subscription === 'yearly'}
+    label="Yearly ($100/yr)"
+    onchange={() => handleSubscriptionChange('yearly')}
+  />
+</div>
+```
+
+## Features
+
+- **Automatic Focus**: When checked, the radio button automatically receives focus (see line 16-20 in source)
+- **Accessible**: Properly linked label with cursor pointer for better UX
+- **Custom Styling**: Styled appearance while maintaining native radio button behavior
+- **Disabled State**: Visual indication and interaction prevention when disabled
+- **Flexible Layout**: Can be used with or without labels, in vertical or horizontal layouts
+- **Group Management**: Uses the `name` attribute to manage radio button groups

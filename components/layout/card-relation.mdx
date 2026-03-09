@@ -1,0 +1,335 @@
+---
+title: 'CardRelation'
+description: 'A compact card component for displaying related entity information with data list items'
+---
+
+## Overview
+
+CardRelation is designed to display summary information about related entities or objects. It presents a header with an icon and title, followed by a list of key-value pairs, making it perfect for showing relationships, linked resources, or entity details.
+
+## Import
+
+```svelte
+import { CardRelation } from '@invopop/popui'
+```
+
+## Basic Usage
+
+```svelte
+<script>
+  import { CardRelation } from '@invopop/popui'
+  import { User } from '@steeze-ui/heroicons'
+  
+  const userDetails = [
+    { label: 'Email', value: 'john.doe@example.com' },
+    { label: 'Role', value: 'Administrator' },
+    { label: 'Department', value: 'Engineering' }
+  ]
+</script>
+
+<CardRelation
+  icon={User}
+  title="User Details"
+  items={userDetails}
+  onclick={() => console.log('Card clicked')}
+/>
+```
+
+## With Icon
+
+Add an icon to visually identify the type of relation:
+
+```svelte
+<script>
+  import { CardRelation } from '@invopop/popui'
+  import { BuildingOffice2 } from '@steeze-ui/heroicons'
+  
+  const companyInfo = [
+    { label: 'Company', value: 'Acme Corporation' },
+    { label: 'Industry', value: 'Technology' },
+    { label: 'Location', value: 'San Francisco, CA' }
+  ]
+</script>
+
+<CardRelation
+  icon={BuildingOffice2}
+  title="Organization"
+  items={companyInfo}
+/>
+```
+
+## Display Patterns
+
+### Entity Relationships
+
+Show how entities are connected:
+
+```svelte
+<script>
+  import { CardRelation } from '@invopop/popui'
+  import { Link } from '@steeze-ui/heroicons'
+  
+  const linkedProject = [
+    { label: 'Project', value: 'Mobile App Redesign' },
+    { label: 'Status', value: 'In Progress' },
+    { label: 'Due Date', value: 'March 30, 2026' },
+    { label: 'Team Size', value: '8 members' }
+  ]
+  
+  function viewProject() {
+    console.log('Navigating to project')
+  }
+</script>
+
+<CardRelation
+  icon={Link}
+  title="Related Project"
+  items={linkedProject}
+  onclick={viewProject}
+/>
+```
+
+### Contact Information
+
+```svelte
+<script>
+  import { CardRelation } from '@invopop/popui'
+  import { Phone } from '@steeze-ui/heroicons'
+  
+  const contactDetails = [
+    { label: 'Name', value: 'Jane Smith' },
+    { label: 'Phone', value: '+1 (555) 123-4567' },
+    { label: 'Email', value: 'jane.smith@company.com' },
+    { label: 'Title', value: 'Sales Manager' }
+  ]
+</script>
+
+<CardRelation
+  icon={Phone}
+  title="Primary Contact"
+  items={contactDetails}
+/>
+```
+
+### Resource Links
+
+```svelte
+<script>
+  import { CardRelation } from '@invopop/popui'
+  import { DocumentText } from '@steeze-ui/heroicons'
+  
+  const documentInfo = [
+    { label: 'Type', value: 'Invoice' },
+    { label: 'Number', value: 'INV-2024-0123' },
+    { label: 'Date', value: 'March 9, 2026' },
+    { label: 'Amount', value: '$1,250.00' }
+  ]
+  
+  function openDocument() {
+    console.log('Opening document')
+  }
+</script>
+
+<CardRelation
+  icon={DocumentText}
+  title="Related Invoice"
+  items={documentInfo}
+  onclick={openDocument}
+/>
+```
+
+## Without Click Handler
+
+For display-only cards (no chevron shown):
+
+```svelte
+<script>
+  import { CardRelation } from '@invopop/popui'
+  import { Cog } from '@steeze-ui/heroicons'
+  
+  const systemInfo = [
+    { label: 'Version', value: '2.4.1' },
+    { label: 'Environment', value: 'Production' },
+    { label: 'Region', value: 'US-East-1' }
+  ]
+</script>
+
+<CardRelation
+  icon={Cog}
+  title="System Information"
+  items={systemInfo}
+/>
+```
+
+## Props
+
+<ParamField path="title" type="string" default="''">
+  Header title text displayed in the card
+</ParamField>
+
+<ParamField path="icon" type="IconSource | undefined">
+  Icon displayed next to the title (from @steeze-ui/svelte-icon)
+</ParamField>
+
+<ParamField path="items" type="DataListItem[]" default="[]">
+  Array of data items to display as label-value pairs. Each item should have:
+  - `label`: string - The label/key for the data
+  - `value`: string - The value to display
+</ParamField>
+
+<ParamField path="onclick" type="(event: MouseEvent) => void">
+  Click handler for the card header. When provided, a chevron icon is shown to indicate interactivity.
+</ParamField>
+
+## TypeScript Interface
+
+```typescript
+export interface CardRelationProps {
+  title?: string
+  icon?: IconSource | undefined
+  items?: DataListItem[]
+  onclick?: (event: MouseEvent) => void
+}
+
+export type DataListItem = {
+  label: string
+  value: string
+}
+```
+
+## Visual Structure
+
+### Header Section
+- Optional icon on the left
+- Title text in the center
+- Chevron right icon on the right (when clickable)
+- Hover state for clickable cards
+
+### Content Section
+- List of label-value pairs
+- Labels displayed on the left (88px min-width)
+- Values displayed on the right
+- Consistent spacing between items
+
+## Styling
+
+The component uses:
+- Rounded border (`rounded-2xl`)
+- Secondary border color (`border-border-default-secondary`)
+- Responsive text sizing
+- Proper text truncation for long values
+- Consistent padding and spacing
+
+## Accessibility
+
+- Header rendered as `<button>` when clickable
+- Icon includes proper color classes for theme support
+- Text maintains readable contrast
+- Keyboard navigable when interactive
+
+## Examples
+
+### Customer Card
+
+```svelte
+<script>
+  import { CardRelation } from '@invopop/popui'
+  import { UserCircle } from '@steeze-ui/heroicons'
+  
+  const customer = [
+    { label: 'Customer ID', value: 'CUST-98765' },
+    { label: 'Name', value: 'Acme Corporation' },
+    { label: 'Account Type', value: 'Enterprise' },
+    { label: 'Since', value: 'January 2024' },
+    { label: 'Status', value: 'Active' }
+  ]
+  
+  function viewCustomer() {
+    window.location.href = '/customers/98765'
+  }
+</script>
+
+<CardRelation
+  icon={UserCircle}
+  title="Customer"
+  items={customer}
+  onclick={viewCustomer}
+/>
+```
+
+### Integration Details
+
+```svelte
+<script>
+  import { CardRelation } from '@invopop/popui'
+  import { Square3Stack3D } from '@steeze-ui/heroicons'
+  
+  const integration = [
+    { label: 'Service', value: 'Stripe Payments' },
+    { label: 'API Version', value: '2023-10-16' },
+    { label: 'Environment', value: 'Production' },
+    { label: 'Connected', value: '3 months ago' },
+    { label: 'Events', value: '12,450 processed' }
+  ]
+  
+  function manageIntegration() {
+    console.log('Manage integration')
+  }
+</script>
+
+<CardRelation
+  icon={Square3Stack3D}
+  title="Integration Details"
+  items={integration}
+  onclick={manageIntegration}
+/>
+```
+
+### Multiple Cards Layout
+
+```svelte
+<script>
+  import { CardRelation } from '@invopop/popui'
+  import { Server, Database, CloudArrowUp } from '@steeze-ui/heroicons'
+  
+  const resources = [
+    {
+      icon: Server,
+      title: 'API Server',
+      items: [
+        { label: 'Status', value: 'Running' },
+        { label: 'Uptime', value: '99.9%' },
+        { label: 'Requests', value: '1.2M/day' }
+      ]
+    },
+    {
+      icon: Database,
+      title: 'Database',
+      items: [
+        { label: 'Type', value: 'PostgreSQL 15' },
+        { label: 'Size', value: '45 GB' },
+        { label: 'Connections', value: '150/200' }
+      ]
+    },
+    {
+      icon: CloudArrowUp,
+      title: 'Storage',
+      items: [
+        { label: 'Provider', value: 'AWS S3' },
+        { label: 'Usage', value: '234 GB' },
+        { label: 'Objects', value: '45,230' }
+      ]
+    }
+  ]
+</script>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+  {#each resources as resource}
+    <CardRelation
+      icon={resource.icon}
+      title={resource.title}
+      items={resource.items}
+    />
+  {/each}
+</div>
+```

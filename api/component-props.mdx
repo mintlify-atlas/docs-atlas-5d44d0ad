@@ -1,0 +1,881 @@
+---
+title: 'Component Props'
+description: 'Props interfaces for all Popui components'
+---
+
+## Dialog Components
+
+### AlertDialogProps
+
+Props for the AlertDialog component.
+
+```typescript
+interface AlertDialogProps {
+  open?: boolean
+  destructive?: boolean
+  title?: string
+  descriptionText?: string
+  cancelText?: string
+  actionText?: string
+  cancelActionEl?: HTMLButtonElement | null
+  okActionEl?: HTMLButtonElement | null
+  oncancel?: () => void
+  onconfirm?: () => void
+  description?: Snippet
+  children?: Snippet
+}
+```
+
+## Button Components
+
+### BaseButtonProps
+
+Base props for all button components.
+
+```typescript
+interface BaseButtonProps {
+  icon?: IconSource
+  iconTheme?: IconTheme
+  iconPosition?: IconPosition
+  type?: 'button' | 'submit' | 'reset' | null
+  variant?: ButtonVariant
+  disabled?: boolean
+  size?: 'sm' | 'md' | 'lg'
+  dangerIcon?: boolean
+  shortcut?: boolean
+  fullwidth?: boolean
+  notification?: boolean
+  stackedLeft?: boolean
+  stackedRight?: boolean
+  children?: Snippet
+  onclick?: (event: MouseEvent) => void
+  [key: string]: any
+}
+```
+
+### ButtonFileProps
+
+Props for file download/preview buttons.
+
+```typescript
+interface ButtonFileProps {
+  name?: string
+  disabled?: boolean
+  date?: string
+  fileType?: ButtonFileType
+  onPreview?: () => void
+  onDownload?: () => void
+  class?: string
+  [key: string]: any
+}
+```
+
+### ButtonUuidCopyProps
+
+Props for UUID copy button.
+
+```typescript
+interface ButtonUuidCopyProps {
+  uuid?: string
+  prefixLength?: number
+  suffixLength?: number
+  full?: boolean
+  disabled?: boolean
+  oncopied?: (label: string) => void
+}
+```
+
+### ButtonSearchProps
+
+Props for expandable search button.
+
+```typescript
+interface ButtonSearchProps {
+  value?: string
+  expanded?: boolean
+  placeholder?: string
+  size?: 'sm' | 'md'
+  loading?: boolean
+  autofocus?: boolean
+  oninput?: (value: string) => void
+  onExpand?: () => void
+  onCollapse?: () => void
+}
+```
+
+## Card Components
+
+### BaseCardProps
+
+Base props for card components.
+
+```typescript
+interface BaseCardProps {
+  imageUrl?: string
+  imageAlt?: string
+  title?: string
+  description?: string
+  type?: 'default' | 'soon' | 'beta'
+  footer?: Snippet
+  onclick?: (event: MouseEvent) => void
+  [key: string]: any
+}
+```
+
+### CardCheckboxProps
+
+Props for selectable card with checkbox.
+
+```typescript
+interface CardCheckboxProps {
+  id?: any
+  name?: string
+  title?: string
+  description?: string
+  accentText?: string
+  checked?: boolean
+  disabled?: boolean
+  icon?: IconSource | undefined
+  hideRadio?: boolean
+  footer?: Snippet
+  onchange?: (checked: boolean) => void
+}
+```
+
+### CardRelationProps
+
+Props for relation/connection cards.
+
+```typescript
+interface CardRelationProps {
+  title?: string
+  icon?: IconSource | undefined
+  items?: DataListItem[]
+  onclick?: (event: MouseEvent) => void
+}
+```
+
+## Counter Components
+
+### BaseCounterProps
+
+Props for counter badge.
+
+```typescript
+interface BaseCounterProps {
+  value: number
+  theme?: 'light' | 'navigation' | 'accent'
+}
+```
+
+### CounterWidgetProps
+
+Props for usage counter widget.
+
+```typescript
+interface CounterWidgetProps {
+  label: string
+  current: number
+  total: number
+  resetDate?: string
+  icon?: IconSource
+  allowOverage?: boolean
+}
+```
+
+## Progress Components
+
+### ProgressBarProps
+
+Props for linear progress bar.
+
+```typescript
+interface ProgressBarProps {
+  percentage?: number
+  current?: number
+  total?: number
+  allowOverage?: boolean
+  warningPercentage?: number
+}
+```
+
+### ProgressBarCircleProps
+
+Props for circular progress indicator.
+
+```typescript
+interface ProgressBarCircleProps {
+  progress: number
+  size: number
+  variant?: 'default' | 'dark'
+}
+```
+
+### TagProgressProps
+
+Props for progress tag.
+
+```typescript
+interface TagProgressProps {
+  progress: number
+  variant?: 'default' | 'dark'
+}
+```
+
+## Dropdown Components
+
+### BaseDropdownProps
+
+Base props for dropdown/popover components.
+
+```typescript
+interface BaseDropdownProps {
+  isOpen?: boolean
+  fullWidth?: boolean
+  placement?: Placement
+  matchParentWidth?: boolean
+  usePortal?: boolean
+  strategy?: 'absolute' | 'fixed'
+  trigger?: Snippet
+  children?: Snippet
+  [key: string]: any
+}
+```
+
+### DropdownSelectProps
+
+Props for dropdown select input.
+
+```typescript
+interface DropdownSelectProps {
+  value?: AnyProp
+  icon?: IconSource | string | undefined
+  iconTheme?: IconTheme
+  options?: DrawerOption[]
+  placeholder?: string
+  multiple?: boolean
+  fullWidth?: boolean
+  widthClass?: string
+  flagPosition?: 'before' | 'after'
+  onSelect?: (value: AnyProp) => void
+  onOpenChange?: (isOpen: boolean) => void
+  stackLeft?: boolean
+  stackRight?: boolean
+  multipleLabel?: string
+  strategy?: 'absolute' | 'fixed'
+}
+```
+
+## Drawer Components
+
+### DrawerContextProps
+
+Props for drawer/menu context.
+
+```typescript
+interface DrawerContextProps {
+  items?: DrawerOption[]
+  multiple?: boolean
+  draggable?: boolean
+  widthClass?: string
+  collapsibleGroups?: boolean
+  flagPosition?: 'before' | 'after'
+  onclick?: (value: AnyProp) => void
+  onselect?: (selected: DrawerOption[]) => void
+  onreorder?: (items: DrawerOption[]) => void
+  ondropitem?: (groups: Record<string, DrawerOption[]>) => void
+  children?: Snippet
+  groups?: DrawerGroup[]
+}
+```
+
+### DrawerContextItemProps
+
+Props for individual drawer items.
+
+```typescript
+interface DrawerContextItemProps {
+  multiple?: boolean
+  item: DrawerOption
+  scrollIfSelected?: boolean
+  onclick?: (value: AnyProp) => void
+  onchange?: (item: DrawerOption) => void
+  onfocus?: (item: DrawerOption) => void
+}
+```
+
+## Input Components
+
+### InputTextProps
+
+Props for text input.
+
+```typescript
+interface InputTextProps {
+  id?: any
+  label?: string
+  placeholder?: string
+  errorText?: string
+  disabled?: boolean
+  value?: string | number
+  focusOnLoad?: boolean
+  stackLeft?: boolean
+  stackRight?: boolean
+  widthClass?: string
+  size?: 'xs' | 'sm' | 'md'
+  oninput?: (value: string) => void
+  onfocus?: (event: FocusEvent) => void
+  onblur?: (event: FocusEvent) => void
+  onkeydown?: (event: KeyboardEvent) => void
+  [key: string]: any
+}
+```
+
+### InputTextareaProps
+
+Props for textarea input.
+
+```typescript
+interface InputTextareaProps {
+  id?: any
+  label?: string
+  placeholder?: string
+  errorText?: string
+  disabled?: boolean
+  value?: string | number
+  rows?: number
+  oninput?: (value: string) => void
+  [key: string]: any
+}
+```
+
+### InputSearchProps
+
+Props for search input.
+
+```typescript
+interface InputSearchProps {
+  value?: string
+  shortcut?: string
+  placeholder?: string
+  icon?: IconSource
+  focusOnLoad?: boolean
+  size?: 'xs' | 'sm' | 'md'
+  loading?: boolean
+  oninput?: (value: string) => void
+  onclick?: (event: MouseEvent) => void
+  onfocus?: (event: FocusEvent) => void
+  onblur?: (event: FocusEvent) => void
+  [key: string]: any
+}
+```
+
+### InputSelectProps
+
+Props for native select input.
+
+```typescript
+interface InputSelectProps {
+  id?: any
+  name?: string
+  label?: string
+  disabled?: boolean
+  value?: string
+  icon?: IconSource | string | undefined
+  iconTheme?: IconTheme
+  options?: SelectOption[]
+  placeholder?: string
+  disablePlaceholder?: boolean
+  errorText?: string
+  size?: 'xs' | 'sm' | 'md'
+  onchange?: (value: string) => void
+  [key: string]: any
+}
+```
+
+### InputCheckboxProps
+
+Props for checkbox input.
+
+```typescript
+interface InputCheckboxProps {
+  id?: string
+  checked?: boolean
+  indeterminate?: boolean
+  label?: string
+  onchange?: (checked: boolean) => void
+  onclick?: (event: MouseEvent) => void
+  [key: string]: any
+}
+```
+
+### InputRadioProps
+
+Props for radio input.
+
+```typescript
+interface InputRadioProps {
+  checked?: boolean
+  disabled?: boolean
+  id?: any
+  name?: string
+  label?: string
+  onchange?: (checked: boolean) => void
+  [key: string]: any
+}
+```
+
+### InputToggleProps
+
+Props for toggle switch.
+
+```typescript
+interface InputToggleProps {
+  id?: string
+  checked?: boolean
+  label?: string
+  onchange?: (checked: boolean) => void
+  [key: string]: any
+}
+```
+
+### InputLabelProps
+
+Props for input label.
+
+```typescript
+interface InputLabelProps {
+  id?: string
+  label?: string
+  [key: string]: any
+}
+```
+
+### InputErrorProps
+
+Props for input error message.
+
+```typescript
+interface InputErrorProps {
+  errorText?: string
+}
+```
+
+## Table Components
+
+### BaseTableActionsProps
+
+Props for table row actions dropdown.
+
+```typescript
+interface BaseTableActionsProps {
+  actions: TableAction[]
+  onclick?: (value: AnyProp) => void
+}
+```
+
+### BaseTableHeaderOrderByProps
+
+Props for table header with sorting.
+
+```typescript
+interface BaseTableHeaderOrderByProps {
+  isActive?: boolean
+  sortDirection: TableSortBy
+  onOrderBy?: (direction: TableSortBy) => void
+  onHide?: () => void
+  onFilter?: () => void
+  onFreeze?: () => void
+  isFrozen?: boolean
+  showSortOptions?: boolean
+  showFilterOption?: boolean
+  showHideOption?: boolean
+}
+```
+
+## Feed Components
+
+### FeedEventsProps
+
+Props for event timeline.
+
+```typescript
+interface FeedEventsProps {
+  events?: FeedEvent[]
+}
+```
+
+### FeedIconEventProps
+
+Props for feed event icon.
+
+```typescript
+interface FeedIconEventProps {
+  icon?: IconSource | undefined
+  iconTheme?: IconTheme
+}
+```
+
+### FeddIconStatusProps
+
+Props for feed status icon.
+
+```typescript
+interface FeddIconStatusProps {
+  status: FeedItemStatus
+}
+```
+
+### FeedItemProps
+
+Props for feed item.
+
+```typescript
+interface FeedItemProps {
+  status?: FeedItemStatus | undefined
+  icon?: IconSource | undefined
+  title?: string
+  date?: Date | undefined
+  hasNext?: boolean
+  slug?: string
+  viewable?: boolean
+  viewableText?: string
+  user?: FeedItemUser | undefined
+  type?: string
+  extraText?: string
+  onView?: (slug: string) => void
+}
+```
+
+### FeedItemDetailProps
+
+Props for detailed feed item view.
+
+```typescript
+interface FeedItemDetailProps {
+  status?: FeedItemStatus | undefined
+  title?: string
+  uuid?: string
+  events?: FeedEvent[]
+  idLabel?: string
+  onCopied?: (uuid: string) => void
+  cancelable?: boolean
+  onCancel?: () => void
+}
+```
+
+### FeedViewerProps
+
+Props for feed viewer container.
+
+```typescript
+interface FeedViewerProps {
+  items?: FeedItemProps[]
+  onView?: (slug: string) => void
+}
+```
+
+## Navigation Components
+
+### BreadcrumbProps
+
+Props for single breadcrumb item.
+
+```typescript
+interface BreadcrumbProps {
+  breadcrumb: Breadcrumb
+  isLast: boolean
+  oncopied?: (label: string) => void
+}
+```
+
+### BreadcrumbsProps
+
+Props for breadcrumb navigation.
+
+```typescript
+interface BreadcrumbsProps {
+  breadcrumbs?: Breadcrumb[]
+  oncopied?: (label: string) => void
+}
+```
+
+### MenuItemProps
+
+Props for sidebar menu item.
+
+```typescript
+interface MenuItemProps {
+  label?: string
+  url?: string
+  isFolderItem?: boolean
+  collapsable?: boolean
+  open?: boolean
+  active?: boolean
+  collapsedSidebar?: boolean
+  iconTheme?: IconTheme
+  icon?: IconSource | string | undefined
+  beta?: boolean
+  children?: MenuItemProps[] | undefined
+  onclick?: (url: string) => void
+}
+```
+
+### MenuItemCollapsibleProps
+
+Props for collapsible menu item.
+
+```typescript
+interface MenuItemCollapsibleProps {
+  collapsed?: boolean
+  title?: string
+  subtitle?: string
+  active?: boolean
+  bold?: boolean
+  icon?: IconSource | undefined
+  children?: Snippet
+}
+```
+
+## Display Components
+
+### BaseFlagProps
+
+Props for country flag.
+
+```typescript
+interface BaseFlagProps {
+  country?: string
+}
+```
+
+### ProfileAvatarProps
+
+Props for user avatar.
+
+```typescript
+interface ProfileAvatarProps {
+  name?: string
+  variant?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
+  dark?: boolean
+  picture?: string
+  country?: string
+  icon?: IconSource
+}
+```
+
+### StatusLabelProps
+
+Props for status label.
+
+```typescript
+interface StatusLabelProps {
+  status: FeedItemStatus
+  label?: string
+}
+```
+
+### TagStatusProps
+
+Props for status tag.
+
+```typescript
+interface TagStatusProps {
+  label?: string
+  status?: StatusType
+  dot?: boolean
+}
+```
+
+### TagSearchProps
+
+Props for search filter tag.
+
+```typescript
+interface TagSearchProps {
+  label?: string
+  icon?: IconSource | string | undefined
+  iconTheme?: IconTheme
+  onclear?: () => void
+}
+```
+
+### EmptyStateProps
+
+Props for empty state display.
+
+```typescript
+interface EmptyStateProps {
+  icon?: Snippet
+  iconSource?: IconSource
+  title?: string
+  description?: string
+  check?: boolean
+  children?: Snippet
+}
+```
+
+### NotificationProps
+
+Props for notification banner.
+
+```typescript
+interface NotificationProps {
+  title?: string
+  description?: string
+  type?: Status
+  children?: Snippet
+  [key: string]: any
+}
+```
+
+## Data Display Components
+
+### DataListItemProps
+
+Props for data list item.
+
+```typescript
+interface DataListItemProps {
+  label?: string
+  value?: string
+  monospaced?: boolean
+  monospacedNums?: boolean
+  fullWidth?: boolean
+  children?: Snippet
+}
+```
+
+### UuidCopyProps
+
+Props for UUID display with copy.
+
+```typescript
+interface UuidCopyProps {
+  uuid?: string
+  small?: boolean
+  dark?: boolean
+  rightAlign?: boolean
+  prefixLength?: number
+  suffixLength?: number
+  full?: boolean
+  compact?: boolean
+  link?: boolean
+  onCopied?: (uuid: string) => void
+  onLinkClick?: (uuid: string) => void
+}
+```
+
+## Date Components
+
+### DatePickerProps
+
+Props for date range picker.
+
+```typescript
+interface DatePickerProps {
+  label?: string
+  placement?: Placement
+  from?: string
+  to?: string
+  onSelect?: (date: {from: string, to: string}) => void
+  stackLeft?: boolean
+  stackRight?: boolean
+  icon?: IconSource | string
+  iconTheme?: IconTheme
+  isOpen?: boolean
+}
+```
+
+## Company Components
+
+### CompanySelectorProps
+
+Props for company/organization selector.
+
+```typescript
+interface CompanySelectorProps {
+  companies?: Company[]
+  selectedCompany?: Company | null
+  collapsed?: boolean
+  onAdd?: () => void
+  onSelect?: (company: Company | null) => void
+}
+```
+
+## Search Components
+
+### GlobalSearchProps
+
+Props for global search trigger.
+
+```typescript
+interface GlobalSearchProps {
+  collapsed?: boolean
+  onOpen?: () => void
+}
+```
+
+## Title Components
+
+### TitleMainProps
+
+Props for main page title.
+
+```typescript
+interface TitleMainProps {
+  title?: string
+  children?: Snippet
+}
+```
+
+### TitleSectionProps
+
+Props for section title.
+
+```typescript
+interface TitleSectionProps {
+  title?: string
+  children?: Snippet
+}
+```
+
+## Step Components
+
+### StepIconProps
+
+Props for step icon.
+
+```typescript
+interface StepIconProps {
+  name?: string
+  showMask?: boolean
+  tooltipContent?: Snippet
+  children: Snippet
+}
+```
+
+### StepIconListProps
+
+Props for step icon list.
+
+```typescript
+interface StepIconListProps {
+  icons?: StepIcon[]
+  [key: string]: any
+}
+```
+
+## Utility Components
+
+### ShortcutWrapperProps
+
+Props for keyboard shortcut display.
+
+```typescript
+interface ShortcutWrapperProps {
+  size?: 'sm' | 'md'
+  theme?: 'light' | 'navigation'
+  children?: Snippet
+}
+```

@@ -1,80 +1,526 @@
 ---
-title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+title: Quick Start
+description: Build your first UI with Popui components in minutes. Learn the basics and create a working example.
 ---
 
-## Get started in three steps
+# Quick Start
 
-Get your documentation site running locally and make your first customization.
+This guide will walk you through creating your first UI with Popui components. We'll build a simple form with validation to demonstrate the key concepts.
 
-### Step 1: Set up your local environment
+## Your First Component
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+Let's start with a simple button to verify everything works:
 
-### Step 2: Deploy your changes
+```svelte +page.svelte
+<script>
+  import { BaseButton } from '@invopop/popui'
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+  function handleClick() {
+    console.log('Button clicked!')
+  }
+</script>
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+<BaseButton variant="primary" onclick={handleClick}>
+  Click Me
+</BaseButton>
+```
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+<Note>
+  Popui uses Svelte 5's event handlers with lowercase syntax (e.g., `onclick` instead of `on:click`).
+</Note>
 
-### Step 3: Go live
+## Building a Complete Form
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+Now let's build a more realistic example: a contact form with validation and multiple components.
 
-## Next steps
+<Steps>
+  <Step title="Import the components">
+    First, import all the components you'll need:
 
-Now that you have your docs running, explore these key features:
+    ```svelte ContactForm.svelte
+    <script lang="ts">
+      import { 
+        InputText, 
+        InputTextarea, 
+        BaseButton,
+        BaseCard,
+        Notification
+      } from '@invopop/popui'
+    </script>
+    ```
+  </Step>
+
+  <Step title="Set up reactive state">
+    Create reactive variables for form data and validation using Svelte 5's runes:
+
+    ```svelte ContactForm.svelte
+    <script lang="ts">
+      import { 
+        InputText, 
+        InputTextarea, 
+        BaseButton,
+        BaseCard,
+        Toaster,
+        toast
+      } from '@invopop/popui'
+
+      // Form state using $state rune
+      let name = $state('')
+      let email = $state('')
+      let message = $state('')
+
+      // Error states
+      let nameError = $state('')
+      let emailError = $state('')
+      let messageError = $state('')
+
+      // Loading state
+      let isSubmitting = $state(false)
+    </script>
+    ```
+  </Step>
+
+  <Step title="Add validation logic">
+    Implement form validation:
+
+    ```svelte ContactForm.svelte
+    <script lang="ts">
+      // ... previous imports and state
+
+      function validateForm(): boolean {
+        let isValid = true
+
+        // Reset errors
+        nameError = ''
+        emailError = ''
+        messageError = ''
+
+        // Name validation
+        if (!name.trim()) {
+          nameError = 'Name is required'
+          isValid = false
+        }
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        if (!email.trim()) {
+          emailError = 'Email is required'
+          isValid = false
+        } else if (!emailRegex.test(email)) {
+          emailError = 'Please enter a valid email'
+          isValid = false
+        }
+
+        // Message validation
+        if (!message.trim()) {
+          messageError = 'Message is required'
+          isValid = false
+        } else if (message.length < 10) {
+          messageError = 'Message must be at least 10 characters'
+          isValid = false
+        }
+
+        return isValid
+      }
+
+      async function handleSubmit() {
+        if (!validateForm()) return
+
+        isSubmitting = true
+
+        try {
+          // Simulate API call
+          await new Promise(resolve => setTimeout(resolve, 1500))
+
+          // Success! Reset form
+          name = ''
+          email = ''
+          message = ''
+          
+          alert('Form submitted successfully!')
+        } catch (error) {
+          console.error('Submission error:', error)
+        } finally {
+          isSubmitting = false
+        }
+      }
+    </script>
+    ```
+  </Step>
+
+  <Step title="Create the form UI">
+    Build the form using Popui components:
+
+    ```svelte ContactForm.svelte
+    <div class="max-w-2xl mx-auto p-6">
+      <BaseCard
+        title="Contact Us"
+        description="Send us a message and we'll get back to you soon."
+      >
+        <form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-6">
+          <InputText
+            label="Name"
+            bind:value={name}
+            placeholder="John Doe"
+            errorText={nameError}
+            disabled={isSubmitting}
+          />
+
+          <InputText
+            label="Email"
+            bind:value={email}
+            placeholder="john@example.com"
+            errorText={emailError}
+            disabled={isSubmitting}
+          />
+
+          <InputTextarea
+            label="Message"
+            bind:value={message}
+            placeholder="Tell us what you're thinking..."
+            errorText={messageError}
+            disabled={isSubmitting}
+            rows={5}
+          />
+
+          <div class="flex gap-3 justify-end">
+            <BaseButton
+              variant="outline"
+              onclick={() => {
+                name = ''
+                email = ''
+                message = ''
+                nameError = ''
+                emailError = ''
+                messageError = ''
+              }}
+              disabled={isSubmitting}
+            >
+              Reset
+            </BaseButton>
+
+            <BaseButton
+              type="submit"
+              variant="primary"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Sending...' : 'Send Message'}
+            </BaseButton>
+          </div>
+        </form>
+      </BaseCard>
+    </div>
+    ```
+  </Step>
+</Steps>
+
+## Complete Example
+
+Here's the full working component:
+
+```svelte ContactForm.svelte
+<script lang="ts">
+  import { 
+    InputText, 
+    InputTextarea, 
+    BaseButton,
+    BaseCard
+  } from '@invopop/popui'
+
+  let name = $state('')
+  let email = $state('')
+  let message = $state('')
+  let nameError = $state('')
+  let emailError = $state('')
+  let messageError = $state('')
+  let isSubmitting = $state(false)
+
+  function validateForm(): boolean {
+    let isValid = true
+    nameError = ''
+    emailError = ''
+    messageError = ''
+
+    if (!name.trim()) {
+      nameError = 'Name is required'
+      isValid = false
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+    if (!email.trim()) {
+      emailError = 'Email is required'
+      isValid = false
+    } else if (!emailRegex.test(email)) {
+      emailError = 'Please enter a valid email'
+      isValid = false
+    }
+
+    if (!message.trim()) {
+      messageError = 'Message is required'
+      isValid = false
+    } else if (message.length < 10) {
+      messageError = 'Message must be at least 10 characters'
+      isValid = false
+    }
+
+    return isValid
+  }
+
+  async function handleSubmit() {
+    if (!validateForm()) return
+
+    isSubmitting = true
+    try {
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      name = ''
+      email = ''
+      message = ''
+      alert('Form submitted successfully!')
+    } catch (error) {
+      console.error('Submission error:', error)
+    } finally {
+      isSubmitting = false
+    }
+  }
+
+  function resetForm() {
+    name = ''
+    email = ''
+    message = ''
+    nameError = ''
+    emailError = ''
+    messageError = ''
+  }
+</script>
+
+<div class="max-w-2xl mx-auto p-6">
+  <BaseCard
+    title="Contact Us"
+    description="Send us a message and we'll get back to you soon."
+  >
+    <form onsubmit={(e) => { e.preventDefault(); handleSubmit(); }} class="space-y-6">
+      <InputText
+        label="Name"
+        bind:value={name}
+        placeholder="John Doe"
+        errorText={nameError}
+        disabled={isSubmitting}
+      />
+
+      <InputText
+        label="Email"
+        bind:value={email}
+        placeholder="john@example.com"
+        errorText={emailError}
+        disabled={isSubmitting}
+      />
+
+      <InputTextarea
+        label="Message"
+        bind:value={message}
+        placeholder="Tell us what you're thinking..."
+        errorText={messageError}
+        disabled={isSubmitting}
+        rows={5}
+      />
+
+      <div class="flex gap-3 justify-end">
+        <BaseButton
+          variant="outline"
+          onclick={resetForm}
+          disabled={isSubmitting}
+        >
+          Reset
+        </BaseButton>
+
+        <BaseButton
+          type="submit"
+          variant="primary"
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? 'Sending...' : 'Send Message'}
+        </BaseButton>
+      </div>
+    </form>
+  </BaseCard>
+</div>
+```
+
+## Key Concepts
 
 <CardGroup cols={2}>
+  <Card title="Svelte 5 Runes" icon="wand-magic-sparkles">
+    Popui uses Svelte 5's `$state`, `$derived`, and `$props` runes for reactivity. Learn more in the [Svelte 5 docs](https://svelte.dev/docs/svelte/v5-migration-guide).
+  </Card>
+  <Card title="Event Handlers" icon="bolt">
+    Use lowercase event handlers like `onclick`, `oninput`, `onblur` instead of the old `on:` directive syntax.
+  </Card>
+  <Card title="Two-way Binding" icon="arrows-rotate">
+    Use `bind:value` for two-way data binding with form components.
+  </Card>
+  <Card title="Error States" icon="circle-exclamation">
+    Pass error messages via the `errorText` prop to display validation errors.
+  </Card>
+</CardGroup>
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
+## Component Variants
 
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
+Most Popui components support multiple variants. Here are examples with `BaseButton`:
 
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
+<CodeGroup>
+```svelte Primary
+<BaseButton variant="primary">
+  Primary Action
+</BaseButton>
+```
 
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
+```svelte Outline
+<BaseButton variant="outline">
+  Secondary Action
+</BaseButton>
+```
 
+```svelte Danger
+<BaseButton variant="danger">
+  Delete Item
+</BaseButton>
+```
+
+```svelte Ghost
+<BaseButton variant="ghost">
+  Subtle Action
+</BaseButton>
+```
+</CodeGroup>
+
+## Adding Icons
+
+Popui components support icons from the `@invopop/ui-icons` and `@steeze-ui/heroicons` packages:
+
+```svelte
+<script>
+  import { BaseButton } from '@invopop/popui'
+  import { Add, Close } from '@invopop/ui-icons'
+  import { Cog6Tooth } from '@steeze-ui/heroicons'
+</script>
+
+<BaseButton variant="primary" icon={Add}>
+  Add Item
+</BaseButton>
+
+<BaseButton variant="outline" icon={Cog6Tooth}>
+  Settings
+</BaseButton>
+
+<BaseButton variant="danger" icon={Close}>
+  Delete
+</BaseButton>
+```
+
+## Working with Data Tables
+
+For complex data display, use the `DataTable` component:
+
+```svelte
+<script lang="ts">
+  import { DataTable, createSvelteTable } from '@invopop/popui'
+  import type { ColumnDef } from '@tanstack/table-core'
+
+  type User = {
+    id: string
+    name: string
+    email: string
+    role: string
+  }
+
+  const data: User[] = [
+    { id: '1', name: 'John Doe', email: 'john@example.com', role: 'Admin' },
+    { id: '2', name: 'Jane Smith', email: 'jane@example.com', role: 'User' },
+    { id: '3', name: 'Bob Johnson', email: 'bob@example.com', role: 'User' }
+  ]
+
+  const columns: ColumnDef<User>[] = [
+    {
+      accessorKey: 'name',
+      header: 'Name'
+    },
+    {
+      accessorKey: 'email',
+      header: 'Email'
+    },
+    {
+      accessorKey: 'role',
+      header: 'Role'
+    }
+  ]
+
+  const table = createSvelteTable({
+    data,
+    columns
+  })
+</script>
+
+<DataTable {table} />
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="View All Components" icon="grid" href="https://popui-svelte.netlify.app/">
+    Explore the complete component library in Storybook
+  </Card>
+  <Card title="GitHub Repository" icon="github" href="https://github.com/invopop/popui">
+    View source code and contribute
+  </Card>
 </CardGroup>
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+  For detailed API documentation of each component, visit the [Storybook](https://popui-svelte.netlify.app/) where you can interact with live examples and see all available props.
 </Note>
+
+## Tips for Success
+
+1. **Use TypeScript** - Popui is fully typed, making development easier with autocompletion and type checking
+2. **Check Storybook** - When in doubt about component usage, the Storybook has working examples
+3. **Customize the theme** - Import and modify the Tailwind theme to match your brand
+4. **Explore component props** - Most components accept additional HTML attributes via `...rest`
+5. **Handle events properly** - Remember to use lowercase event handlers (`onclick`, not `on:click`)
+
+## Common Patterns
+
+### Conditional Rendering
+
+```svelte
+{#if isLoading}
+  <Skeleton />
+{:else}
+  <DataTable {table} />
+{/if}
+```
+
+### Lists and Iteration
+
+```svelte
+{#each items as item}
+  <DataListItem
+    title={item.title}
+    description={item.description}
+    onclick={() => handleItemClick(item)}
+  />
+{/each}
+```
+
+### Tooltips
+
+```svelte
+<Tooltip>
+  <TooltipTrigger>
+    <BaseButton variant="ghost" icon={InfoIcon} />
+  </TooltipTrigger>
+  <TooltipContent>
+    <p>Additional information about this feature</p>
+  </TooltipContent>
+</Tooltip>
+```
+
+You're now ready to build beautiful UIs with Popui!
