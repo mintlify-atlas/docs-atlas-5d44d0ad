@@ -1,0 +1,162 @@
+{
+  "projectType": "sdk-library",
+  "projectName": "Popui",
+  "projectDescription": "A comprehensive library of reusable Svelte UI components built with Svelte 5 and Tailwind CSS for Invopop applications.",
+  "theme": "palm",
+  "primaryColor": "#cb0404",
+  "lightColor": "#f3d2d2",
+  "darkColor": "#e37b84",
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Documentation",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "installation",
+              "quickstart"
+            ]
+          },
+          {
+            "group": "Form Components",
+            "pages": [
+              "components/forms/input-text",
+              "components/forms/input-textarea",
+              "components/forms/input-select",
+              "components/forms/input-checkbox",
+              "components/forms/input-radio",
+              "components/forms/input-toggle",
+              "components/forms/input-search",
+              "components/forms/date-picker",
+              "components/forms/dropdown-select"
+            ]
+          },
+          {
+            "group": "Button Components",
+            "pages": [
+              "components/buttons/base-button",
+              "components/buttons/button-file",
+              "components/buttons/button-search",
+              "components/buttons/button-uuid-copy"
+            ]
+          },
+          {
+            "group": "Data Display",
+            "pages": [
+              "components/data-display/data-table",
+              "components/data-display/table",
+              "components/data-display/data-list-item",
+              "components/data-display/feed-viewer",
+              "components/data-display/profile-avatar",
+              "components/data-display/uuid-copy"
+            ]
+          },
+          {
+            "group": "Navigation",
+            "pages": [
+              "components/navigation/breadcrumbs",
+              "components/navigation/menu-item",
+              "components/navigation/tabs",
+              "components/navigation/global-search"
+            ]
+          },
+          {
+            "group": "Feedback & Status",
+            "pages": [
+              "components/feedback/alert-dialog",
+              "components/feedback/notification",
+              "components/feedback/empty-state",
+              "components/feedback/status-label",
+              "components/feedback/tag-status",
+              "components/feedback/progress-bar"
+            ]
+          },
+          {
+            "group": "Layout & Structure",
+            "pages": [
+              "components/layout/base-card",
+              "components/layout/card-checkbox",
+              "components/layout/card-relation",
+              "components/layout/drawer-context",
+              "components/layout/separator"
+            ]
+          },
+          {
+            "group": "Utilities & Helpers",
+            "pages": [
+              "components/utilities/tooltip",
+              "components/utilities/skeleton",
+              "components/utilities/base-flag",
+              "components/utilities/step-icon"
+            ]
+          },
+          {
+            "group": "Theming",
+            "pages": [
+              "theming/tailwind-theme",
+              "theming/customization"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "API Reference",
+        "groups": [
+          {
+            "group": "Types & Interfaces",
+            "pages": [
+              "api/types",
+              "api/component-props",
+              "api/helpers"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "70+ production-ready Svelte 5 components",
+    "Built-in Tailwind CSS theme configuration",
+    "Comprehensive TypeScript support",
+    "Form inputs with validation support",
+    "Advanced data table with sorting and filtering",
+    "Accessible UI components",
+    "Storybook documentation and examples",
+    "Drag-and-drop drawer components"
+  ],
+  "publicApiSurface": [
+    "InputText",
+    "InputTextarea",
+    "InputSelect",
+    "InputCheckbox",
+    "InputRadio",
+    "InputToggle",
+    "InputSearch",
+    "BaseButton",
+    "ButtonFile",
+    "ButtonSearch",
+    "DatePicker",
+    "DropdownSelect",
+    "DataTable",
+    "Table",
+    "Tabs",
+    "AlertDialog",
+    "Notification",
+    "EmptyState",
+    "BaseCard",
+    "DrawerContext",
+    "Breadcrumbs",
+    "MenuItem",
+    "ProfileAvatar",
+    "StatusLabel",
+    "TagStatus",
+    "ProgressBar",
+    "Tooltip",
+    "Skeleton",
+    "FeedViewer",
+    "GlobalSearch",
+    "Toaster"
+  ]
+}
